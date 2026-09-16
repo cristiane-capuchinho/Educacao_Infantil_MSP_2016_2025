@@ -1,0 +1,154 @@
+## Para mostrar tabelas com valores com vírgula em decimal e separador de milhares
+
+scales::number(
+  dados_orc_sp_2003_2025$Vl_Liquidado,
+  accuracy = 0.01,
+  decimal.mark = ",",
+  big.mark = "."
+)
+
+ou 
+tabela %>%
+  mutate(
+    across(
+      where(is.numeric),
+      ~ scales::number(
+          .x,
+          accuracy = 0.01,
+          decimal.mark = ",",
+          big.mark = "."
+        )
+    )
+  ) %>%
+  knitr::kable()
+  
+  ## Verificar relação entre PA e subfunção
+  
+  ```{r}
+library(dplyr)
+library(stringr)
+
+# ------------------------------------------------------------
+# ProjetoAtividades que serão explorados
+# ------------------------------------------------------------
+
+projetos_explorar <- tibble::tribble(
+  
+  ~ProjetoAtividade, ~Ds_Projeto_Atividade,
+  
+  2828, "Manutenção e Operação da Rede Parceira CEI",
+  2825, "Operação e Manutenção de CEIs e Creches da rede conveniada e outras modalidades de parcerias",
+  
+  2856, "Remuneração dos Profissionais de Magistério - CEI",
+  2856, "Remuneração dos Profissionais de Educação Básica - CEI",
+  4360, "Manutenção e Operação de CEIs",
+  
+  2858, "Remuneração dos Profissionais do Magistério - Escola Municipal de Educação Infantil (EMEI)",
+  2858, "Remuneração dos Profissionais da Educação Básica - EMEI",
+  4362, "Manutenção e Operação das Escolas Municipais da EMEI",
+  
+  2840, "Transferência de Recursos Financeiros para as Unidades Educacionais - Educação Infantil",
+  2877, "Remuneração dos Profissionais de Magistério CEMEI",
+  2877, "Remuneração dos Profissionais da Educação Básica - CEMEI",
+  2876, "Manutenção e Operação de CEMEI",
+  2878, "Conservação e Manutenção de Unidades Educacionais - Educação Infantil",
+  
+  2815, "Fornecimento de Material Escolar - Educação Infantil",
+  2811, "Fornecimento de Uniformes - Educação Infantil",
+  
+  3359, "Construção de CEI",
+  3360, "Ampliação, Reforma e Requalificação de CEI",
+  
+  3361, "Ampliação, Reforma e Requalificação de EMEIs",
+  3358, "Construção de EMEI",
+  3362, "Ampliação, Reforma e Requalificação de EMEIs"
+)
+
+
+# ------------------------------------------------------------
+# Explorar a classificação dos ProjetoAtividade
+# ------------------------------------------------------------
+exploracao_projetos <- dadosfunedu_16_25 %>%
+  
+  # Seleciona apenas os códigos de interesse
+  filter(
+    ProjetoAtividade %in% projetos_explorar$ProjetoAtividade
+  ) %>%
+  
+  # Mantém apenas registros com classificação
+  filter(
+    !is.na(Ds_SubFuncao),
+    Ds_SubFuncao != ""
+  ) %>%
+  
+  # Agrupa pelo código, descrição existente no banco,
+  # subfunção e ano
+  group_by(
+    ProjetoAtividade,
+    Ds_Projeto_Atividade,
+    Ds_SubFuncao
+  ) %>%
+  
+  summarise(
+    Anos = paste(
+      sort(unique(Cd_Exercicio)),
+      collapse = ", "
+    ),
+    .groups = "drop"
+  ) %>%
+  
+  arrange(
+    ProjetoAtividade,
+    Ds_Projeto_Atividade,
+    Ds_SubFuncao
+  )
+
+exploracao_projetos
+
+
+  # Ensino fundamental
+  "Custo por matrícula de ensino fundamental",
+  2857,
+  "Remuneração dos profissionais do Magistério - Ensino Fundamental",
+  
+  "Custo por matrícula de ensino fundamental",
+  2857,
+  "Remuneração dos Profissionais da Educação Básica - Ensino Fundamental",
+  
+  "Custo por matrícula de ensino fundamental",
+  2826,
+  "Manutenção e Operação de Unidades Educacionais - Escola Municipal de Ensino Fundamental (EMEF)",
+  
+  "Custo por matrícula de ensino fundamental",
+  2841,
+  "Transferência de Recursos Financeiros para as Unidades Educacionais - Ensino Fundamental",
+  
+  "Custo por matrícula de ensino fundamental",
+  2812,
+  "Fornecimento de Uniformes-Educação Fundamental",
+  
+  "Custo por matrícula de ensino fundamental",
+  2879,
+  "Conservação e Manutenção de Unidades Educacionais - Ensino Fundamental",
+  
+  "Custo por matrícula de ensino fundamental",
+  2816,
+  "Fornecimento de Material Escolar-Ensino Fundamental",
+  
+  "Custo por matrícula de ensino fundamental",
+  2816,
+  "Fornecimento de Uniformes e Material Escolar-Ensino Fundamental",
+  
+  "Custo por matrícula de ensino fundamental",
+  2807,
+  "Alfabetização na Idade Certa",
+  
+  
+  # Investimento em ensino fundamental
+  "Investimento em rede direta de ensino fundamental",
+  3366,
+  "Ampliação, Reforma e Requalificação de Escola Municipal de Ensino Fundamental (EMEF)",
+  
+  "Investimento em rede direta de ensino fundamental",
+  3365,
+  "Construção de Escolas Municipais de Ensino Fundamental (EMEF)",

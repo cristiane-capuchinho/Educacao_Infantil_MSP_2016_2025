@@ -1,0 +1,978 @@
+---
+title: "Primeira Análise de dados do infantil FL 082026"
+author: "Cris Capuchinho"
+date: "2026-08-14"
+output: html_document
+---
+
+```{r setup Início, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# 1. Instalar o pacote caso ainda não esteja instalado
+
+library(readxl)
+
+# 2. Definir o caminho do arquivo
+# ============================================================
+
+arquivo <- "C:/Users/crist/Documents/Pesquisas/CEM - Leituras e produção/Pesquisas nossas/Educação Infantil - panorama/Análise Educação Infantil/Data/tabelas_analiticas_2015_2025_v2.xlsx"
+
+
+# 3. Verificar quais planilhas existem no arquivo
+# ============================================================
+
+excel_sheets(arquivo)
+
+
+# 4. Importar cada planilha
+# ============================================================
+
+municipios_FL <- read_excel(
+  arquivo,
+  sheet = 1
+)
+
+capitais_FL <- read_excel(
+  arquivo,
+  sheet = 2
+)
+
+saopaulocapital_fl <- read_excel(
+  arquivo,
+  sheet = 3
+)
+
+
+# 5. Verificar as bases criadas
+# ============================================================
+
+View(municipios_FL)
+View(capitais_FL)
+View(saopaulocapital_fl)
+
+
+# 6. Verificar dimensões de cada banco
+# ============================================================
+
+dim(municipios_FL)
+dim(capitais_FL)
+dim(saopaulocapital_fl)
+
+
+
+# 7. Verificar os nomes das variáveis
+
+
+names(municipios_FL)
+names(capitais_FL)
+names(saopaulocapital_fl)
+
+#=========================
+#8. Reorganizar colunas são paulo
+
+
+library(dplyr)
+
+saopaulocapital_fl <- saopaulocapital_fl %>%
+  relocate(
+    NO_MICRORREGIAO,
+    CO_MICRORREGIAO,
+    NO_DISTRITO,
+    CO_DISTRITO,
+    .after = 4
+  )
+
+names(saopaulocapital_fl)
+
+
+plot(pressure)
+```
+# Cenário geral de São Paulo capital
+
+
+
+```{r Panorama São Paulo, echo=FALSE}
+
+library (dplyr)
+library (tidyr)
+
+resumosp <- capitais_FL %>%
+  
+  # ----------------------------------------------------------
+  # 1. Selecionar São Paulo e os anos de interesse
+  # ----------------------------------------------------------
+  dplyr::filter(
+    NO_MUNICIPIO == "São Paulo",
+    NU_ANO_CENSO %in% c(2016, 2025)
+  ) %>%
+  
+  # ----------------------------------------------------------
+  # 2. Selecionar as variáveis necessárias
+  # ----------------------------------------------------------
+  dplyr::select(
+    NO_MUNICIPIO,
+    NU_ANO_CENSO,
+    
+    # ========================================================
+    # MATRÍCULAS ORIGINAIS
+    # ========================================================
+    mat_bas_tot,
+    mat_ei_tot,
+    mat_cre_tot,
+    mat_pre_tot,
+    mat_cre_dir,
+    mat_pre_dir,
+    mat_pre_ti_dir,
+    mat_pre_ti_ind,
+    mat_cre_ti_dir,
+    mat_cre_ti_ind,
+    mat_cre_ind,
+    mat_pre_ind,
+    
+    # ========================================================
+    # MATRÍCULAS DE ESCOLAS POR REDE
+    # ========================================================
+    mat_ei_esc_dir,
+    mat_ei_esc_ind,
+    
+    # ========================================================
+    # MATRÍCULAS DE ATIVIDADES — REDE DIRETA
+    # ========================================================
+    mat_ei_av_dir,
+    mat_ei_ban_dir,
+    mat_ei_jog_dir,
+    mat_ei_art_dir,
+    mat_ei_4_dir,
+    mat_ei_s4_dir,
+    
+    # ========================================================
+    # MATRÍCULAS DE ATIVIDADES — REDE INDIRETA
+    # ========================================================
+    mat_ei_av_ind,
+    mat_ei_ban_ind,
+    mat_ei_jog_ind,
+    mat_ei_art_ind,
+    mat_ei_4_ind,
+    mat_ei_s4_ind,
+    
+    # ========================================================
+    # DOCENTES
+    # ========================================================
+    doc_tur_cre_dir,
+    doc_tur_cre_ind,
+    doc_tur_pre_dir,
+    doc_tur_pre_ind ) %>%
+  
+  # ==========================================================
+  # 3. CALCULAR MATRÍCULAS POR JORNADA
+  # ==========================================================
+  dplyr::mutate(
+    
+    # --------------------------------------------------------
+    # Creche direta — jornada parcial
+    # --------------------------------------------------------
+    mat_cre_parc_dir =
+      mat_cre_dir - mat_cre_ti_dir,
+    
+    # --------------------------------------------------------
+    # Pré-escola direta — jornada parcial
+    # --------------------------------------------------------
+    mat_pre_parc_dir =
+      mat_pre_dir - mat_pre_ti_dir,
+    
+    # --------------------------------------------------------
+    # Creche indireta — jornada parcial
+    # --------------------------------------------------------
+    mat_cre_parc_ind =
+      mat_cre_ind - mat_cre_ti_ind,
+    
+    # --------------------------------------------------------
+    # Pré-escola indireta — jornada parcial
+    # --------------------------------------------------------
+    mat_pre_parc_ind =
+      mat_pre_ind - mat_pre_ti_ind
+  ) %>%
+  
+  # ==========================================================
+  # 4. CALCULAR CATEGORIAS AGREGADAS
+  # ==========================================================
+  dplyr::mutate(
+    
+    # --------------------------------------------------------
+    # Rede indireta de Educação Infantil — integral
+    # --------------------------------------------------------
+    mat_ind_ti =
+      mat_cre_ti_ind +
+      mat_pre_ti_ind,
+    
+    # --------------------------------------------------------
+    # Rede indireta de Educação Infantil — parcial
+    # --------------------------------------------------------
+    mat_ind_parc =
+      mat_cre_parc_ind +
+      mat_pre_parc_ind,
+    
+    # --------------------------------------------------------
+    # Rede direta de Educação Infantil — parcial
+    # --------------------------------------------------------
+    mat_dir_parc =
+      mat_cre_parc_dir +
+      mat_pre_parc_dir,
+    
+    # --------------------------------------------------------
+    # Rede direta de Educação Infantil — integral
+    # --------------------------------------------------------
+    mat_dir_ti =
+      mat_cre_ti_dir +
+      mat_pre_ti_dir,
+    
+    # --------------------------------------------------------
+    # Creche em oferta municipal
+    # --------------------------------------------------------
+    mat_cre_municipal =
+      mat_cre_parc_dir +
+      mat_cre_ti_dir +
+      mat_cre_parc_ind +
+      mat_cre_ti_ind,
+    
+    # --------------------------------------------------------
+    # Pré-escola em oferta municipal
+    # --------------------------------------------------------
+    mat_pre_municipal =
+      mat_pre_parc_dir +
+      mat_pre_ti_dir +
+      mat_pre_parc_ind +
+      mat_pre_ti_ind,
+    
+    # --------------------------------------------------------
+    # Educação Infantil em oferta municipal
+    # --------------------------------------------------------
+    mat_ei_municipal =
+      mat_cre_parc_dir +
+      mat_cre_ti_dir +
+      mat_cre_parc_ind +
+      mat_cre_ti_ind +
+      mat_pre_parc_dir +
+      mat_pre_ti_dir +
+      mat_pre_parc_ind +
+      mat_pre_ti_ind
+  ) %>%
+  
+  # ==========================================================
+  # 5. SELECIONAR O BANCO FINAL
+  # ==========================================================
+  dplyr::select(
+    NO_MUNICIPIO,
+    NU_ANO_CENSO,
+    
+    # Matrículas gerais
+    mat_bas_tot,
+    mat_ei_tot,
+    mat_cre_tot,
+    mat_pre_tot,
+    
+    # Matrículas por etapa e rede
+    mat_cre_dir,
+    mat_cre_parc_dir,
+    mat_cre_ti_dir,
+    mat_cre_ind,
+    mat_cre_parc_ind,
+    mat_cre_ti_ind,
+    
+    mat_pre_dir,
+    mat_pre_parc_dir,
+    mat_pre_ti_dir,
+    mat_pre_ind,
+    mat_pre_parc_ind,
+    mat_pre_ti_ind,
+    
+    # Categorias agregadas
+    mat_ind_ti,
+    mat_ind_parc,
+    mat_dir_parc,
+    mat_dir_ti,
+    mat_cre_municipal,
+    mat_pre_municipal,
+    mat_ei_municipal,
+    
+    # Escolas
+    mat_ei_esc_dir,
+    mat_ei_esc_ind,
+    
+    # Atividades — direta
+    mat_ei_av_dir,
+    mat_ei_ban_dir,
+    mat_ei_jog_dir,
+    mat_ei_art_dir,
+    mat_ei_4_dir,
+    mat_ei_s4_dir,
+    
+    # Atividades — indireta
+    mat_ei_av_ind,
+    mat_ei_ban_ind,
+    mat_ei_jog_ind,
+    mat_ei_art_ind,
+    mat_ei_4_ind,
+    mat_ei_s4_ind,
+    
+    # Docentes
+    doc_tur_cre_dir,
+    doc_tur_cre_ind,
+    doc_tur_pre_dir,
+    doc_tur_pre_ind) %>%
+  
+  dplyr::arrange(NU_ANO_CENSO)
+
+#matrículas_distrito_SaoPaulo
+
+tabela_matriculas_distrito <-
+  saopaulocapital_fl %>%
+  
+  dplyr::select(
+    ano = NU_ANO_CENSO,
+    CO_DISTRITO,
+    NO_DISTRITO,
+    mat_cre_ti_dir,
+    mat_cre_dir,
+    mat_pre_ti_dir,
+    mat_pre_dir,
+    mat_cre_ti_ind,
+    mat_cre_ind,
+    mat_pre_ti_ind,
+    mat_pre_ind,
+    
+      # Matrículas de escolas por rede
+  mat_ei_esc_dir,
+  mat_ei_esc_ind,
+  
+  # Matrículas de atividades - rede direta
+  mat_ei_av_dir,
+  mat_ei_ban_dir,
+  mat_ei_jog_dir,
+  mat_ei_art_dir,
+  mat_ei_4_dir,
+  mat_ei_s4_dir,
+  
+  # Matrículas de atividades - rede indireta
+  mat_ei_av_ind,
+  mat_ei_ban_ind,
+  mat_ei_jog_ind,
+  mat_ei_art_ind,
+  mat_ei_4_ind,
+  mat_ei_s4_ind,
+  
+  # Docentes
+  doc_tur_cre_dir,
+  doc_tur_cre_ind,
+  doc_tur_pre_dir,
+  doc_tur_pre_ind,
+  
+  # Bolsa Família
+  fonte_bf,
+  qtd_bf_creche_antigo,
+  qtd_bf_creche_0a3,
+  qtd_bf_pre_4a6
+    
+  ) %>%
+  
+  dplyr::mutate(
+    dplyr::across(
+      dplyr::starts_with("mat_"),
+      ~ tidyr::replace_na(.x, 0)
+    )
+  )  %>%
+  
+  # ==========================================================
+  # 1. MATRÍCULAS POR JORNADA
+  # ==========================================================
+  
+  dplyr::mutate(
+    
+    # Creche direta - jornada parcial
+    mat_cre_parc_dir =
+      mat_cre_dir - mat_cre_ti_dir,
+    
+    # Pré-escola direta - jornada parcial
+    mat_pre_parc_dir =
+      mat_pre_dir - mat_pre_ti_dir,
+    
+    # Creche indireta - jornada parcial
+    mat_cre_parc_ind =
+      mat_cre_ind - mat_cre_ti_ind,
+    
+    # Pré-escola indireta - jornada parcial
+    mat_pre_parc_ind =
+      mat_pre_ind - mat_pre_ti_ind
+  ) %>%
+  
+  # ==========================================================
+  # 2. CATEGORIAS AGREGADAS
+  # ==========================================================
+  
+  dplyr::mutate(
+    
+    # 5. Rede indireta de Educação Infantil - jornada integral
+    mat_ind_ti =
+      mat_cre_ti_ind +
+      mat_pre_ti_ind,
+    
+    # 6. Rede indireta de Educação Infantil - jornada parcial
+    mat_ind_parc =
+      mat_cre_parc_ind +
+      mat_pre_parc_ind,
+    
+    # 7. Rede direta de Educação Infantil - jornada parcial
+    mat_dir_parc =
+      mat_cre_parc_dir +
+      mat_pre_parc_dir,
+    
+    # 8. Rede direta de Educação Infantil - jornada integral
+    mat_dir_ti =
+      mat_cre_ti_dir +
+      mat_pre_ti_dir,
+    
+    # 9. Creche em oferta municipal
+    mat_cre_municipal =
+      mat_cre_parc_dir +
+      mat_cre_ti_dir +
+      mat_cre_parc_ind +
+      mat_cre_ti_ind,
+    
+    # 10. Pré-escola em oferta municipal
+    mat_pre_municipal =
+      mat_pre_parc_dir +
+      mat_pre_ti_dir +
+      mat_pre_parc_ind +
+      mat_pre_ti_ind,
+    
+    # 11. Educação Infantil em oferta municipal
+    mat_ei_municipal =
+      mat_cre_parc_dir +
+      mat_cre_ti_dir +
+      mat_cre_parc_ind +
+      mat_cre_ti_ind +
+      mat_pre_parc_dir +
+      mat_pre_ti_dir +
+      mat_pre_parc_ind +
+      mat_pre_ti_ind
+  ) %>%
+  
+  # ==========================================================
+  # 3. SELEÇÃO DA TABELA FINAL
+  # ==========================================================
+  
+  dplyr::select(
+    ano,
+    CO_DISTRITO,
+    NO_DISTRITO,
+    
+    # Matrículas por etapa, rede e jornada
+    mat_cre_ti_dir,
+    mat_cre_parc_dir,
+    mat_pre_ti_dir,
+    mat_pre_parc_dir,
+    mat_cre_ti_ind,
+    mat_cre_parc_ind,
+    mat_pre_ti_ind,
+    mat_pre_parc_ind,
+    
+      # Agregados por etapa
+    mat_cre_municipal,
+    mat_pre_municipal,
+    mat_ei_municipal,
+    
+          # Matrículas de escolas por rede
+  mat_ei_esc_dir,
+  mat_ei_esc_ind,
+  
+  # Matrículas de atividades - rede direta
+  mat_ei_av_dir,
+  mat_ei_ban_dir,
+  mat_ei_jog_dir,
+  mat_ei_art_dir,
+  mat_ei_4_dir,
+  mat_ei_s4_dir,
+  
+  # Matrículas de atividades - rede indireta
+  mat_ei_av_ind,
+  mat_ei_ban_ind,
+  mat_ei_jog_ind,
+  mat_ei_art_ind,
+  mat_ei_4_ind,
+  mat_ei_s4_ind,
+  
+  # Docentes
+  doc_tur_cre_dir,
+  doc_tur_cre_ind,
+  doc_tur_pre_dir,
+  doc_tur_pre_ind,
+  
+  # Bolsa Família
+  fonte_bf,
+  qtd_bf_creche_antigo,
+  qtd_bf_creche_0a3,
+  qtd_bf_pre_4a6  ) %>%
+  
+  dplyr::arrange(
+    NO_DISTRITO,
+    ano
+  )
+
+
+# ------------------------------------------------------------
+# 4. Conferir o resultado
+# ------------------------------------------------------------
+
+tabela_matriculas_distrito
+
+#------------------------------------------------------------
+# 5. Incluir uma linha por ano para São Paulo toda. Serve para verificação
+
+# Criar as linhas agregadas para São Paulo Toda
+sp_toda <-
+  tabela_matriculas_distrito %>%
+  dplyr::group_by(ano) %>%
+  dplyr::summarise(
+    CO_DISTRITO = 0,
+    NO_DISTRITO = "São Paulo Toda",
+    dplyr::across(
+      dplyr::starts_with("mat_"),
+      ~ sum(.x, na.rm = TRUE)
+    ),
+    .groups = "drop"
+  )
+
+# Acrescentar as linhas à tabela original
+tabela_matriculas_distrito <-
+  tabela_matriculas_distrito %>%
+  dplyr::bind_rows(sp_toda) %>%
+  dplyr::arrange(
+    CO_DISTRITO,
+    ano
+  )
+
+
+# TESTE DE NAS
+tabela_matriculas_distrito |>
+  dplyr::summarise(
+    dplyr::across(
+      dplyr::everything(),
+      ~ sum(is.na(.))
+    )
+  )
+
+```
+
+O município de São Paulo ofertou **`r format(resumosp$mat_ei_tot[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** matrículas na educação infantil em 2025, isso representa **`r round(resumosp$mat_ei_tot[resumosp$NU_ANO_CENSO == "2025"] / resumosp$mat_bas_tot[resumosp$NU_ANO_CENSO == "2025"] * 100, 1)`%** do total de matrículas da educação básica oferecidas pela rede municipal.
+
+Desse total, **`r format(resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** eram matrículas na creche para crianças de 0 a 3 anos e **`r format(resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** eram vagas de pré-escola, ou como nomeia a rede municipal, infantil integrado, matrículas de crianças de 4 e 5 anos. 
+
+Este é o resultado de evolução na oferta de educação para a primeira infância, em especial, para a creche. Entre 2016 e 2025, foram criadas **`r format(resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2025"] - resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2016"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** de creche na capital paulista. No mesmo período, as vagas em pré-escola tiveram redução de **`r resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2025"] - resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2016"]`**.
+
+## Provisão
+A oferta de pré-escola, de ensino obrigatório, e de creche, etapa não obrigatória, tem características distintas na capital. Enquanto a pré-escola é oferecida majoritariamente na rede direta **(`r round((resumosp$mat_pre_dir[resumosp$NU_ANO_CENSO == "2025"] / resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2025"]) * 100, 1)`%)**, já a creche tem **`r round((1- resumosp$mat_cre_dir[resumosp$NU_ANO_CENSO == "2025"] / resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2025"]) * 100, 1)`%** de suas matrículas em unidades conveniadas com o poder público. 
+
+## Jornada
+
+A **jornada integral é o padrão na oferta de vagas públicas em creche** na cidade de São Paulo, tanto na rede direta como na rede conveniada. Em números de 2025, eram `r format(resumosp$mat_cre_ti_dir[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)` matrículas em tempo integral na rede direta e `r format(resumosp$mat_cre_ti_ind[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)` vagas de tempo integral na rede indireta. 
+Isso significa que apenas `r format(resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2025"] - resumosp$mat_cre_ti_dir[resumosp$NU_ANO_CENSO == "2025"] - resumosp$mat_cre_ti_ind[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)` eram de tempo parcial, uma opção de jornada oferecida aos pais no momento da matrícula.  
+
+```{r grafico-evolucao-pre, echo=FALSE}
+# ============================================================
+# EVOLUÇÃO DAS MATRÍCULAS NA PRÉ-ESCOLA
+# SÃO PAULO — 2016 A 2025
+# ============================================================
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(scales)
+
+
+# ============================================================
+# 1. Preparar os dados a partir de capitais_FL
+# ============================================================
+
+evolucao_pre_sp <- capitais_FL %>%
+  
+  # Garantir que o ano seja numérico
+  mutate(
+    NU_ANO_CENSO = as.numeric(NU_ANO_CENSO)
+  ) %>%
+  
+  # Selecionar São Paulo e os anos de interesse
+  filter(
+    NO_MUNICIPIO == "São Paulo",
+    NU_ANO_CENSO %in% 2016:2025
+  ) %>%
+  
+  # Agrupar por ano
+  group_by(NU_ANO_CENSO) %>%
+  
+  # Somar as matrículas
+  summarise(
+    mat_pre_dir = sum(mat_pre_dir, na.rm = TRUE),
+    mat_pre_ind = sum(mat_pre_ind, na.rm = TRUE),
+    mat_pre_ti_dir = sum(mat_pre_ti_dir, na.rm = TRUE),
+    mat_pre_ti_ind = sum(mat_pre_ti_ind, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  
+  # Calcular matrículas de tempo parcial
+  mutate(
+    mat_pre_parc_dir = mat_pre_dir - mat_pre_ti_dir,
+    mat_pre_parc_ind = mat_pre_ind - mat_pre_ti_ind
+  ) %>%
+  
+  # Manter apenas as quatro categorias do gráfico
+  select(
+    NU_ANO_CENSO,
+    mat_pre_ti_dir,
+    mat_pre_ti_ind,
+    mat_pre_parc_dir,
+    mat_pre_parc_ind
+  ) %>%
+  
+  # Transformar a tabela para formato longo
+  pivot_longer(
+    cols = -NU_ANO_CENSO,
+    names_to = "tipo_matricula",
+    values_to = "matriculas"
+  ) %>%
+  
+  # Criar as classificações de provisão e jornada
+  mutate(
+    provisao = case_when(
+      tipo_matricula %in% c(
+        "mat_pre_ti_dir",
+        "mat_pre_parc_dir"
+      ) ~ "Direta",
+      
+      tipo_matricula %in% c(
+        "mat_pre_ti_ind",
+        "mat_pre_parc_ind"
+      ) ~ "Indireta"
+    ),
+    
+    jornada = case_when(
+      tipo_matricula %in% c(
+        "mat_pre_ti_dir",
+        "mat_pre_ti_ind"
+      ) ~ "Tempo integral",
+      
+      tipo_matricula %in% c(
+        "mat_pre_parc_dir",
+        "mat_pre_parc_ind"
+      ) ~ "Tempo parcial"
+    )
+  )
+
+
+# ============================================================
+# 2. Gráfico
+# ============================================================
+
+ggplot(
+  evolucao_pre_sp,
+  aes(
+    x = NU_ANO_CENSO,
+    y = matriculas,
+    group = tipo_matricula,
+    color = provisao,
+    linetype = jornada
+  )
+) +
+  
+  geom_line(linewidth = 1) +
+  
+  scale_x_continuous(
+    breaks = 2016:2025
+  ) +
+  
+  scale_y_continuous(
+    labels = scales::label_number(
+      big.mark = ".",
+      decimal.mark = ",",
+      accuracy = 1
+    )
+  ) +
+  
+  scale_color_manual(
+    values = c(
+      "Direta" = "#1F77B4",
+      "Indireta" = "#D95F02"
+    )
+  ) +
+  
+  scale_linetype_manual(
+    values = c(
+      "Tempo integral" = "solid",
+      "Tempo parcial" = "dashed"
+    )
+  ) +
+  
+  labs(
+    title = "Evolução das matrículas na pré-escola",
+    subtitle = "São Paulo, 2016–2025",
+    x = "Ano",
+    y = "Número de matrículas",
+    color = "Forma de provisão",
+    linetype = "Jornada"
+  ) +
+  
+  theme_minimal() +
+  
+  theme(
+    legend.position = "bottom",
+    plot.title = element_text(face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+
+```
+
+Já na **pré-escola, a vaga pública de tempo parcial é o tipo de jornada mais comum** na rede. Apenas `r round(((resumosp$mat_pre_ti_dir[resumosp$NU_ANO_CENSO == "2025"] + resumosp$mat_pre_ti_ind[resumosp$NU_ANO_CENSO == "2025"]) / resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2025"]) * 100, 1)`% das matrículas estão no tempo integral, isto é, `r format(resumosp$mat_pre_ti_dir[resumosp$NU_ANO_CENSO == "2025"] + resumosp$mat_pre_ti_ind[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)` do total, sendo a maior parte em unidades da rede conveniada. Como mostra a figura abaixo '@ref(fig:grafico-evolucao-pre).
+
+## Proporção docentes por turma 
+
+As unidades da rede direta têm em média maior proporção de docentes por turma que a rede conveniada. Isso ocorre tanto na creche quanto na pré-escola. 
+
+Enquanto nas creches conveniadas a média de docentes por turma é de **`r format(resumosp$doc_tur_cre_ind[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`**, nas creches da rede municipal direta a proporção é de **`r format(resumosp$doc_tur_cre_dir[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`**, praticamente o dobro.
+
+Na pré-escola o mesmo fenômeno se repete. A média de docente por turma de pré-escola conveniada é de **`r format(resumosp$doc_tur_pre_ind[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`**, diante da média de **`r format(resumosp$doc_tur_pre_dir[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** em escolas da rede municipal direta.
+
+## Qualidade da infraestrutura
+```{r infrasp}
+# infrasp2025 <- capitais_FL %>%
+# filter (NU_ANO_CENSO == 2025, NOMUNICIPIO == "São Paulo") %>%
+
+```
+
+
+
+
+# Oferta de creches por distrito
+
+Ainda que a oferta de creches seja majoritariamente dada pela rede conveniada, a distribuição muda conforme os distritos da cidade de São Paulo. 
+
+Como é possível visualizar na tabela a seguir, organizada pelo % de participação
+
+```{r Panorama creches por distrito}
+
+library(dplyr)
+
+names(saopaulocapital_fl)
+
+resumo_distritos_2025 <- saopaulocapital_fl %>%
+  filter(NU_ANO_CENSO == 2025) %>%
+  select(
+    NO_DISTRITO,
+    mat_cre_dir,
+    mat_cre_ind,
+    mat_cre_tot,
+    doc_tur_cre_dir,
+    doc_tur_cre_ind,
+    doc_tur_pre_dir,
+    doc_tur_pre_ind,
+    mat_pre_dir,
+    mat_pre_ind,
+    mat_pre_tot
+  ) %>%
+  mutate(
+    part_ind_cre_tot = mat_cre_ind / mat_cre_tot,
+    part_ind_pre_tot = mat_pre_ind / mat_pre_tot
+  ) %>%
+  select(
+    NO_DISTRITO,
+    mat_cre_dir,
+    mat_cre_ind,
+    mat_cre_tot,
+    part_ind_cre_tot,
+    doc_tur_cre_dir,
+    doc_tur_cre_ind,
+    mat_pre_dir,
+    mat_pre_ind,
+    mat_pre_tot,
+    part_ind_pre_tot,
+    doc_tur_pre_dir,
+    doc_tur_pre_ind
+  )
+
+
+resumo_distritos_2025 %>%
+  summarise(
+    across(
+      c(
+        doc_tur_cre_dir,
+        doc_tur_cre_ind,
+        doc_tur_pre_dir,
+        doc_tur_pre_ind
+      ),
+      list(
+        minimo = ~ min(.x, na.rm = TRUE),
+        distrito_min = ~ NO_DISTRITO[which.min(.x)],
+        maximo = ~ max(.x, na.rm = TRUE),
+        distrito_max = ~ NO_DISTRITO[which.max(.x)],
+        variancia = ~ var(.x, na.rm = TRUE)
+      )
+    )
+  ) %>%
+  pivot_longer(
+    everything(),
+    names_to = c("variavel", ".value"),
+    names_pattern = "(.+)_(minimo|distrito_min|maximo|distrito_max|variancia)$"
+  )
+
+View (resumo_distritos_2025)
+
+```
+
+
+
+# Cenário geral das capitais
+```{r Evolução das Creches}
+# ============================================================
+# EVOLUÇÃO DA EDUCAÇÃO INFANTIL NAS CAPITAIS - 2016 A 2025
+# ============================================================
+# 1. Conferir as variáveis existentes
+names(capitais_FL)
+# 2. Criar tabela de evolução
+# ============================================================
+
+evolucao_capitais_FL <- capitais_FL %>%
+  
+  # Manter somente os anos de interesse
+  filter(NU_ANO_CENSO %in% c(2016, 2025)) %>%
+  
+  filter(NO_MUNICIPIO != "Brasília") %>%
+  
+  # Manter as variáveis necessárias
+  select(
+    NO_MUNICIPIO,
+    NU_ANO_CENSO,
+    mat_cre_dir,
+    mat_cre_ind,
+    mat_cre_tot
+  ) %>%
+  
+  # Transformar 2016 e 2025 em colunas
+  pivot_wider(
+    names_from = NU_ANO_CENSO,
+    values_from = c(
+      mat_cre_dir,
+      mat_cre_ind,
+      mat_cre_tot
+    ),
+    names_sep = "_"
+  ) %>%
+  
+  # Calcular os indicadores
+  mutate(
+    
+    # --------------------------------------------------------
+    # CRECHE DIRETA
+    # --------------------------------------------------------
+    
+    evol_mat_cre_dir = mat_cre_dir_2025 / mat_cre_dir_2016,
+    
+    dif_mat_cre_dir = mat_cre_dir_2025 - mat_cre_dir_2016,
+    
+    mat_cre_dir_2025 = mat_cre_dir_2025,
+    
+    
+    # --------------------------------------------------------
+    # CRECHE INDIRETA
+    # --------------------------------------------------------
+    
+    evol_mat_cre_ind = mat_cre_ind_2025 / mat_cre_ind_2016,
+    
+    dif_mat_cre_ind = mat_cre_ind_2025 - mat_cre_ind_2016,
+    
+    mat_cre_ind_2025 = mat_cre_ind_2025,
+    
+    
+    # --------------------------------------------------------
+    # CRECHE TOTAL
+    # --------------------------------------------------------
+    
+    mat_cre_tot_2025 = mat_cre_tot_2025,
+    
+    evol_mat_cre_tot = mat_cre_tot_2025 / mat_cre_tot_2016,
+    
+    part_ind_cre_tot = mat_cre_ind_2025 /  mat_cre_tot_2025
+  ) %>%
+  
+  # ----------------------------------------------------------
+  # Selecionar e ordenar as colunas finais
+  # ----------------------------------------------------------
+  
+  select(
+    NO_MUNICIPIO,
+    
+    mat_cre_tot_2025,
+    evol_mat_cre_tot,
+    part_ind_cre_tot,
+    
+    evol_mat_cre_dir,
+    dif_mat_cre_dir,
+    evol_mat_cre_ind,
+    mat_cre_ind_2025
+      )
+
+
+```
+
+## Cenário das creches nas capitais
+
+A partir
+
+As capitais com maior evolução na criação de vagas em creches de oferta pública.
+
+
+```{r participação das conveniadas nas capitais, echo=FALSE}
+
+
+# ============================================================
+# 3. Gráfico de participação da rede conveniada na oferta de creche
+# ============================================================
+
+library(dplyr)
+library(ggplot2)
+
+ggplot(
+  evolucao_capitais_FL,
+  aes(
+    x = reorder(NO_MUNICIPIO, part_ind_cre_tot),
+    y = part_ind_cre_tot
+  )
+) +
+geom_col() +
+  geom_text(
+    aes(
+      label = percent(part_ind_cre_tot, accuracy = 1)
+    ),
+    hjust = -0.1
+  ) +
+  coord_flip() +
+  scale_y_continuous(
+    labels = percent_format(accuracy = 1),
+    expand = expansion(mult = c(0, 0.1))
+  ) +
+  labs(
+    title = "Participação da rede conveniada na oferta municipal de creche",
+    x = "Capital",
+    y = "Participação da rede indireta"
+  ) +
+  theme_minimal()
+
+```
+
+Blend de rede direta e indireta.
+
+Avanço entre 2016 e 2025 nas redes diretas. Avanço nas redes indiretas
+
+Cobertura das capitais
+
+```{r}
+
+```

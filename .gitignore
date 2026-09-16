@@ -1,0 +1,13 @@
+# R session / workspace artifacts (regenerable, machine-specific)
+.RData
+.RDataTmp
+.RDataTmp1
+.Rhistory
+.Rproj.user/
+
+# Knitted report outputs (regenerate from the .Rmd sources)
+*.html
+
+# OS/editor cruft
+.DS_Store
+Thumbs.db
