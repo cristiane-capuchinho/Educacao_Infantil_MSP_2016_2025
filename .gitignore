@@ -1,13 +1,13 @@
-# R session / workspace artifacts (regenerable, machine-specific)
-.RData
-.RDataTmp
-.RDataTmp1
-.Rhistory
-.Rproj.user/
+# Only the files needed to reproduce and read the
+# "Financiamento da Educação Infantil em São Paulo" report are tracked.
+# Everything else is ignored by default.
 
-# Knitted report outputs (regenerate from the .Rmd sources)
-*.html
-
-# OS/editor cruft
-.DS_Store
-Thumbs.db
+*
+!*/
+!/.gitignore
+!/README.md
+!/Data/basedadosexecucaoconsolidados_0326.csv
+!/Data/BRIDI (2026) NT_Disoc_124_Receitas_vinculadas_educacao1_2007_2024.ods
+!/Data/tabelas_analiticas_2015_2025_v2.xlsx
+!/Outputs/092026 - Financiamento da Educação Infantil em São Paulo.Rmd
+!/Outputs/092026---Financiamento-da-Educação-Infantil-em-São-Paulo.html

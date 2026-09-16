@@ -11,15 +11,18 @@ infantil de 2016 a 2025?
 
 ## Estrutura do repositório
 
-- `Data/` — bases de dados originais (execução orçamentária da PMSP, receitas
-  vinculadas à educação, matrículas do Censo Escolar).
-- `Scripts/` — scripts e relatórios R Markdown de exploração e preparação dos
-  dados.
-- `Outputs/` — relatório final em R Markdown (`.Rmd`) com a análise de
-  financiamento da Educação Infantil.
-- `Setup_dados_orcamentarios_SP.R` — script auxiliar de preparação da base
-  orçamentária.
-- `tabela_custos.xlsx` — tabela de apoio com os custos por matrícula.
+Este repositório contém apenas os arquivos necessários para reproduzir e ler
+o relatório "Financiamento da Educação Infantil em São Paulo":
+
+- `Outputs/092026 - Financiamento da Educação Infantil em São Paulo.Rmd` —
+  script R Markdown com a análise completa.
+- `Outputs/092026---Financiamento-da-Educação-Infantil-em-São-Paulo.html` —
+  relatório já processado (HTML), pronto para leitura sem precisar rodar o R.
+- `Data/basedadosexecucaoconsolidados_0326.csv` — execução orçamentária da
+  PMSP.
+- `Data/BRIDI (2026) NT_Disoc_124_Receitas_vinculadas_educacao1_2007_2024.ods`
+  — receitas vinculadas à educação.
+- `Data/tabelas_analiticas_2015_2025_v2.xlsx` — matrículas do Censo Escolar.
 
 ## Principais fontes de dados
 
