@@ -23,6 +23,8 @@ o relatório "Financiamento da Educação Infantil em São Paulo":
 - `Data/BRIDI (2026) NT_Disoc_124_Receitas_vinculadas_educacao1_2007_2024.ods`
   — receitas vinculadas à educação.
 - `Data/tabelas_analiticas_2015_2025_v2.xlsx` — matrículas do Censo Escolar.
+- `Data/distrito_municipal_geosampa_18082026.gpkg` — malha dos distritos
+  municipais (GeoSampa), usada nos mapas por distrito.
 
 ## Principais fontes de dados
 
@@ -30,6 +32,7 @@ o relatório "Financiamento da Educação Infantil em São Paulo":
   Planejamento e Eficiência).
 - Receitas vinculadas à educação (Bridi et al., 2026, via Ipea).
 - Censo Escolar da Educação Básica (Inep).
+- Malha de distritos municipais (GeoSampa).
 - IPCA (Ipeadata), usado para atualizar valores monetários a preços de
   dezembro de 2025.
 
