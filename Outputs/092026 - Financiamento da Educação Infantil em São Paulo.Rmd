@@ -1337,7 +1337,7 @@ top5_infra_4itens <- head(ranking_infra_4itens_2025, 5)
 bottom5_infra_4itens <- tail(ranking_infra_4itens_2025, 5) %>% arrange(percentual_4itens)
 ```
 
-Os cinco distritos com maior proporção de matrículas de Educação Infantil em unidades com todos os itens de infraestrutura em 2025 são `r knitr::combine_words(top5_infra_4itens$NO_DISTRITO, and = " e ")`, com o total de suas matrículas de pré-escola em unidades que ofertam o tempo integral. 
+Os cinco distritos com maior proporção de matrículas de Educação Infantil em unidades com todos os itens de infraestrutura em 2025 são `r knitr::combine_words(top5_infra_4itens$NO_DISTRITO, and = " e ")`, com percentuais entre `r percent(min(top5_infra_4itens$percentual_4itens), accuracy = 0.01, decimal.mark = ",")` e `r percent(max(top5_infra_4itens$percentual_4itens), accuracy = 0.01, decimal.mark = ",")`. 
 
 Na outra ponta, os cinco distritos com menor proporção são `r knitr::combine_words(bottom5_infra_4itens$NO_DISTRITO, and = " e ")`, com percentuais entre `r percent(min(bottom5_infra_4itens$percentual_4itens), accuracy = 0.01, decimal.mark = ",")` e `r percent(max(bottom5_infra_4itens$percentual_4itens), accuracy = 0.01, decimal.mark = ",")`.
 
@@ -2658,6 +2658,8 @@ dados_grafico_modalidade_ei <- dadosfunedu_16_25 %>%
 
 Os gastos classificados na subfunção Educação Infantil não permitem diferenciar recursos usados para financiar a creche ou a pré-escola, sendo que apenas a última é obrigatória. 
 
+### 6.1 Metodologia de reconstrução de gastos por fase da educação infantil e tipo de provisão
+
 Com o objetivo de reconstruir gastos por fase da educação infantil e tipo de provisão, a decisão foi por fazer uma reconstrução a partir da classificação orçamentária. Assim, foram identificados diferentes projetos atividades que poderiam ser reclassificados em função da fase da educação infantil, do tipo de provisão e do tipo de gasto (custeio ou investimento). A partir dos 127 Projetos Atividades com valores liquidados registrados entre 2016 e 2025, foi realizada uma seleção conforme sua descrição, a análise dos PPAs e, quando necessário, a busca por decretos e detalhamento no site da Prefeitura de São Paulo.
 
 Assim, foram selecionados 26 projetos atividades:
@@ -2707,6 +2709,8 @@ As 26 ações orçamentárias destacadas foram classificadas em nove tipos de cu
 É preciso chamar a atenção para o fato de que os custos não incluem gastos com alimentação escolar. Isso porque o registro reúne custos de merenda escolar de todas as etapas de ensino e tipos de jornada, impossibilitando a ponderação desses custos sem uma análise aprofundada da forma como são realizados os repasses e as ofertas de merenda em todas as etapas e modalidades ofertadas pela rede. 
 
 Essa reclassificação foi cotejada com os gastos registrados pela prefeitura na subfunção “Educação Infantil” e foram recompostos gastos equivalentes a entre 99,91% e 100% do gasto, conforme os diferentes anos. A diferença se dá pela escolha metodológica de não contabilizar recursos usados em no projeto-atividade: “Programa Bolsa Infância”. O Programa Bolsa Infância, vigente entre 2019 e 2021, não entrou na recomposição de custos por considerarmos que este programa de transferência de recursos para famílias na fila da creche não constitui gastos com oferta de educação infantil.
+
+### 6.2 Ponderação de matrículas em tempo integral e parcial
 
 Em relação aos diferentes tipos de jornada, os dados de execução de recursos municipais não possuem descritores que permitam separar gastos realizados com matrículas da educação infantil em tempo integral ou em tempo parcial. Ao olhar o país, uma das dificuldades é a heterogeneidade de períodos para matrículas de tempo integral.
 
@@ -2950,6 +2954,12 @@ tabela_custos <- valores_custos_componentes %>%
   ) %>%
   select(custo, Ds_SubFuncao, all_of(as.character(2016:2025)))
 ```
+
+### 6.3 Limitações das estimativas
+
+A reconstrução do gasto por matrícula a partir das ações orçamentárias apresenta limitações que devem ser consideradas na interpretação dos resultados. Na rede direta, as ações utilizadas agregam despesas de profissionais com diferentes formações, remunerações e momentos da carreira, sem permitir identificar como esses custos se distribuem entre unidades, distritos, etapas ou jornadas. Dessa forma, a estimativa baseada em valores médios não captura diferenças na composição e nas características do corpo docente, dimensão relevante para a qualidade da oferta educacional, nem permite observar possíveis desigualdades de gasto associadas à etapa, à jornada ou à localização das unidades.
+
+Na rede indireta, por sua vez, a ação orçamentária que reúne os repasses para a manutenção da Educação Infantil na rede parceira não discrimina os diferentes arranjos de parceria existentes. Não é possível, por exemplo, distinguir unidades em que o município arca com despesas de aluguel daquelas que funcionam em imóveis cedidos ou disponibilizados pelas próprias instituições. Essas diferenças podem implicar custos e condições de infraestrutura distintos, mas permanecem agregadas na ação orçamentária e, portanto, não são capturadas pela estimativa. Assim, os valores reconstruídos permitem comparar a magnitude e a distribuição do gasto entre diferentes tipos de oferta, mas não devem ser interpretados como medidas exatas do custo de provisão de cada matrícula.
 
 A tabela a seguir confere, ano a ano, qual a proporção do gasto liquidado na subfunção Educação Infantil que foi efetivamente recomposta pelos nove tipos de custo descritos acima. A diferença corresponde, sobretudo, ao Programa Bolsa Primeira Infância, deliberadamente excluído da reconstituição.
 
@@ -3314,7 +3324,7 @@ validacao_custo_matricula %>%
   kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
 ```
 
-## Desigualdades territoriais no gasto por matrícula
+### 6.4 Desigualdades territoriais no gasto por matrícula
 
 A partir dos valores gastos por tipo de matrícula ofertada nos diferentes distritos de São Paulo, é possível estimar um valor médio de gasto por aluno da educação infantil por distrito e por ano. O objetivo é criar um indicador comparativo do esforço de gasto feito pela Prefeitura nos 96 territórios da cidade, dadas as diferentes decisões de provisão e de jornada.
 
