@@ -641,7 +641,7 @@ tabela_matriculas_distrito |>
 
 A pesquisa analisa a evolução dos gastos públicos com Educação Infantil no município de São Paulo entre 2016 e 2025, relacionando a execução orçamentária às matrículas da rede municipal. A análise combina dados de execução orçamentária da Prefeitura Municipal de São Paulo (PMSP) e dados de matrículas do Censo Escolar, considerando como unidades de análise o ano e, em uma etapa específica, os distritos municipais.
 
-Também foram usados dados de receita municipal referentes ao período de 2016 a 2024 foram obtidos na base disponibilizada no repositório do Ipea (Instituto de Pesquisa Econômica Aplicada), elaborada por pesquisadores que realizaram a harmonização de informações provenientes de diferentes fontes, entre elas o Sistema de Informações sobre Orçamentos Públicos em Educação (Siope), a Declaração de Contas Anuais das Finanças do Brasil (Finbra), dados da Secretaria do Tesouro Nacional (STN) e do Fundo Nacional de Desenvolvimento da Educação (FNDE) (Bridi et al, 2026).
+Também foram usados dados de receita municipal referentes ao período de 2016 a 2024 obtidos na base disponibilizada no repositório do Ipea (Instituto de Pesquisa Econômica Aplicada), que harmoniza informações provenientes de diferentes fontes, entre elas o Sistema de Informações sobre Orçamentos Públicos em Educação (Siope), a Declaração de Contas Anuais das Finanças do Brasil (Finbra), dados da Secretaria do Tesouro Nacional (STN) e do Fundo Nacional de Desenvolvimento da Educação (FNDE) (Bridi et al, 2026).
 
 Os dados de gasto municipal foram obtidos no portal da Secretaria Municipal de Planejamento e Eficiência da Prefeitura de São Paulo, com acesso realizado em abril de 2026. Para a análise, foram considerados valores liquidados. A escolha desta etapa de empenho busca mapear o gasto efetivo no momento em que a despesa é reconhecida como obrigação. Os valores empenhados apesar de representarem um compromisso de ação do Estado podem não se concretizar, tendo valores estimados e incertos. Já os valores pagos registram a saída efetiva de recursos do caixa, mas podem acontecer em momento posterior ao serviço prestado.
 
@@ -680,11 +680,9 @@ Desse total, **`r format(resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2025"], 
 
 Este é o resultado de evolução na oferta de educação para a primeira infância, em especial, para a creche. Entre 2016 e 2025, foram criadas **`r format(resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2025"] - resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2016"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** de creche na capital paulista. No mesmo período, as vagas em pré-escola tiveram redução de **`r format(resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2025"] - resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2016"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`**.
 
-## Taxas de cobertura e de atendimento municipal
-
 O gráfico a seguir mostra, de 2016 a 2025, a evolução das taxas de cobertura de creche e pré-escola calculadas pelo Inep, que consideram toda a oferta no município, pública e privada, sem convênio.
 
-```{r grafico-taxas-cobertura-atendimento, echo=FALSE, include=TRUE}
+```{r grafico-taxas-cobertura-atendimento, echo=FALSE, include=TRUE, fig.width=10, fig.height=6.5, out.width="100%"}
 # ============================================================
 # EVOLUÇÃO DAS TAXAS DE COBERTURA E DE ATENDIMENTO MUNICIPAL
 # CRECHE E PRÉ-ESCOLA — SÃO PAULO, 2016 A 2025
@@ -851,7 +849,7 @@ A **jornada integral é o padrão na oferta de vagas públicas em creche** na ci
 Isso significa que apenas `r format(resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2025"] - resumosp$mat_cre_ti_dir[resumosp$NU_ANO_CENSO == "2025"] - resumosp$mat_cre_ti_ind[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)` eram de tempo parcial, uma opção de jornada oferecida aos pais no momento da matrícula.
 
 
-```{r grafico-evolucao-pre, echo=FALSE, include=TRUE}
+```{r grafico-evolucao-pre, echo=FALSE, include=TRUE, fig.width=10, fig.height=6.5, out.width="100%"}
 # ============================================================
 # EVOLUÇÃO DAS MATRÍCULAS NA PRÉ-ESCOLA
 # SÃO PAULO — 2016 A 2025
@@ -1236,7 +1234,7 @@ knitr::kable(
 
 As rede direta e indireta apresentam padrões distintos de infraestrutura, tanto em 2019 quanto em 2025, como mostra o gráfico a seguir.
 
-```{r grafico-infra-ei, echo=FALSE, include=TRUE}
+```{r grafico-infra-ei, echo=FALSE, include=TRUE, fig.width=10, fig.height=6.5, out.width="100%"}
 library(tidyr)
 library(ggplot2)
 library(scales)
@@ -1488,7 +1486,7 @@ knitr::kable(
   kableExtra::column_spec(1:3, extra_css = "padding: 6px 14px;")
 ```
 
-```{r grafico-gastos-educ, echo=FALSE, include=TRUE}
+```{r grafico-gastos-educ, echo=FALSE, include=TRUE, fig.width=10, fig.height=6.5, out.width="100%"}
 library(dplyr)
 library(tidyr)
 library(ggplot2)
@@ -1548,7 +1546,7 @@ ggplot(
   )
 ```
 
-## 4.2 Fontes de receitas
+### 4.1 Fontes de receitas
 
 ```{r tabela-fonte-ano, echo=FALSE, include=FALSE}
 library(dplyr)
@@ -1621,7 +1619,7 @@ Ao analisar as fontes dos recursos gastos em educação no município de São Pa
 
 O gráfico a seguir mostra a evolução do gasto liquidado por fonte de recursos, em valores absolutos.
 
-```{r grafico-fonte-ano, echo=FALSE, include=TRUE}
+```{r grafico-fonte-ano, echo=FALSE, include=TRUE, fig.width=10, fig.height=6.5, out.width="100%"}
 library(dplyr)
 library(ggplot2)
 library(scales)
@@ -1668,12 +1666,13 @@ ggplot(
     breaks = 2016:2025
   ) +
   labs(
-    title = "Evolução do gasto liquidado por fonte de recursos",
+    title = "Evolução do gasto liquidado\npor fonte de recursos",
     subtitle = "São Paulo, 2016–2025 — valores atualizados pelo IPCA (dez/2025)",
     x = "Ano",
     y = "Valor liquidado (R$ milhões)",
     color = "Fonte"
   ) +
+  guides(color = guide_legend(nrow = 2, byrow = TRUE)) +
   theme_minimal() +
   theme(
     legend.position = "bottom",
@@ -1681,6 +1680,8 @@ ggplot(
     axis.text.x = element_text(angle = 45, hjust = 1)
   )
 ```
+
+### 4.1.1 Participação das Fontes de Receitas
 
 São Paulo sustenta grande parte de seu gasto educacional com receitas próprias vinculadas. Essa baixa dependência do Fundeb segue, como aponta Nota Técnica de Pereira, Machado e Minarelli (2026), um padrão próprio de grandes cidades, com alta capacidade de financiamento por impostos próprios, como o IPTU e o ISS. 
 
@@ -1777,7 +1778,7 @@ O maior percentual de participação do Fundo Constitucional ocorreu em `r ano_m
 
 Tal característica reduz a influência direta das regras do fundo sobre a composição do gasto educacional como um todo e, ao mesmo tempo, preserva maior margem de decisão do município na alocação dos recursos vinculados à educação. Desse modo, ainda que o Fundeb estabeleça regras específicas para a aplicação dos recursos, inclusive com o objetivo de assegurar uma parcela significativa dos gastos com pessoal, seus efeitos sobre a trajetória do orçamento educacional paulistano são condicionados pela elevada capacidade de arrecadação do município.
 
-#### 4.2.1 Evolução de receitas do Fundeb
+### 4.1.2 Evolução de receitas do Fundeb
 
 Como é possível perceber pela composição de fontes, a implementação do Fundeb Permanente não alterou esse cenário. Ainda que a complementação da União ao fundo tenha sido ampliada, os recursos suplementares com fim de aumentar a equidade do financiamento em educação não beneficiam o município de São Paulo. Assim, a única complementação a que o município pode ter acesso é aquela ligada aos seus resultados (Complementação VAAR). No entanto, quando recebe em 2024, o valor é pouco representativo em relação ao todo dos recursos redistribuídos no Fundo. 
 
@@ -1838,7 +1839,9 @@ knitr::kable(
   kableExtra::row_spec(nrow(tabela_variacao_fundo_constitucional), bold = TRUE)
 ```
 
-É importante deixar claro que o repasse realizado pelo Fundo ao município de São Paulo cresceu no período, no entanto esse crescimento foi menos importante que o aumento de outras receitas.
+É importante deixar claro que os repasses do Fundeb, ligados diretamente ao número de matrículas ofertadas, tiveram crescimento ao longo do período mas em menor proporção em relação ao restante das outras fontes de receita. 
+
+O aumento total dos recursos do Fundeb foi de `r percent(variacao_periodo_fundo, accuracy = 0.1)`, saindo de `r format(round(variacao_fundo_constitucional$Vl_Liquidado_ipca[variacao_fundo_constitucional$ano == 2016] / 1e9, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)` bilhões em 2016 para `r format(round(variacao_fundo_constitucional$Vl_Liquidado_ipca[variacao_fundo_constitucional$ano == 2024] / 1e9, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)` bi em 2024.
 
 A tabela a seguir compara essa variação com a variação anual do gasto liquidado somando as demais fontes de recursos (excluído o Fundo Constitucional da Educação), permitindo observar se o Fundo Constitucional da Educação acompanha, supera ou fica abaixo da trajetória geral do gasto nas demais fontes.
 
@@ -1912,6 +1915,8 @@ knitr::kable(
   kableExtra::row_spec(nrow(tabela_comparacao_variacao_fundo_total), bold = TRUE)
 ```
 
+O aumento total dos recursos das demais fontes foi de `r percent(variacao_periodo_total, accuracy = 0.1)`, saindo de `r format(round(variacao_total_fontes$Vl_Liquidado_ipca[variacao_total_fontes$ano == 2016] / 1e9, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)` bilhões em 2016 para `r format(round(variacao_total_fontes$Vl_Liquidado_ipca[variacao_total_fontes$ano == 2024] / 1e9, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)` bi em 2024.
+
 A composição da receita do Fundeb pode ser decomposta em transferências e complementações da União, detalhadas ano a ano na tabela abaixo.
 
 ```{r tabela-composicao-fundeb, echo=FALSE, include=TRUE}
@@ -1919,14 +1924,21 @@ library(dplyr)
 library(knitr)
 library(kableExtra)
 
-tabela_composicao_fundeb <- receitas_pmsp_ipca %>%
+composicao_fundeb_raw <- receitas_pmsp_ipca %>%
   filter(ano >= 2016, ano <= 2024) %>%
   select(
     ano,
     transf_fundeb_ipca,
     compl_vaar_ipca
   ) %>%
-  arrange(ano) %>%
+  arrange(ano)
+
+# Complementação VAAR em 2024 e sua participação no total recebido pelo Fundeb
+vaar_2024 <- composicao_fundeb_raw$compl_vaar_ipca[composicao_fundeb_raw$ano == 2024]
+transf_fundeb_2024 <- composicao_fundeb_raw$transf_fundeb_ipca[composicao_fundeb_raw$ano == 2024]
+vaar_2024_pct <- vaar_2024 / (vaar_2024 + transf_fundeb_2024) * 100
+
+tabela_composicao_fundeb <- composicao_fundeb_raw %>%
   mutate(
     across(
       -ano,
@@ -1949,6 +1961,9 @@ knitr::kable(
   ) %>%
   kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
 ```
+
+Vale destacar que, com as novas regras do Fundeb permanente, no ano de 2024 a capital recebe uma complementação federal graças às regras da complementação por resultado (VAAR). O montante da **complementação VAAR** recebida pelo município de São Paulo em 2024 é pequeno em relação ao valor geral. São **R$ `r format(round(vaar_2024 / 1e6, 1), big.mark = ".", decimal.mark = ",", nsmall = 1, scientific = FALSE)` milhões*, o equivalente a `r format(round(vaar_2024_pct, 1), big.mark = ".", decimal.mark = ",", nsmall = 1, scientific = FALSE)`% de todo o recurso recebido.
+
 
 ```{r verificacao-fundeb-vs-gasto, echo=FALSE, include=FALSE}
 library(dplyr)
@@ -2007,7 +2022,11 @@ knitr::kable(
   kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
 ```
 
-## Evolução de receitas do Salário-Educação
+### 4.1.3 Evolução de receitas do Salário-Educação
+
+No período analisado, outra fonte de financiamento da educação básica sofreu importante alteração institucional. O salário-educação trata-se de uma contribuição social recolhida das empresas em âmbito federal e que são redistribuídos entre União, estados e municípios. Até 2023, a distribuição dessas cotas combinava a arrecadação de cada unidade da federação com o número de matrículas na educação básica da rede pública: primeiro, os recursos eram apropriados de acordo com a origem da arrecadação e, posteriormente, redistribuídos entre os municípios de cada estado segundo suas matrículas. Tal mecanismo fazia com que a capacidade de arrecadação de cada estado condicionasse o volume de recursos posteriormente disponível para seus municípios, produzindo diferenças expressivas na receita per capita do salário-educação entre as unidades da federação.
+
+Essa forma de partilha foi alterada em decorrência de uma controvérsia jurídica iniciada em 2009 e encerrada pelo Supremo Tribunal Federal em 2022. A decisão determinou que, a partir de 2024, a totalidade das cotas destinadas a estados e municípios passasse a ser destinada conforme o número de matrículas na educação básica pública, conforme previsto pela Emenda Constitucional nº 53/2006. A mudança deslocou o critério de distribuição da origem estadual da arrecadação para uma lógica nacional baseada na matrícula, conferindo ao salário-educação maior caráter redistributivo.
 
 A tabela a seguir mostra a receita do Salário-Educação em relação à receita total vinculada à Educação, ano a ano.
 
@@ -2016,14 +2035,22 @@ library(dplyr)
 library(knitr)
 library(kableExtra)
 
-tabela_composicao_salario_educacao <- receitas_pmsp_ipca %>%
+composicao_salario_raw <- receitas_pmsp_ipca %>%
   filter(ano >= 2016, ano <= 2024) %>%
   select(
     ano,
     sal_educ_ipca,
     rectot_educ_ipca
   ) %>%
-  arrange(ano) %>%
+  arrange(ano)
+
+# Queda do Salário-Educação entre 2023 e 2024, em valor absoluto e percentual
+sal_educ_2023 <- composicao_salario_raw$sal_educ_ipca[composicao_salario_raw$ano == 2023]
+sal_educ_2024 <- composicao_salario_raw$sal_educ_ipca[composicao_salario_raw$ano == 2024]
+queda_sal_educ_valor <- sal_educ_2023 - sal_educ_2024
+queda_sal_educ_pct <- queda_sal_educ_valor / sal_educ_2023 * 100
+
+tabela_composicao_salario_educacao <- composicao_salario_raw %>%
   mutate(
     percentual = sal_educ_ipca / rectot_educ_ipca
   ) %>%
@@ -2049,9 +2076,11 @@ knitr::kable(
   ) %>%
   kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
 ```
-## Evolução da participação da Educação Infantil nas despesas de educação
+Para o município de São Paulo, a mudança implicou perda da vantagem relacionada à elevada arrecadação do estado de São Paulo. A mudança é observada nos dados de 2024, que indicam queda de **`r format(round(queda_sal_educ_valor / 1e6, 1), big.mark = ".", decimal.mark = ",", nsmall = 1, scientific = FALSE)` milhões** em relação ao ano anterior, o equivalente a uma queda de **`r format(round(queda_sal_educ_pct, 1), big.mark = ".", decimal.mark = ",", nsmall = 1, scientific = FALSE)`%**.
 
-A tabela a seguir detalha, para cada subfunção do gasto em Educação, o valor liquidado (em milhões de R$) e a participação percentual no total de cada ano, entre 2018 e 2025, ordenadas da subfunção com maior gasto acumulado no período para a de menor gasto.
+## 4.2 Evolução da participação da Educação Infantil nas despesas de educação
+
+A tabela a seguir detalha, para cada subfunção do gasto em Educação, o valor liquidado (em milhões de R$) e a participação percentual no total de cada ano, entre 2018 e 2025, ordenadas da subfunção com maior gasto acumulado no período para a de menor gasto. São detalhadas individualmente as subfunções até Educação Especial; as demais são somadas na linha "Outras subfunções".
 
 ```{r tabela-subfuncao-ano, echo=FALSE, include=TRUE}
 library(dplyr)
@@ -2060,7 +2089,7 @@ library(scales)
 library(knitr)
 library(kableExtra)
 
-tabela_subfuncao_ano <- dadosfunedu_16_25 %>%
+tabela_subfuncao_base <- dadosfunedu_16_25 %>%
   # Restringir o período de análise a 2018-2025
   filter(Cd_Exercicio >= 2018) %>%
   # Soma do gasto por subfunção e ano
@@ -2088,24 +2117,49 @@ tabela_subfuncao_ano <- dadosfunedu_16_25 %>%
     percentual = Vl_Liquidado_ipca /
       sum(Vl_Liquidado_ipca, na.rm = TRUE)
   ) %>%
-  ungroup() %>%
+  ungroup()
+
+# Ordem das subfunções pelo gasto acumulado no período (maior para menor)
+ordem_subfuncoes <- tabela_subfuncao_base %>%
+  distinct(Ds_SubFuncao, total_periodo) %>%
+  arrange(desc(total_periodo)) %>%
+  pull(Ds_SubFuncao)
+
+# Detalhar individualmente até "Educação Especial"; agrupar as demais em "Outras subfunções"
+posicao_educ_especial <- which(ordem_subfuncoes == "Educação Especial")
+subfuncoes_detalhadas <- ordem_subfuncoes[1:posicao_educ_especial]
+ordem_final <- c(subfuncoes_detalhadas, "Outras subfunções")
+
+tabela_subfuncao_ano <- tabela_subfuncao_base %>%
+  mutate(
+    Ds_SubFuncao = if_else(
+      Ds_SubFuncao %in% subfuncoes_detalhadas,
+      Ds_SubFuncao,
+      "Outras subfunções"
+    )
+  ) %>%
+
+  # Somar os valores e percentuais das subfunções agrupadas em "Outras subfunções"
+  group_by(Ds_SubFuncao, Cd_Exercicio) %>%
+  summarise(
+    Vl_Liquidado_ipca = sum(Vl_Liquidado_ipca, na.rm = TRUE),
+    percentual = sum(percentual, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
 
   # Transformar os anos em colunas
   pivot_wider(
-    id_cols = c(Ds_SubFuncao, total_periodo),
+    id_cols = Ds_SubFuncao,
     names_from = Cd_Exercicio,
     values_from = c(Vl_Liquidado_ipca, percentual),
     values_fill = 0,
     names_glue = "{Cd_Exercicio}_{.value}"
   ) %>%
 
-  # Ordenar do maior para o menor gasto acumulado em 2018-2025
-  arrange(desc(total_periodo)) %>%
-
-  # Retirar a coluna usada apenas para ordenar
-  select(
-    -total_periodo
-  ) %>%
+  # Ordenar pela mesma ordem de gasto acumulado, com "Outras subfunções" por último
+  mutate(Ds_SubFuncao = factor(Ds_SubFuncao, levels = ordem_final)) %>%
+  arrange(Ds_SubFuncao) %>%
+  mutate(Ds_SubFuncao = as.character(Ds_SubFuncao)) %>%
 
   # Organizar as colunas: valor, %, valor, %...
   select(
@@ -2158,12 +2212,82 @@ tabela_subfuncao_ano %>%
     full_width = FALSE
   ) %>%
   kableExtra::column_spec(1, bold = TRUE) %>%
-  kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
+  kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;") %>%
+  kableExtra::row_spec(nrow(tabela_subfuncao_ano), bold = TRUE)
 ```
+
+```{r analise-tabela-subfuncao, echo=FALSE, include=FALSE}
+# Seleciona os valores necessários para a análise textual da tabela.
+dados_analise_subfuncoes <- tabela_subfuncao_base %>%
+  filter(
+    Ds_SubFuncao %in% c(
+      "Educação Infantil",
+      "Ensino Fundamental",
+      "Previdência Básica"
+    )
+  )
+
+valor_subfuncao <- function(subfuncao, ano) {
+  dados_analise_subfuncoes %>%
+    filter(Ds_SubFuncao == subfuncao, Cd_Exercicio == ano) %>%
+    pull(Vl_Liquidado_ipca)
+}
+
+percentual_subfuncao <- function(subfuncao, ano) {
+  dados_analise_subfuncoes %>%
+    filter(Ds_SubFuncao == subfuncao, Cd_Exercicio == ano) %>%
+    pull(percentual)
+}
+
+gasto_ei_2018 <- valor_subfuncao("Educação Infantil", 2018)
+gasto_ei_2022 <- valor_subfuncao("Educação Infantil", 2022)
+gasto_ei_2024 <- valor_subfuncao("Educação Infantil", 2024)
+gasto_ei_2025 <- valor_subfuncao("Educação Infantil", 2025)
+
+percentual_ei_2018 <- percentual_subfuncao("Educação Infantil", 2018)
+percentual_ei_2022 <- percentual_subfuncao("Educação Infantil", 2022)
+percentual_ei_2024 <- percentual_subfuncao("Educação Infantil", 2024)
+percentual_ei_2025 <- percentual_subfuncao("Educação Infantil", 2025)
+
+gasto_fundamental_2018 <- valor_subfuncao("Ensino Fundamental", 2018)
+gasto_fundamental_2025 <- valor_subfuncao("Ensino Fundamental", 2025)
+percentual_fundamental_2018 <- percentual_subfuncao("Ensino Fundamental", 2018)
+percentual_fundamental_2025 <- percentual_subfuncao("Ensino Fundamental", 2025)
+
+percentual_previdencia_2024 <- percentual_subfuncao("Previdência Básica", 2024)
+percentual_previdencia_2025 <- percentual_subfuncao("Previdência Básica", 2025)
+
+crescimento_ei <- gasto_ei_2025 / gasto_ei_2018 - 1
+crescimento_fundamental <- gasto_fundamental_2025 / gasto_fundamental_2018 - 1
+
+formatar_bilhoes <- function(valor) {
+  scales::number(
+    valor / 1000000000,
+    accuracy = 0.01,
+    decimal.mark = ",",
+    big.mark = "."
+  )
+}
+
+formatar_percentual <- function(valor) {
+  scales::percent(valor, accuracy = 0.1, decimal.mark = ",")
+}
+
+formatar_variacao <- function(valor) {
+  paste0(
+    scales::number(valor * 100, accuracy = 0.1, decimal.mark = ","),
+    "%"
+  )
+}
+```
+
+A Educação Infantil foi a principal subfunção do gasto educacional em todos os anos analisados. O valor liquidado passou de R$ **`r formatar_bilhoes(gasto_ei_2018)`** bilhões, em 2018, para R$ **`r formatar_bilhoes(gasto_ei_2025)`** bilhões, em 2025, um crescimento real de **`r formatar_variacao(crescimento_ei)`**. Sua participação no total, contudo, não cresceu de forma contínua: aumentou de **`r formatar_percentual(percentual_ei_2018)`**, em 2018, para o pico de **`r formatar_percentual(percentual_ei_2022)`**, em 2022, quando o gasto alcançou R$ **`r formatar_bilhoes(gasto_ei_2022)`** bilhões. Depois disso, a participação recuou para **`r formatar_percentual(percentual_ei_2024)`** em 2024 e **`r formatar_percentual(percentual_ei_2025)`** em 2025, embora a Educação Infantil tenha permanecido como a subfunção de maior volume de recursos, à frente do Ensino Fundamental.
+
+A trajetória revela uma mudança importante na composição interna das despesas educacionais. Enquanto o gasto com Educação Infantil cresceu em termos reais, o Ensino Fundamental passou de R$ **`r formatar_bilhoes(gasto_fundamental_2018)`** bilhões, em 2018, para R$ **`r formatar_bilhoes(gasto_fundamental_2025)`** bilhões, em 2025, com redução de sua participação de **`r formatar_percentual(percentual_fundamental_2018)`** para **`r formatar_percentual(percentual_fundamental_2025)`** e crescimento real de **`r formatar_variacao(crescimento_fundamental)`**. A queda relativa da Educação Infantil em 2024 e 2025 deve ser interpretada com cautela, pois coincide com o surgimento da subfunção Previdência Básica, que respondeu por **`r formatar_percentual(percentual_previdencia_2024)`** e **`r formatar_percentual(percentual_previdencia_2025)`** do total nesses anos. Portanto, o recuo da participação percentual da Educação Infantil reflete alterações na classificação do gasto total.
 
 O gráfico a seguir destaca a trajetória do gasto liquidado em Educação Infantil, em valores absolutos, em contraste com as demais subfunções, apresentadas em cores suaves para evidenciar se a Educação Infantil ganhou ou perdeu espaço relativo no período. O período considerado é 2018 a 2025, evitando os anos de 2016 e 2017, em que parte do gasto com educação infantil ficava registrada na subfunção Educação Básica.
 
-```{r grafico-participacao-educ-infantil, echo=FALSE, include=TRUE}
+```{r grafico-participacao-educ-infantil, echo=FALSE, include=TRUE, fig.width=10, fig.height=6.5, out.width="100%"}
 library(dplyr)
 library(ggplot2)
 library(scales)
@@ -2309,14 +2433,17 @@ ggplot(
   coord_cartesian(clip = "off") +
 
   labs(
-    title = "Gasto liquidado em Educação Infantil, em contraste com as demais subfunções",
+    title = "Gasto liquidado em Educação Infantil,\nem contraste com as demais subfunções",
     subtitle = "São Paulo, 2018–2025 — valores atualizados pelo IPCA (dez/2025)",
     x = "Ano",
     y = "R$ milhões",
     color = NULL
   ) +
 
-  guides(linewidth = "none") +
+  guides(
+    linewidth = "none",
+    color = guide_legend(nrow = 2, byrow = TRUE)
+  ) +
 
   theme_minimal() +
 
@@ -2335,11 +2462,10 @@ Nesses anos, dentro da subfunção Educação Infantil temos apenas gastos com a
 Já para os anos de 2018 a 2025, a subfunção educação infantil parece agregar todos os custos com esta etapa de ensino. Sem diferenciar, no entanto, gastos com creche ou com pré-escola.
 
 
-
 ## 5. Gasta-se com o quê
 
 Os gráficos a seguir exploram a evolução do gasto liquidado em Educação por grupo de natureza de despesa e por modalidade de aplicação, entre 2016 e 2025, com valores atualizados pelo IPCA a dezembro de 2025.
-```{r grafico-grupo-ano, echo=FALSE, include=TRUE}
+```{r grafico-grupo-ano, echo=FALSE, include=TRUE, fig.width=10, fig.height=6.5, out.width="100%"}
 # ============================================================
 # EVOLUÇÃO DO GASTO LIQUIDADO POR GRUPO DE NATUREZA DE DESPESA
 # ============================================================
@@ -2382,12 +2508,13 @@ ggplot(
     breaks = 2016:2025
   ) +
   labs(
-    title = "Evolução do gasto liquidado em Educação por grupo de natureza de despesa",
+    title = "Evolução do gasto liquidado em Educação\npor grupo de natureza de despesa",
     subtitle = "São Paulo, 2016–2025 — valores atualizados pelo IPCA (dez/2025)",
     x = "Ano",
     y = "Valor liquidado (R$ milhões)",
     color = "Grupo de natureza de despesa"
   ) +
+  guides(color = guide_legend(nrow = 2, byrow = TRUE)) +
   theme_minimal() +
   theme(
     legend.position = "bottom",
@@ -2398,7 +2525,7 @@ ggplot(
 
 ### 5.1 Qual a modalidade de aplicação do gasto em EI
 
-```{r grafico-modalidade-ano, echo=FALSE, include=TRUE}
+```{r grafico-modalidade-ano, echo=FALSE, include=TRUE, fig.width=10, fig.height=6.5, out.width="100%"}
 # ============================================================
 # EVOLUÇÃO DO GASTO LIQUIDADO POR MODALIDADE DE APLICAÇÃO
 # ============================================================
@@ -2441,12 +2568,13 @@ ggplot(
     breaks = 2016:2025
   ) +
   labs(
-    title = "Evolução do gasto liquidado em Educação por modalidade de aplicação",
+    title = "Evolução do gasto liquidado em Educação\npor modalidade de aplicação",
     subtitle = "São Paulo, 2016–2025 — valores atualizados pelo IPCA (dez/2025)",
     x = "Ano",
     y = "Valor liquidado (R$ milhões)",
     color = "Modalidade de aplicação"
   ) +
+  guides(color = guide_legend(nrow = 2, byrow = TRUE)) +
   theme_minimal() +
   theme(
     legend.position = "bottom",
@@ -3281,7 +3409,7 @@ amplitude_dist_por_ano %>%
   kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
 ```
 
-```{r grafico-desigualdade-distrito, echo=FALSE, include=TRUE}
+```{r grafico-desigualdade-distrito, echo=FALSE, include=TRUE, fig.width=10, fig.height=6.5, out.width="100%"}
 library(dplyr)
 library(tidyr)
 library(ggplot2)
@@ -3319,7 +3447,7 @@ ggplot(
     )
   ) +
   labs(
-    title = "Desigualdade territorial no valor por matrícula de Educação Infantil",
+    title = "Desigualdade territorial no valor por matrícula\nde Educação Infantil",
     subtitle = "São Paulo, 2018–2025 — distritos com maior e menor valor médio por matrícula",
     x = "Ano",
     y = "Valor por matrícula (R$)",
@@ -3333,7 +3461,7 @@ ggplot(
   )
 ```
 
-A tabela a seguir lista, a cada ano, os cinco distritos com maior e os cinco com menor valor médio por matrícula.
+A tabela a seguir lista, para o início e o fim da série (2018 e 2025), os cinco distritos com maior e os cinco com menor valor médio por matrícula.
 
 ```{r extremos-distrito-tabela, echo=FALSE, include=TRUE}
 library(dplyr)
@@ -3342,7 +3470,7 @@ library(knitr)
 library(kableExtra)
 
 extremos_por_ano <- custo_medio_ei_distrito %>%
-  filter(!is.na(valor_medio_aluno), CO_DISTRITO != 0) %>%
+  filter(!is.na(valor_medio_aluno), CO_DISTRITO != 0, ano %in% c(2018, 2025)) %>%
   group_by(ano) %>%
   mutate(
     posicao_maior = min_rank(desc(valor_medio_aluno)),
@@ -3371,7 +3499,7 @@ extremos_por_ano %>%
   knitr::kable(
     format = "html",
     align = c("c", "c", "c", "l", "r"),
-    caption = "Cinco distritos com maior e cinco com menor valor médio por matrícula de Educação Infantil, por ano — São Paulo, 2018–2025"
+    caption = "Cinco distritos com maior e cinco com menor valor médio por matrícula de Educação Infantil — São Paulo, 2018 e 2025"
   ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
@@ -3477,4 +3605,4 @@ ggplot(mapa_custo_medio_2025) +
 
 
 
-As informações foram analisadas e validadas por Cristiane Capuchinho. As bases de dados foram feitas por Anderson Henrique e Cristiane Capuchinho.
+As informações foram analisadas e validadas por Cristiane Capuchinho. As bases de dados foram organizadas e tratadas por Anderson Henrique e Cristiane Capuchinho.
