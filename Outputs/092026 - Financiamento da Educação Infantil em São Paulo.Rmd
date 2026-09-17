@@ -1413,9 +1413,29 @@ ggplot(mapa_infra_4itens_2025) +
   )
 ```
 
-## 4.1 Evolução dos gastos em Educação da PMSP
+## 4. Evolução dos gastos em Educação da PMSP
 
-A tabela e o gráfico a seguir comparam, ano a ano, o valor liquidado na função Educação pela Prefeitura de São Paulo com o total de receitas vinculadas à Educação, ambos atualizados pelo IPCA para dezembro de 2025.
+```{r crescimento-gasto-educ, echo=FALSE, include=FALSE}
+library(dplyr)
+
+gasto_educ_pmsp <- dadosfunedu_16_25 %>%
+  group_by(ano = Cd_Exercicio) %>%
+  summarise(
+    gasto_liquidado_ipca = sum(Vl_Liquidado_ipca, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+crescimento_gasto_educ_pct <- (
+  gasto_educ_pmsp$gasto_liquidado_ipca[gasto_educ_pmsp$ano == 2025] /
+    gasto_educ_pmsp$gasto_liquidado_ipca[gasto_educ_pmsp$ano == 2016] - 1
+) * 100
+```
+
+A ampliação da oferta de educação infantil e a expansão da jornada na pré-escola são concomitantes com um período de aumento de gastos com educação no município de São Paulo. Entre 2016 e 2025, os recursos liquidados na Função Educação cresceram `r round(crescimento_gasto_educ_pct, 2)`%, já descontada a inflação no período.
+
+Essa trajetória de aumento de gastos é paralela ao crescimento dos valores vinculados constitucionalmente à educação, o que mostra uma expansão de gasto relacionada ao aumento de receita total do município.
+
+A tabela e o gráfico a seguir comparam, ano a ano, o valor liquidado na função Educação pela Prefeitura de São Paulo com o total de receitas vinculadas à Educação.
 
 ```{r tabela-gastos-educ, echo=FALSE, include=TRUE}
 library(dplyr)
@@ -1427,13 +1447,7 @@ library(scales)
 # EVOLUÇÃO DOS GASTOS E RECEITAS DE EDUCAÇÃO — PMSP
 # ============================================================
 
-# 1. Gasto liquidado em Educação, por ano (dadosfunedu_16_25)
-gasto_educ_pmsp <- dadosfunedu_16_25 %>%
-  group_by(ano = Cd_Exercicio) %>%
-  summarise(
-    gasto_liquidado_ipca = sum(Vl_Liquidado_ipca, na.rm = TRUE),
-    .groups = "drop"
-  )
+# 1. Gasto liquidado em Educação, por ano (dadosfunedu_16_25) — já calculado em gasto_educ_pmsp
 
 # 2. Receita total vinculada à Educação, 2016 a 2024 (receitas_pmsp_ipca)
 receita_educ_pmsp <- receitas_pmsp_ipca %>%
@@ -1603,6 +1617,8 @@ knitr::kable(
   kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
 ```
 
+Ao analisar as fontes dos recursos gastos em educação no município de São Paulo, revela-se que o financiamento educacional na capital paulista é marcado pela baixa relevância relativa dos recursos redistribuídos do Fundeb em relação ao total das receitas educacionais do município. 
+
 O gráfico a seguir mostra a evolução do gasto liquidado por fonte de recursos, em valores absolutos.
 
 ```{r grafico-fonte-ano, echo=FALSE, include=TRUE}
@@ -1620,6 +1636,15 @@ dados_grafico_fonte <- dadosfunedu_16_25 %>%
   group_by(Ds_Fonte) %>%
   filter(any(Vl_Liquidado_ipca != 0)) %>%
   ungroup()
+
+ordem_fontes <- dados_grafico_fonte %>%
+  group_by(Ds_Fonte) %>%
+  summarise(total = sum(Vl_Liquidado_ipca, na.rm = TRUE), .groups = "drop") %>%
+  arrange(desc(total)) %>%
+  pull(Ds_Fonte)
+
+dados_grafico_fonte <- dados_grafico_fonte %>%
+  mutate(Ds_Fonte = factor(Ds_Fonte, levels = ordem_fontes))
 
 ggplot(
   dados_grafico_fonte,
@@ -1656,6 +1681,8 @@ ggplot(
     axis.text.x = element_text(angle = 45, hjust = 1)
   )
 ```
+
+São Paulo sustenta grande parte de seu gasto educacional com receitas próprias vinculadas. Essa baixa dependência do Fundeb segue, como aponta Nota Técnica de Pereira, Machado e Minarelli (2026), um padrão próprio de grandes cidades, com alta capacidade de financiamento por impostos próprios, como o IPTU e o ISS. 
 
 A tabela a seguir isola a participação percentual de cada fonte de recursos no gasto liquidado em Educação, ano a ano. A linha do Fundo Constitucional da Educação está sublinhada para destacar sua trajetória.
 
@@ -1729,9 +1756,30 @@ knitr::kable(
     linha_fundo_constitucional,
     extra_css = "text-decoration: underline;"
   )
+
+# Encontrar máximo, mínimo e média (a partir dos valores numéricos, antes da formatação em %)
+
+fundo_constitucional <- tabela_fonte_percentual_base %>%
+  filter(Ds_Fonte == "Fundo Constitucional da Educação") %>%
+  arrange(Cd_Exercicio)
+
+percentuais <- fundo_constitucional$percentual * 100
+anos <- fundo_constitucional$Cd_Exercicio
+
+ano_maior <- anos[which.max(percentuais)]
+ano_menor <- anos[which.min(percentuais)]
+media_percentual <- mean(percentuais, na.rm = TRUE)
+
+
 ```
 
-## Evolução de receitas do Fundeb
+O maior percentual de participação do Fundo Constitucional ocorreu em `r ano_maior`, com `r round(max(percentuais, na.rm = TRUE), 2)`%. O menor ocorreu em `r ano_menor`, com `r round(min(percentuais, na.rm = TRUE), 2)`%. No período, a média foi de `r round(media_percentual, 2)`%.
+
+Tal característica reduz a influência direta das regras do fundo sobre a composição do gasto educacional como um todo e, ao mesmo tempo, preserva maior margem de decisão do município na alocação dos recursos vinculados à educação. Desse modo, ainda que o Fundeb estabeleça regras específicas para a aplicação dos recursos, inclusive com o objetivo de assegurar uma parcela significativa dos gastos com pessoal, seus efeitos sobre a trajetória do orçamento educacional paulistano são condicionados pela elevada capacidade de arrecadação do município.
+
+#### 4.2.1 Evolução de receitas do Fundeb
+
+Como é possível perceber pela composição de fontes, a implementação do Fundeb Permanente não alterou esse cenário. Ainda que a complementação da União ao fundo tenha sido ampliada, os recursos suplementares com fim de aumentar a equidade do financiamento em educação não beneficiam o município de São Paulo. Assim, a única complementação a que o município pode ter acesso é aquela ligada aos seus resultados (Complementação VAAR). No entanto, quando recebe em 2024, o valor é pouco representativo em relação ao todo dos recursos redistribuídos no Fundo. 
 
 ```{r variacao-fundo-constitucional, echo=FALSE, include=FALSE}
 library(dplyr)
@@ -1790,7 +1838,9 @@ knitr::kable(
   kableExtra::row_spec(nrow(tabela_variacao_fundo_constitucional), bold = TRUE)
 ```
 
-A tabela a seguir compara essa variação com a variação anual do gasto liquidado somando todas as fontes de recursos, permitindo observar se o Fundo Constitucional da Educação acompanha, supera ou fica abaixo da trajetória geral do gasto em Educação.
+É importante deixar claro que o repasse realizado pelo Fundo ao município de São Paulo cresceu no período, no entanto esse crescimento foi menos importante que o aumento de outras receitas.
+
+A tabela a seguir compara essa variação com a variação anual do gasto liquidado somando as demais fontes de recursos (excluído o Fundo Constitucional da Educação), permitindo observar se o Fundo Constitucional da Educação acompanha, supera ou fica abaixo da trajetória geral do gasto nas demais fontes.
 
 ```{r comparacao-variacao-fundo-total, echo=FALSE, include=TRUE}
 library(dplyr)
@@ -1799,6 +1849,7 @@ library(knitr)
 library(kableExtra)
 
 variacao_total_fontes <- dadosfunedu_16_25 %>%
+  filter(Ds_Fonte != "Fundo Constitucional da Educação") %>%
   group_by(ano = Cd_Exercicio) %>%
   summarise(
     Vl_Liquidado_ipca = sum(Vl_Liquidado_ipca, na.rm = TRUE),
@@ -1823,7 +1874,7 @@ tabela_comparacao_variacao_fundo_total <- comparacao_variacao_fundo_total %>%
     `Variação — Fundo Constitucional da Educação` = ifelse(
       is.na(variacao_fundo), "-", percent(variacao_fundo, accuracy = 0.1)
     ),
-    `Variação — Todas as fontes` = ifelse(
+    `Variação — Demais fontes` = ifelse(
       is.na(variacao_total), "-", percent(variacao_total, accuracy = 0.1)
     ),
     `Diferença (p.p.)` = ifelse(
@@ -1842,7 +1893,7 @@ tabela_comparacao_variacao_fundo_total <- tabela_comparacao_variacao_fundo_total
     tibble(
       Ano = "2016–2025",
       `Variação — Fundo Constitucional da Educação` = percent(variacao_periodo_fundo, accuracy = 0.1),
-      `Variação — Todas as fontes` = percent(variacao_periodo_total, accuracy = 0.1),
+      `Variação — Demais fontes` = percent(variacao_periodo_total, accuracy = 0.1),
       `Diferença (p.p.)` = percent(variacao_periodo_fundo - variacao_periodo_total, accuracy = 0.1)
     )
   )
@@ -1851,7 +1902,7 @@ knitr::kable(
   tabela_comparacao_variacao_fundo_total,
   format = "html",
   align = c("c", "r", "r", "r"),
-  caption = "Comparação da variação anual do gasto liquidado — Fundo Constitucional da Educação versus todas as fontes de recursos — São Paulo, 2016–2025"
+  caption = "Comparação da variação anual do gasto liquidado — Fundo Constitucional da Educação versus demais fontes de recursos — São Paulo, 2016–2025"
 ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
