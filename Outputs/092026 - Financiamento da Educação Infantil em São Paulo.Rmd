@@ -1,12 +1,17 @@
 ---
-title: "Financiamento da Educação Infantil na cidade de São Paulo"
-author: "Cris Capuchinho"
+title: "A educação infantil de oferta municipal em São Paulo"
+subtitle: "Versão preliminar Policy Brief"
+author: ""
 date: "2026-09-15"
 output:
   html_document:
     md_extensions: -tex_math_dollars
 ---
-# Pergunta de pesquisa
+# 1. Introdução
+
+
+
+## Pergunta de pesquisa e objetivos
 
 Como a cidade de São Paulo tem ofertado e financiado a expansão da educação infantil de 2016 a 2025?
 
@@ -634,9 +639,9 @@ tabela_matriculas_distrito |>
 
 ## 2. Metodologia
 
-A pesquisa analisa a evolução das receitas de educação e dos gastos públicos com Educação Infantil no município de São Paulo entre 2016 e 2025, relacionando a execução orçamentária às matrículas da rede municipal.
+A pesquisa analisa a evolução dos gastos públicos com Educação Infantil no município de São Paulo entre 2016 e 2025, relacionando a execução orçamentária às matrículas da rede municipal. A análise combina dados de execução orçamentária da Prefeitura Municipal de São Paulo (PMSP) e dados de matrículas do Censo Escolar, considerando como unidades de análise o ano e, em uma etapa específica, os distritos municipais.
 
-Os dados de receita municipal referentes ao período de 2016 a 2024 foram obtidos na base disponibilizada no repositório do Ipea (Instituto de Pesquisa Econômica Aplicada), elaborada por pesquisadores que realizaram a harmonização de informações provenientes de diferentes fontes, entre elas o Sistema de Informações sobre Orçamentos Públicos em Educação (Siope), a Declaração de Contas Anuais das Finanças do Brasil (Finbra), dados da Secretaria do Tesouro Nacional (STN) e do Fundo Nacional de Desenvolvimento da Educação (FNDE) (Bridi et al, 2026).
+Também foram usados dados de receita municipal referentes ao período de 2016 a 2024 foram obtidos na base disponibilizada no repositório do Ipea (Instituto de Pesquisa Econômica Aplicada), elaborada por pesquisadores que realizaram a harmonização de informações provenientes de diferentes fontes, entre elas o Sistema de Informações sobre Orçamentos Públicos em Educação (Siope), a Declaração de Contas Anuais das Finanças do Brasil (Finbra), dados da Secretaria do Tesouro Nacional (STN) e do Fundo Nacional de Desenvolvimento da Educação (FNDE) (Bridi et al, 2026).
 
 Os dados de gasto municipal foram obtidos no portal da Secretaria Municipal de Planejamento e Eficiência da Prefeitura de São Paulo, com acesso realizado em abril de 2026. Para a análise, foram considerados valores liquidados. A escolha desta etapa de empenho busca mapear o gasto efetivo no momento em que a despesa é reconhecida como obrigação. Os valores empenhados apesar de representarem um compromisso de ação do Estado podem não se concretizar, tendo valores estimados e incertos. Já os valores pagos registram a saída efetiva de recursos do caixa, mas podem acontecer em momento posterior ao serviço prestado.
 
@@ -646,7 +651,25 @@ Os dados de matrículas têm como fonte o Censo Escolar da Educação Básica, r
 
 O tratamento dos dados buscou identificar, para cada ano analisado, as instituições privadas que declararam manter parceria com o poder público e especificaram a rede municipal como parceira, seja exclusivamente, seja em conjunto com a rede estadual. Assim, foram incluídas as matrículas dessas unidades nos cálculos, inclusive nos casos em que a instituição declarava manter simultaneamente parcerias com as redes municipal e estadual. A opção de incluir matrículas em unidades com parceria com dois níveis de federação é consistente com a repartição constitucional de responsabilidades na educação básica, segundo a qual a educação infantil constitui área de atuação prioritária dos municípios. 
 
-Assim, o trabalho usa de maneira abrangente as matrículas de educação infantil vinculadas à oferta municipal, independentemente de a instituição responsável pela oferta ser pública ou privada.
+### 2.1 Tratamento de dados
+
+A base de execução orçamentária contém informações sobre função, subfunção, programa, projeto/atividade, natureza da despesa e valores orçamentários. Foram utilizados os valores liquidados, corrigidos pelo IPCA, como medida da execução do gasto. A identificação das despesas de Educação Infantil foi realizada a partir da análise dos projetos e atividades orçamentários, não se restringindo às despesas diretamente classificadas na subfunção Educação Infantil. Foram excluídas linhas com valor liquidado igual a zero em todos os anos.
+
+Os projetos e atividades identificados foram agrupados em componentes de custo relacionados à oferta de Educação Infantil, incluindo remuneração de profissionais, manutenção e operação das unidades, transferências, materiais, uniformes, transporte e investimentos. Esses componentes foram associados a oito categorias de matrícula, diferenciadas por etapa (creche ou pré-escola), tipo de oferta (rede direta ou indireta) e jornada (parcial ou integral).
+
+Os dados de matrícula foram organizados por ano e distrito. As matrículas de jornada parcial foram calculadas, quando necessário, pela diferença entre o total de matrículas da modalidade e as matrículas de jornada integral. Para componentes que abrangem jornadas com diferentes durações, as matrículas foram ponderadas, atribuindo peso 1 à jornada parcial e peso 2 à jornada integral.
+
+O custo por matrícula de jornada parcial foi então obtido pela divisão do gasto total pelo número de matrículas ponderadas. E o custo por matrícula integral foi dado por duas vezes o valor do custo de jornada parcial.  
+
+Os custos por matrícula foram então relacionados às matrículas de cada categoria, ano e distrito. O gasto total calculado para cada distrito e ano corresponde à soma dos gastos atribuídos às diferentes categorias de matrícula. O custo médio por matrícula de Educação Infantil foi obtido pela razão entre esse gasto total e o número de matrículas da Educação Infantil, sem diferenciar fase da educação infantil ou jornada.
+
+Para complementar a análise, foram calculados, para cada ano, o valor mínimo, o valor máximo e a amplitude dos custos entre os distritos, além da identificação dos distritos com maiores e menores valores. 
+
+### 2.2 Ferramentas 
+
+Todo o tratamento e processamento dos dados foi realizado em R. Foram empregados procedimentos de transformação, agregação, junção e validação das bases, incluindo verificações de valores ausentes, tipos das variáveis, consistência das matrículas derivadas e correspondência entre categorias de matrícula e componentes de gasto.
+
+Assistentes virtuais baseados em inteligência artificial, especificamente GPT e Claude, foram usados como ferramenta de apoio à programação e à organização do processamento dos dados, especialmente na elaboração e depuração de códigos em R, na identificação de inconsistências e na construção de procedimentos de verificação. Todas as decisões relativas à seleção de receitas, de despesas, classificação dos componentes de custo, definição das categorias de matrícula, critérios de tratamento dos dados e interpretação dos resultados foram realizadas e validadas pelos pesquisadores.
 
 ## 3. Oferta e financiamento da educação infantil em São Paulo
 ### 3.1 Evolução da oferta
@@ -1006,7 +1029,7 @@ top5_pre_ti <- head(ranking_pre_ti_2025, 5)
 bottom5_pre_ti <- tail(ranking_pre_ti_2025, 5) %>% arrange(percentual_pre_ti)
 ```
 
-Os cinco distritos com maior proporção de matrículas de pré-escola em tempo integral em 2025 são `r knitr::combine_words(top5_pre_ti$NO_DISTRITO, and = " e ")`, com percentuais entre `r percent(min(top5_pre_ti$percentual_pre_ti), accuracy = 0.1, decimal.mark = ",")` e `r percent(max(top5_pre_ti$percentual_pre_ti), accuracy = 0.1, decimal.mark = ",")`.
+Os cinco distritos com maior proporção de matrículas de pré-escola em tempo integral em 2025 são `r knitr::combine_words(top5_pre_ti$NO_DISTRITO, and = " e ")`, com o total de seus alunos da rede municipal em unidades com tempo integral, sejam elas diretas ou indiretas.
 
 Na outra ponta, os cinco distritos com menor proporção de matrículas de pré-escola em tempo integral são `r knitr::combine_words(bottom5_pre_ti$NO_DISTRITO, and = " e ")`, com percentuais entre `r percent(min(bottom5_pre_ti$percentual_pre_ti), accuracy = 0.1, decimal.mark = ",")` e `r percent(max(bottom5_pre_ti$percentual_pre_ti), accuracy = 0.1, decimal.mark = ",")`.
 
@@ -1093,8 +1116,7 @@ ggplot(mapa_pre_ti_2025) +
   )
 ```
 
-
-### 3.4 Proporção docentes por turma 
+### 3.4 Proporção docentes por turma
 
 As unidades da rede direta têm em média maior proporção de docentes por turma que a rede conveniada. Isso ocorre tanto na creche quanto na pré-escola. 
 
@@ -1104,7 +1126,12 @@ Na pré-escola o mesmo fenômeno se repete. A média de docente por turma de pr�
 
 ### 3.5 Qualidade da infraestrutura
 
-Em relação aos atributos de infraestrutura, a análise é feita entre os anos de 2019 e 2025 por conta da disponibilidade de dados no Censo Escolar. 
+A infraestrutura é compreendida na literatura, e em documentos do Ministério da Educação, como elemento de grande importância para determinar a qualidade da oferta na educação infantil. Dentre os itens mapeados anualmente pelo Censo Escolar, selecionamos quatro elementos da infraestrutura relacionados especificamente com educação infantil ou apontados como importantes para esta fase. 
+
+Foram eles: *presença de área verde* na unidade escolar, existência de *banheiro infantil*, disponibilidade de *jogos pedagógicos* e de *material de atividades artísticas*. A partir disso, foram criadas duas categorias de unidades para casos extremos, aquelas sem nenhum dos quatro itens e aquelas com todos os quatro itens. Todas essas informações estão presentes a partir do Censo Escolar de 2019. 
+
+A análise dessas informações, como é possível observar na tabela a seguir, indica que houve melhora na infraestrutura da rede no período analisado. Contudo, é clara a maior presença de elementos identificados com a qualidade em unidades escolares da rede direta, tanto em 2019 quanto em 2025. 
+ 
 ```{r tabela-infra-ei, include=FALSE}
 library(knitr)
 library(kableExtra)
@@ -1302,7 +1329,7 @@ top5_infra_4itens <- head(ranking_infra_4itens_2025, 5)
 bottom5_infra_4itens <- tail(ranking_infra_4itens_2025, 5) %>% arrange(percentual_4itens)
 ```
 
-Os cinco distritos com maior proporção de matrículas de Educação Infantil em unidades com todos os itens de infraestrutura em 2025 são `r knitr::combine_words(top5_infra_4itens$NO_DISTRITO, and = " e ")`, com percentuais entre `r percent(min(top5_infra_4itens$percentual_4itens), accuracy = 0.1, decimal.mark = ",")` e `r percent(max(top5_infra_4itens$percentual_4itens), accuracy = 0.1, decimal.mark = ",")`.
+Os cinco distritos com maior proporção de matrículas de Educação Infantil em unidades com todos os itens de infraestrutura em 2025 são `r knitr::combine_words(top5_infra_4itens$NO_DISTRITO, and = " e ")`, com o total de suas matrículas de pré-escola em unidades que ofertam o tempo integral. 
 
 Na outra ponta, os cinco distritos com menor proporção são `r knitr::combine_words(bottom5_infra_4itens$NO_DISTRITO, and = " e ")`, com percentuais entre `r percent(min(bottom5_infra_4itens$percentual_4itens), accuracy = 0.1, decimal.mark = ",")` e `r percent(max(bottom5_infra_4itens$percentual_4itens), accuracy = 0.1, decimal.mark = ",")`.
 
