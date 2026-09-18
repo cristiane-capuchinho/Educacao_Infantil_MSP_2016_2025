@@ -155,6 +155,67 @@ dados_orc_sp_ipca %>%
 dadosfunedu_16_25 <- dados_orc_sp_ipca %>%
   filter(Cd_Funcao == '12' & Cd_Exercicio >= 2016 & Cd_Exercicio <= 2025)
 
+# Descrição do elemento de despesa (Ds_Elemento), a partir da correspondência com Cd_Elemento
+elementos_despesa <- c(
+  "01" = "APOSENTADORIAS DO RPPS, RESERVA REMUNERADA E REFORMAS DOS MILITARES",
+  "03" = "PENSÕES DO RPPS E DO MILITAR",
+  "04" = "CONTRATAÇÃO POR TEMPO DETERMINADO",
+  "07" = "CONTRIBUIÇÃO A ENTIDADES FECHADAS DE PREVIDÊNCIA",
+  "08" = "OUTROS BENEFÍCIOS ASSISTENCIAIS DO SERVIDOR E DO MILITAR",
+  "11" = "VENCIMENTOS E VANTAGENS FIXAS - PESSOAL CIVIL",
+  "13" = "OBRIGAÇÕES PATRONAIS",
+  "14" = "DIÁRIAS – CIVIL",
+  "16" = "OUTRAS DESPESAS VARIÁVEIS - PESSOAL CIVIL",
+  "21" = "JUROS SOBRE A DÍVIDA POR CONTRATO",
+  "22" = "OUTROS ENCARGOS SOBRE A DÍVIDA POR CONTRATO",
+  "30" = "MATERIAL DE CONSUMO",
+  "31" = "PREMIAÇÕES CULTURAIS, ARTÍSTICAS, CIENTÍFICAS, DESPORTIVAS E OUTRAS",
+  "32" = "MATERIAL, BEM OU SERVIÇO PARA DISTRIBUIÇÃO GRATUITA",
+  "33" = "PASSAGENS E DESPESAS COM LOCOMOÇÃO",
+  "34" = "OUTRAS DESPESAS DE PESSOAL DECORRENTES DE CONTRATOS DE TERCEIRIZAÇÃO",
+  "35" = "SERVIÇOS DE CONSULTORIA",
+  "36" = "OUTROS SERVIÇOS DE TERCEIROS - PESSOA FÍSICA",
+  "37" = "LOCAÇÃO DE MÃO-DE-OBRA",
+  "39" = "OUTROS SERVIÇOS DE TERCEIROS - PESSOA JURÍDICA",
+  "40" = "SERVIÇOS DE TECNOLOGIA DA INFORMAÇÃO E COMUNICAÇÃO - PESSOA JURÍDICA",
+  "41" = "CONTRIBUIÇÕES",
+  "43" = "SUBVENÇÕES SOCIAIS",
+  "45" = "SUBVENÇÕES ECONÔMICAS",
+  "46" = "AUXÍLIO-ALIMENTAÇÃO",
+  "47" = "OBRIGAÇÕES TRIBUTÁRIAS E CONTRIBUTIVAS",
+  "48" = "OUTROS AUXÍLIOS FINANCEIROS A PESSOAS FÍSICAS",
+  "49" = "AUXÍLIO-TRANSPORTE",
+  "51" = "OBRAS E INSTALAÇÕES",
+  "52" = "EQUIPAMENTOS E MATERIAL PERMANENTE",
+  "61" = "AQUISIÇÃO DE IMÓVEIS",
+  "62" = "AQUISIÇÃO DE PRODUTOS PARA REVENDA",
+  "65" = "CONSTITUIÇÃO OU AUMENTO DE CAPITAL DE EMPRESAS",
+  "66" = "CONCESSÃO DE EMPRÉSTIMOS E FINANCIAMENTOS",
+  "71" = "PRINCIPAL DA DÍVIDA CONTRATUAL RESGATADO",
+  "82" = "APORTE DE RECURSOS PELO PARCEIRO PÚBLICO EM FAVOR DO PARCEIRO PRIVADO DECORRENTE DE CONTRATO DE PARCERIA PÚBLICO-PRIVADA – PPP",
+  "83" = "DESPESAS DECORRENTES DE CONTRATO DE PARCERIA PÚBLICO-PRIVADA",
+  "84" = "DESP. DEC. DA PARTIC.FUNDOS, ORGAN., OU ENTID.ASSEM., NAC.E INTERNAC.",
+  "85" = "TRANSFERÊNCIAS POR MEIO DE CONTRATO DE GESTÃO",
+  "86" = "COMPENSAÇÕES A REGIMES DE PREVIDÊNCIA",
+  "91" = "SENTENÇAS JUDICIAIS",
+  "92" = "DESPESAS DE EXERCÍCIOS ANTERIORES",
+  "93" = "INDENIZAÇÕES E RESTITUIÇÕES",
+  "94" = "INDENIZAÇÕES E RESTITUIÇÕES TRABALHISTAS",
+  "96" = "RESSARCIMENTO DE DESPESAS DE PESSOAL REQUISITADO",
+  "97" = "APORTE PARA COBERTURA DO DÉFICIT ATUARIAL DO RPPS",
+  "99" = "RESERVA DE CONTINGÊNCIA"
+)
+
+dadosfunedu_16_25 <- dadosfunedu_16_25 %>%
+  mutate(
+    Ds_Elemento = unname(elementos_despesa[sprintf("%02d", as.integer(Cd_Elemento))]),
+    Ds_Elemento = stringr::str_to_sentence(Ds_Elemento),
+    # Preserva siglas (acrônimos) que a conversão para minúsculas afetaria
+    Ds_Elemento = stringr::str_replace_all(Ds_Elemento, stringr::regex("\\brpps\\b", ignore_case = TRUE), "RPPS"),
+    Ds_Elemento = stringr::str_replace_all(Ds_Elemento, stringr::regex("\\bppp\\b", ignore_case = TRUE), "PPP")
+  ) %>%
+  relocate(Ds_Elemento, .after = Cd_Elemento)
+
 # 3. Atualizar receitas da PMSP pelo IPCA para dezembro de 2025
 # (substitui o deflator próprio da base — coluna defla_ipca —, que usa outra referência)
 receitas_pmsp_ipca <- receitas_pmsp_2007_2024 %>%
@@ -1334,11 +1395,16 @@ ranking_infra_4itens_2025 <- saopaulocapital_fl %>%
 
 top5_infra_4itens <- head(ranking_infra_4itens_2025, 5)
 bottom5_infra_4itens <- tail(ranking_infra_4itens_2025, 5) %>% arrange(percentual_4itens)
+
+# Distritos sem nenhuma unidade com os quatro itens de infraestrutura
+distritos_sem_4itens <- ranking_infra_4itens_2025 %>%
+  filter(percentual_4itens == 0)
+n_distritos_sem_4itens <- nrow(distritos_sem_4itens)
 ```
 
-Os cinco distritos com maior proporção de matrículas de Educação Infantil em unidades com todos os itens de infraestrutura em 2025 são `r knitr::combine_words(top5_infra_4itens$NO_DISTRITO, and = " e ")`, com percentuais entre `r percent(min(top5_infra_4itens$percentual_4itens), accuracy = 0.01, decimal.mark = ",")` e `r percent(max(top5_infra_4itens$percentual_4itens), accuracy = 0.01, decimal.mark = ",")`. 
+Os cinco distritos com maior proporção de matrículas de Educação Infantil em unidades com todos os itens de infraestrutura em 2025 são `r knitr::combine_words(top5_infra_4itens$NO_DISTRITO, and = " e ")`, com percentuais entre `r percent(min(top5_infra_4itens$percentual_4itens), accuracy = 0.01, decimal.mark = ",")` e `r percent(max(top5_infra_4itens$percentual_4itens), accuracy = 0.01, decimal.mark = ",")`.
 
-Na outra ponta, 28 distritos não apresentaram em 2025 qualquer unidade com matrículas de oferta municipal com os quatro itens de infraestrutura, entre eles República, Liberdade, Marsilac, Barra Funda, Pinheiros.
+Na outra ponta, `r n_distritos_sem_4itens` distritos não apresentaram em 2025 qualquer unidade com matrículas de oferta municipal com os quatro itens de infraestrutura, entre eles República, Liberdade, Marsilac, Barra Funda, Pinheiros.
 
 ```{r mapa-infra-4itens-distrito-2025, echo=FALSE, include=TRUE, fig.width=10, fig.height=8, out.width="100%"}
 # ============================================================
@@ -1403,14 +1469,97 @@ mapa_infra_4itens_2025 <- distritos_geo_infra %>%
 
 ggplot(mapa_infra_4itens_2025) +
   geom_sf(aes(fill = percentual_4itens), color = "white", linewidth = 0.15) +
-  scale_fill_viridis_c(
-    option = "D",
+  scale_fill_gradient(
+    low = "#C62828",
+    high = "#2E7D32",
     labels = label_percent(decimal.mark = ","),
     na.value = "grey85"
   ) +
   labs(
     title = "Matrículas de Educação Infantil em unidades com todos os itens de infraestrutura",
     subtitle = "São Paulo, 2025 — % das matrículas (rede direta + indireta) em unidades com área verde,\nbanheiro infantil, jogos pedagógicos e material artístico",
+    fill = "% das matrículas"
+  ) +
+  theme_void() +
+  theme(
+    legend.position = "right",
+    plot.title = element_text(face = "bold")
+  )
+```
+
+O mapa a seguir mostra, para cada distrito, a proporção das matrículas de Educação Infantil (rede direta e indireta) ofertadas em unidades sem nenhum dos quatro itens de infraestrutura considerados, em 2025.
+
+```{r ranking-infra-sem4itens-distrito-2025, include=FALSE}
+library(dplyr)
+library(scales)
+
+ranking_infra_sem4itens_2025 <- saopaulocapital_fl %>%
+  filter(as.numeric(NU_ANO_CENSO) == 2025) %>%
+  mutate(
+    percentual_sem4itens = if_else(
+      mat_ei_tot > 0,
+      (coalesce(mat_ei_s4_dir, 0) + coalesce(mat_ei_s4_ind, 0)) / mat_ei_tot,
+      NA_real_
+    )
+  ) %>%
+  filter(!is.na(percentual_sem4itens)) %>%
+  select(NO_DISTRITO, percentual_sem4itens) %>%
+  arrange(desc(percentual_sem4itens))
+
+top5_infra_sem4itens <- head(ranking_infra_sem4itens_2025, 5)
+bottom5_infra_sem4itens <- tail(ranking_infra_sem4itens_2025, 5) %>% arrange(percentual_sem4itens)
+
+# Distritos sem nenhuma matrícula em unidade sem nenhum item de infraestrutura
+# (ou seja: 100% das matrículas de EI estão em unidades com pelo menos um item)
+distritos_zero_sem4itens <- ranking_infra_sem4itens_2025 %>%
+  filter(percentual_sem4itens == 0) %>%
+  arrange(NO_DISTRITO)
+n_distritos_zero_sem4itens <- nrow(distritos_zero_sem4itens)
+```
+
+Em 2025, `r n_distritos_zero_sem4itens` distritos não tinham nenhuma matrícula de Educação Infantil em unidades sem nenhum item de infraestrutura — ou seja, em todos eles, a totalidade das matrículas estava em unidades com pelo menos um dos quatro itens considerados: `r knitr::combine_words(distritos_zero_sem4itens$NO_DISTRITO, and = " e ")`.
+
+Já os cinco distritos com maior proporção de matrículas em unidades sem nenhum item de infraestrutura são `r knitr::combine_words(top5_infra_sem4itens$NO_DISTRITO, and = " e ")`, com percentuais entre `r percent(min(top5_infra_sem4itens$percentual_sem4itens), accuracy = 0.01, decimal.mark = ",")` e `r percent(max(top5_infra_sem4itens$percentual_sem4itens), accuracy = 0.01, decimal.mark = ",")`.
+
+```{r mapa-infra-sem4itens-distrito-2025, echo=FALSE, include=TRUE, fig.width=10, fig.height=8, out.width="100%"}
+# ============================================================
+# MAPA: % DAS MATRÍCULAS DE EDUCAÇÃO INFANTIL EM UNIDADES SEM
+# NENHUM ITEM DE INFRAESTRUTURA, POR DISTRITO — 2025
+# ============================================================
+# Reaproveita distritos_geo_infra, já lido e normalizado no
+# chunk mapa-infra-4itens-distrito-2025, logo acima.
+
+library(sf)
+library(dplyr)
+library(ggplot2)
+library(scales)
+
+infra_sem4itens_2025 <- saopaulocapital_fl %>%
+  filter(as.numeric(NU_ANO_CENSO) == 2025) %>%
+  mutate(
+    percentual_sem4itens = if_else(
+      mat_ei_tot > 0,
+      (coalesce(mat_ei_s4_dir, 0) + coalesce(mat_ei_s4_ind, 0)) / mat_ei_tot,
+      NA_real_
+    ),
+    nome_norm = normalizar_nome_distrito(NO_DISTRITO)
+  ) %>%
+  select(nome_norm, NO_DISTRITO, percentual_sem4itens)
+
+mapa_infra_sem4itens_2025 <- distritos_geo_infra %>%
+  left_join(infra_sem4itens_2025, by = "nome_norm")
+
+ggplot(mapa_infra_sem4itens_2025) +
+  geom_sf(aes(fill = percentual_sem4itens), color = "white", linewidth = 0.15) +
+  scale_fill_gradient(
+    low = "#2E7D32",
+    high = "#C62828",
+    labels = label_percent(decimal.mark = ","),
+    na.value = "grey85"
+  ) +
+  labs(
+    title = "Matrículas de Educação Infantil em unidades sem nenhum item de infraestrutura",
+    subtitle = "São Paulo, 2025 — % das matrículas (rede direta + indireta) em unidades sem área verde,\nbanheiro infantil, jogos pedagógicos nem material artístico",
     fill = "% das matrículas"
   ) +
   theme_void() +
@@ -2653,95 +2802,75 @@ dados_grafico_modalidade_ei <- dadosfunedu_16_25 %>%
 
 ### 5.2 Gastos com pessoal na rede direta e indireta de EI
 
-```{r tabela-rede-parceira-despesa, echo=FALSE, include=TRUE}
+```{r tabela-elemento-ei-total, echo=FALSE, include=TRUE}
 library(dplyr)
 library(tidyr)
 library(scales)
 library(knitr)
 library(kableExtra)
 
-projetos_rede_parceira <- c(
-  "Manutenção e Operação da Rede Parceira - Centro de Educação Infantil (CEI)",
-  "Operação e Manutenção de CEIs e Creches da rede conveniada e outras modalidades de parcerias"
-)
+anos_tabela_elemento <- c(2018, 2022, 2025)
 
-tabela_rede_parceira_despesa <- dadosfunedu_16_25 %>%
-  filter(Ds_Projeto_Atividade %in% projetos_rede_parceira) %>%
-  group_by(Ds_Despesa, Cd_Exercicio) %>%
+dados_elemento_ei_total <- dadosfunedu_16_25 %>%
+  filter(
+    Ds_SubFuncao == "Educação Infantil",
+    Cd_Exercicio %in% anos_tabela_elemento
+  ) %>%
+  group_by(Ds_Elemento, Cd_Exercicio) %>%
   summarise(
     Vl_Liquidado_ipca = sum(Vl_Liquidado_ipca, na.rm = TRUE),
     .groups = "drop"
   ) %>%
-  complete(Ds_Despesa, Cd_Exercicio = 2016:2025, fill = list(Vl_Liquidado_ipca = 0)) %>%
+  complete(Ds_Elemento, Cd_Exercicio = anos_tabela_elemento, fill = list(Vl_Liquidado_ipca = 0)) %>%
+  group_by(Cd_Exercicio) %>%
   mutate(
-    valor_fmt = number(
-      Vl_Liquidado_ipca / 1e6,
-      accuracy = 0.01, big.mark = ".", decimal.mark = ","
-    )
+    percentual = Vl_Liquidado_ipca / sum(Vl_Liquidado_ipca, na.rm = TRUE)
   ) %>%
-  select(Ds_Despesa, Cd_Exercicio, valor_fmt) %>%
+  ungroup()
+
+# Ordenar os elementos de despesa pela magnitude do gasto acumulado nos três anos
+ordem_elemento_ei <- dados_elemento_ei_total %>%
+  group_by(Ds_Elemento) %>%
+  summarise(total = sum(Vl_Liquidado_ipca, na.rm = TRUE), .groups = "drop") %>%
+  arrange(desc(total)) %>%
+  pull(Ds_Elemento)
+
+tabela_elemento_ei_total <- dados_elemento_ei_total %>%
+  mutate(Ds_Elemento = factor(Ds_Elemento, levels = ordem_elemento_ei)) %>%
   pivot_wider(
+    id_cols = Ds_Elemento,
     names_from = Cd_Exercicio,
-    values_from = valor_fmt
+    values_from = c(Vl_Liquidado_ipca, percentual),
+    names_glue = "{Cd_Exercicio}_{.value}"
   ) %>%
-  select(Ds_Despesa, any_of(as.character(2016:2025)))
+  arrange(Ds_Elemento) %>%
+  mutate(Ds_Elemento = as.character(Ds_Elemento)) %>%
+  select(
+    Ds_Elemento,
+    unlist(lapply(
+      as.character(anos_tabela_elemento),
+      function(ano) c(paste0(ano, "_Vl_Liquidado_ipca"), paste0(ano, "_percentual"))
+    ))
+  ) %>%
+  mutate(
+    across(
+      contains("_Vl_Liquidado_ipca"),
+      ~ number(.x / 1e6, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
+    ),
+    across(
+      contains("_percentual"),
+      ~ percent(.x, accuracy = 0.01, decimal.mark = ",")
+    )
+  )
 
 knitr::kable(
-  tabela_rede_parceira_despesa,
+  tabela_elemento_ei_total,
   format = "html",
-  col.names = c("Despesa", 2016:2025),
-  caption = "Gasto liquidado por elemento de despesa nos Projetos Atividade da rede parceira de Educação Infantil — São Paulo, 2016–2025 (R$ milhões, valores atualizados pelo IPCA a dezembro de 2025)"
-) %>%
-  kableExtra::kable_styling(
-    bootstrap_options = c("striped", "hover", "bordered"),
-    full_width = FALSE
-  ) %>%
-  kableExtra::column_spec(1, bold = TRUE) %>%
-  kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
-```
-
-```{r tabela-rede-direta-despesa, echo=FALSE, include=TRUE}
-library(dplyr)
-library(tidyr)
-library(scales)
-library(knitr)
-library(kableExtra)
-
-projetos_rede_direta <- c(
-  "Remuneração dos Profissionais do Magistério - Centro de Educação Infantil (CEI)",
-  "Remuneração dos Profissionais da Educação Básica - Centro de Educação Infantil (CEI)",
-  "Remuneração dos Profissionais do Magistério - Escola Municipal de Educação Infantil (EMEI)",
-  "Remuneração dos Profissionais da Educação Básica - Escola Municipal de Educação Infantil (EMEI)",
-  "Remuneração dos Profissionais do Magistério - Centro Municipal de Educação Infantil( CEMEI)",
-  "Remuneração dos Profissionais da Educação Básica - Centro Municipal de Educação Infantil( CEMEI)"
-)
-
-tabela_rede_direta_despesa <- dadosfunedu_16_25 %>%
-  filter(Ds_Projeto_Atividade %in% projetos_rede_direta) %>%
-  group_by(Ds_Despesa, Cd_Exercicio) %>%
-  summarise(
-    Vl_Liquidado_ipca = sum(Vl_Liquidado_ipca, na.rm = TRUE),
-    .groups = "drop"
-  ) %>%
-  complete(Ds_Despesa, Cd_Exercicio = 2016:2025, fill = list(Vl_Liquidado_ipca = 0)) %>%
-  mutate(
-    valor_fmt = number(
-      Vl_Liquidado_ipca / 1e6,
-      accuracy = 0.01, big.mark = ".", decimal.mark = ","
-    )
-  ) %>%
-  select(Ds_Despesa, Cd_Exercicio, valor_fmt) %>%
-  pivot_wider(
-    names_from = Cd_Exercicio,
-    values_from = valor_fmt
-  ) %>%
-  select(Ds_Despesa, any_of(as.character(2016:2025)))
-
-knitr::kable(
-  tabela_rede_direta_despesa,
-  format = "html",
-  col.names = c("Despesa", 2016:2025),
-  caption = "Gasto liquidado por elemento de despesa nos Projetos Atividade de remuneração dos profissionais da rede direta de Educação Infantil — São Paulo, 2016–2025 (R$ milhões, valores atualizados pelo IPCA a dezembro de 2025)"
+  col.names = c(
+    "Elemento de despesa",
+    unlist(lapply(anos_tabela_elemento, function(ano) c(paste(ano, "em R$"), paste(ano, "em %"))))
+  ),
+  caption = "Gasto liquidado por elemento de despesa (Ds_Elemento) na subfunção Educação Infantil e participação percentual no total do ano — São Paulo, 2018, 2022 e 2025 (valores em milhões de R$, atualizados pelo IPCA a dezembro de 2025)"
 ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
@@ -3050,46 +3179,6 @@ tabela_custos <- valores_custos_componentes %>%
     values_fill = 0
   ) %>%
   select(custo, Ds_SubFuncao, all_of(as.character(2016:2025)))
-```
-
-```{r verificacao-projetos-rede-custos, echo=FALSE, include=TRUE}
-library(dplyr)
-library(scales)
-library(knitr)
-library(kableExtra)
-
-# Verifica se os mesmos Projetos Atividade usados nas tabelas da rede
-# parceira e da rede direta (seção 5.2) aparecem em dadosfunedu_custos
-# com valor liquidado diferente de zero — ou seja, se a padronização de
-# nomes de Projeto Atividade não deixou algum deles órfão.
-verificacao_projetos_rede <- dadosfunedu_custos %>%
-  filter(Ds_Projeto_Atividade %in% c(projetos_rede_parceira, projetos_rede_direta)) %>%
-  group_by(Ds_Projeto_Atividade) %>%
-  summarise(
-    `Anos com valor ≠ 0` = sum(Vl_Liquidado_ipca != 0, na.rm = TRUE),
-    total_liquidado_ipca = sum(Vl_Liquidado_ipca, na.rm = TRUE),
-    .groups = "drop"
-  ) %>%
-  arrange(desc(total_liquidado_ipca)) %>%
-  mutate(
-    `Total liquidado (R$ milhões)` = number(
-      total_liquidado_ipca / 1e6, accuracy = 0.01, big.mark = ".", decimal.mark = ","
-    )
-  ) %>%
-  select(Ds_Projeto_Atividade, `Anos com valor ≠ 0`, `Total liquidado (R$ milhões)`)
-
-knitr::kable(
-  verificacao_projetos_rede,
-  format = "html",
-  col.names = c("Projeto Atividade", "Anos com valor ≠ 0 (de 10)", "Total liquidado (R$ milhões)"),
-  caption = "Verificação: Projetos Atividade da rede parceira e da rede direta de Educação Infantil em dadosfunedu_custos, com valor liquidado diferente de zero"
-) %>%
-  kableExtra::kable_styling(
-    bootstrap_options = c("striped", "hover", "bordered"),
-    full_width = FALSE
-  ) %>%
-  kableExtra::column_spec(1, bold = TRUE) %>%
-  kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
 ```
 
 ### 6.3 Limitações das estimativas
