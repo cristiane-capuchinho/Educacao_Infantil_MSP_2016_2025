@@ -1241,7 +1241,6 @@ knitr::kable(
   kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;") %>%
   kableExtra::column_spec(1:8, extra_css = "padding: 6px 14px;")
 ```
-
 As rede direta e indireta apresentam padrões distintos de infraestrutura, tanto em 2019 quanto em 2025, como mostra o gráfico a seguir.
 
 ```{r grafico-infra-ei, echo=FALSE, include=TRUE, fig.width=10, fig.height=6.5, out.width="100%"}
@@ -1339,7 +1338,7 @@ bottom5_infra_4itens <- tail(ranking_infra_4itens_2025, 5) %>% arrange(percentua
 
 Os cinco distritos com maior proporção de matrículas de Educação Infantil em unidades com todos os itens de infraestrutura em 2025 são `r knitr::combine_words(top5_infra_4itens$NO_DISTRITO, and = " e ")`, com percentuais entre `r percent(min(top5_infra_4itens$percentual_4itens), accuracy = 0.01, decimal.mark = ",")` e `r percent(max(top5_infra_4itens$percentual_4itens), accuracy = 0.01, decimal.mark = ",")`. 
 
-Na outra ponta, os cinco distritos com menor proporção são `r knitr::combine_words(bottom5_infra_4itens$NO_DISTRITO, and = " e ")`, com percentuais entre `r percent(min(bottom5_infra_4itens$percentual_4itens), accuracy = 0.01, decimal.mark = ",")` e `r percent(max(bottom5_infra_4itens$percentual_4itens), accuracy = 0.01, decimal.mark = ",")`.
+Na outra ponta, 28 distritos não apresentaram em 2025 qualquer unidade com matrículas de oferta municipal com os quatro itens de infraestrutura, entre eles República, Liberdade, Marsilac, Barra Funda, Pinheiros.
 
 ```{r mapa-infra-4itens-distrito-2025, echo=FALSE, include=TRUE, fig.width=10, fig.height=8, out.width="100%"}
 # ============================================================
@@ -2701,6 +2700,57 @@ knitr::kable(
   kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
 ```
 
+```{r tabela-rede-direta-despesa, echo=FALSE, include=TRUE}
+library(dplyr)
+library(tidyr)
+library(scales)
+library(knitr)
+library(kableExtra)
+
+projetos_rede_direta <- c(
+  "Remuneração dos Profissionais do Magistério - Centro de Educação Infantil (CEI)",
+  "Remuneração dos Profissionais da Educação Básica - Centro de Educação Infantil (CEI)",
+  "Remuneração dos Profissionais do Magistério - Escola Municipal de Educação Infantil (EMEI)",
+  "Remuneração dos Profissionais da Educação Básica - Escola Municipal de Educação Infantil (EMEI)",
+  "Remuneração dos Profissionais do Magistério - Centro Municipal de Educação Infantil( CEMEI)",
+  "Remuneração dos Profissionais da Educação Básica - Centro Municipal de Educação Infantil( CEMEI)"
+)
+
+tabela_rede_direta_despesa <- dadosfunedu_16_25 %>%
+  filter(Ds_Projeto_Atividade %in% projetos_rede_direta) %>%
+  group_by(Ds_Despesa, Cd_Exercicio) %>%
+  summarise(
+    Vl_Liquidado_ipca = sum(Vl_Liquidado_ipca, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  complete(Ds_Despesa, Cd_Exercicio = 2016:2025, fill = list(Vl_Liquidado_ipca = 0)) %>%
+  mutate(
+    valor_fmt = number(
+      Vl_Liquidado_ipca / 1e6,
+      accuracy = 0.01, big.mark = ".", decimal.mark = ","
+    )
+  ) %>%
+  select(Ds_Despesa, Cd_Exercicio, valor_fmt) %>%
+  pivot_wider(
+    names_from = Cd_Exercicio,
+    values_from = valor_fmt
+  ) %>%
+  select(Ds_Despesa, any_of(as.character(2016:2025)))
+
+knitr::kable(
+  tabela_rede_direta_despesa,
+  format = "html",
+  col.names = c("Despesa", 2016:2025),
+  caption = "Gasto liquidado por elemento de despesa nos Projetos Atividade de remuneração dos profissionais da rede direta de Educação Infantil — São Paulo, 2016–2025 (R$ milhões, valores atualizados pelo IPCA a dezembro de 2025)"
+) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "bordered"),
+    full_width = FALSE
+  ) %>%
+  kableExtra::column_spec(1, bold = TRUE) %>%
+  kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
+```
+
 ## 6. Estimativa de custo por tipo de provisão e jornada
 
 Os gastos classificados na subfunção Educação Infantil não permitem diferenciar recursos usados para financiar a creche ou a pré-escola, sendo que apenas a última é obrigatória. 
@@ -3000,6 +3050,46 @@ tabela_custos <- valores_custos_componentes %>%
     values_fill = 0
   ) %>%
   select(custo, Ds_SubFuncao, all_of(as.character(2016:2025)))
+```
+
+```{r verificacao-projetos-rede-custos, echo=FALSE, include=TRUE}
+library(dplyr)
+library(scales)
+library(knitr)
+library(kableExtra)
+
+# Verifica se os mesmos Projetos Atividade usados nas tabelas da rede
+# parceira e da rede direta (seção 5.2) aparecem em dadosfunedu_custos
+# com valor liquidado diferente de zero — ou seja, se a padronização de
+# nomes de Projeto Atividade não deixou algum deles órfão.
+verificacao_projetos_rede <- dadosfunedu_custos %>%
+  filter(Ds_Projeto_Atividade %in% c(projetos_rede_parceira, projetos_rede_direta)) %>%
+  group_by(Ds_Projeto_Atividade) %>%
+  summarise(
+    `Anos com valor ≠ 0` = sum(Vl_Liquidado_ipca != 0, na.rm = TRUE),
+    total_liquidado_ipca = sum(Vl_Liquidado_ipca, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(total_liquidado_ipca)) %>%
+  mutate(
+    `Total liquidado (R$ milhões)` = number(
+      total_liquidado_ipca / 1e6, accuracy = 0.01, big.mark = ".", decimal.mark = ","
+    )
+  ) %>%
+  select(Ds_Projeto_Atividade, `Anos com valor ≠ 0`, `Total liquidado (R$ milhões)`)
+
+knitr::kable(
+  verificacao_projetos_rede,
+  format = "html",
+  col.names = c("Projeto Atividade", "Anos com valor ≠ 0 (de 10)", "Total liquidado (R$ milhões)"),
+  caption = "Verificação: Projetos Atividade da rede parceira e da rede direta de Educação Infantil em dadosfunedu_custos, com valor liquidado diferente de zero"
+) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "bordered"),
+    full_width = FALSE
+  ) %>%
+  kableExtra::column_spec(1, bold = TRUE) %>%
+  kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
 ```
 
 ### 6.3 Limitações das estimativas
