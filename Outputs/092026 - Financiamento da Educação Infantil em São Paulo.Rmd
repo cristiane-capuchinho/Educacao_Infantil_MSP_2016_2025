@@ -13,9 +13,9 @@ output:
 
 ## Pergunta de pesquisa e objetivos
 
-Como a cidade de São Paulo tem ofertado e financiado a expansão da educação infantil de 2016 a 2025?
+A pesquisa parte da seguinte pergunta: como o município de São Paulo ofertou e financiou a expansão da educação infantil entre 2016 e 2025? Para respondê-la, o estudo articula quatro dimensões: oferta, formas de provisão, jornada e financiamento, considerando tanto creche quanto pré-escola.
 
-A pesquisa vai analisar a trajetória recente da educação infantil no município de São Paulo, tanto creche quanto pré-escola, articulando dimensões de oferta, provisão e financiamento. 
+O estudo tem, para tanto, quatro objetivos específicos. O primeiro busca analisar a evolução da oferta de educação infantil no município de São Paulo, considerando as mudanças nas matrículas de creche e pré-escola, os diferentes tipos de provisão — rede direta ou indireta — e as jornadas parcial e integral. O segundo consiste em analisar a evolução e a estrutura do gasto público municipal, examinando sua distribuição entre subfunções, grupos de natureza e elemento de despesa. O terceiro objetivo é identificar e analisar a evolução das fontes de financiamento da educação infantil, com atenção às mudanças decorrentes da transição do Fundeb para o Fundeb Permanente e às alterações no Salário-Educação. Por fim, o quarto objetivo busca mapear as desigualdades territoriais na oferta de educação infantil, examinando como as matrículas e as diferentes formas de provisão e jornada se distribuem entre os distritos do município.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(include = FALSE, message = FALSE, warning = FALSE)
@@ -2654,6 +2654,53 @@ dados_grafico_modalidade_ei <- dadosfunedu_16_25 %>%
 
 ### 5.2 Gastos com pessoal na rede direta e indireta de EI
 
+```{r tabela-rede-parceira-despesa, echo=FALSE, include=TRUE}
+library(dplyr)
+library(tidyr)
+library(scales)
+library(knitr)
+library(kableExtra)
+
+projetos_rede_parceira <- c(
+  "Manutenção e Operação da Rede Parceira - Centro de Educação Infantil (CEI)",
+  "Operação e Manutenção de CEIs e Creches da rede conveniada e outras modalidades de parcerias"
+)
+
+tabela_rede_parceira_despesa <- dadosfunedu_16_25 %>%
+  filter(Ds_Projeto_Atividade %in% projetos_rede_parceira) %>%
+  group_by(Ds_Despesa, Cd_Exercicio) %>%
+  summarise(
+    Vl_Liquidado_ipca = sum(Vl_Liquidado_ipca, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  complete(Ds_Despesa, Cd_Exercicio = 2016:2025, fill = list(Vl_Liquidado_ipca = 0)) %>%
+  mutate(
+    valor_fmt = number(
+      Vl_Liquidado_ipca / 1e6,
+      accuracy = 0.01, big.mark = ".", decimal.mark = ","
+    )
+  ) %>%
+  select(Ds_Despesa, Cd_Exercicio, valor_fmt) %>%
+  pivot_wider(
+    names_from = Cd_Exercicio,
+    values_from = valor_fmt
+  ) %>%
+  select(Ds_Despesa, any_of(as.character(2016:2025)))
+
+knitr::kable(
+  tabela_rede_parceira_despesa,
+  format = "html",
+  col.names = c("Despesa", 2016:2025),
+  caption = "Gasto liquidado por elemento de despesa nos Projetos Atividade da rede parceira de Educação Infantil — São Paulo, 2016–2025 (R$ milhões, valores atualizados pelo IPCA a dezembro de 2025)"
+) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "bordered"),
+    full_width = FALSE
+  ) %>%
+  kableExtra::column_spec(1, bold = TRUE) %>%
+  kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
+```
+
 ## 6. Estimativa de custo por tipo de provisão e jornada
 
 Os gastos classificados na subfunção Educação Infantil não permitem diferenciar recursos usados para financiar a creche ou a pré-escola, sendo que apenas a última é obrigatória. 
@@ -2716,7 +2763,7 @@ Em relação aos diferentes tipos de jornada, os dados de execução de recursos
 
 A LDB prevê, desde 2013, que a educação infantil de tempo integral deve ter, no mínimo, 7 horas diárias. As matrículas parciais, por regra (Brasil, 1996), têm jornada de 4 horas diárias. Na rede municipal de São Paulo, o tempo integral em vagas de creche equivale a jornadas diárias de dez horas. Já na pré-escola, o tempo integral equivale a jornadas diárias de oito horas. A jornada parcial é, por sua vez, de quatro horas diárias.
 
-E a partir de quais referências pensar o financiamento de jornadas diferentes? Os fatores de ponderação do Fundeb ampliam com 30% os valores de uma matrícula de educação infantil de jornada integral, em relação à jornada parcial (REFERÊNCIA). O CAQi, xxxx, indica um custo 75% maior para a jornada integral na creche e 5x% maior para a pré-escola integral, em relação à parcial (CAMPANHA, 2024). 
+E a partir de quais referências pensar o financiamento de jornadas diferentes? Os fatores de ponderação do Fundeb ampliam com 30 pontos percentuais os valores de uma matrícula de educação infantil de jornada integral, em relação à jornada parcial (MEC, 2025). O CAQi (Custo Aluno Qualidade Inicial) indica um custo entre 105% e 115% maior para a jornada integral de creches ou pré-escolas urbanas de tempo integral, em relação à parcial (CAMPANHA, 2024). 
 
 Dado o caso de São Paulo, com jornadas duplicadas de tempo, neste trabalho usaremos o peso 2 para matrículas de tempo integral e o peso 1 para matrículas de tempo parcial. Essa ponderação não representa a realidade da execução de recursos, no entanto, optou-se por uma ponderação conservadora que considera os custos como os mesmos no momento da majoração da jornada. 
 
@@ -2957,7 +3004,7 @@ tabela_custos <- valores_custos_componentes %>%
 
 ### 6.3 Limitações das estimativas
 
-A reconstrução do gasto por matrícula a partir das ações orçamentárias apresenta limitações que devem ser consideradas na interpretação dos resultados. Na rede direta, as ações utilizadas agregam despesas de profissionais com diferentes formações, remunerações e momentos da carreira, sem permitir identificar como esses custos se distribuem entre unidades, distritos, etapas ou jornadas. Dessa forma, a estimativa baseada em valores médios não captura diferenças na composição e nas características do corpo docente, dimensão relevante para a qualidade da oferta educacional, nem permite observar possíveis desigualdades de gasto associadas à etapa, à jornada ou à localização das unidades.
+A reconstrução do gasto por matrícula a partir das ações orçamentárias apresenta limitações que devem ser consideradas na interpretação dos resultados. Na rede direta, as ações utilizadas agregam despesas de profissionais com diferentes formações, remunerações e momentos da carreira, sem permitir identificar como esses custos se distribuem entre unidades, distritos, etapas ou jornadas. Dessa forma, a estimativa baseada em valores médios não captura diferenças na composição e nas características do corpo docente, dimensão relevante para a qualidade da oferta educacional.
 
 Na rede indireta, por sua vez, a ação orçamentária que reúne os repasses para a manutenção da Educação Infantil na rede parceira não discrimina os diferentes arranjos de parceria existentes. Não é possível, por exemplo, distinguir unidades em que o município arca com despesas de aluguel daquelas que funcionam em imóveis cedidos ou disponibilizados pelas próprias instituições. Essas diferenças podem implicar custos e condições de infraestrutura distintos, mas permanecem agregadas na ação orçamentária e, portanto, não são capturadas pela estimativa. Assim, os valores reconstruídos permitem comparar a magnitude e a distribuição do gasto entre diferentes tipos de oferta, mas não devem ser interpretados como medidas exatas do custo de provisão de cada matrícula.
 
@@ -3551,9 +3598,9 @@ top5_custo_medio <- head(ranking_custo_medio_2025, 5)
 bottom5_custo_medio <- tail(ranking_custo_medio_2025, 5) %>% arrange(valor_medio_aluno)
 ```
 
-Os cinco distritos com maior valor médio por matrícula de Educação Infantil em 2025 são `r knitr::combine_words(top5_custo_medio$NO_DISTRITO, and = " e ")`, com valores entre `r number(min(top5_custo_medio$valor_medio_aluno), accuracy = 1, big.mark = ".", decimal.mark = ",")` e `r number(max(top5_custo_medio$valor_medio_aluno), accuracy = 1, big.mark = ".", decimal.mark = ",")` reais por matrícula.
+Os cinco distritos com **maior valor médio por matrícula de Educação Infantil** em 2025 são `r knitr::combine_words(top5_custo_medio$NO_DISTRITO, and = " e ")`, com **valores entre R$ `r number(min(top5_custo_medio$valor_medio_aluno), accuracy = 1, big.mark = ".", decimal.mark = ",")` e R$ `r number(max(top5_custo_medio$valor_medio_aluno), accuracy = 1, big.mark = ".", decimal.mark = ",")` por matrícula**.
 
-Na outra ponta, os cinco distritos com menor valor médio por matrícula são `r knitr::combine_words(bottom5_custo_medio$NO_DISTRITO, and = " e ")`, com valores entre `r number(min(bottom5_custo_medio$valor_medio_aluno), accuracy = 1, big.mark = ".", decimal.mark = ",")` e `r number(max(bottom5_custo_medio$valor_medio_aluno), accuracy = 1, big.mark = ".", decimal.mark = ",")` reais por matrícula.
+Na outra ponta, os cinco **distritos com menor valor médio por matrícula** são `r knitr::combine_words(bottom5_custo_medio$NO_DISTRITO, and = " e ")`, com valores entre **R$ `r number(min(bottom5_custo_medio$valor_medio_aluno), accuracy = 1, big.mark = ".", decimal.mark = ",")` e R$ `r number(max(bottom5_custo_medio$valor_medio_aluno), accuracy = 1, big.mark = ".", decimal.mark = ",")` por matrícula**.
 
 ```{r mapa-custo-medio-distrito-2025, echo=FALSE, include=TRUE, fig.width=10, fig.height=8, out.width="100%"}
 # ============================================================
