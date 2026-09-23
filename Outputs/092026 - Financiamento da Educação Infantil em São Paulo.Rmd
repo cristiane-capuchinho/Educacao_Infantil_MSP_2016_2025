@@ -7,7 +7,7 @@ output:
     md_extensions: "-tex_math_dollars"
 subtitle: Versão preliminar Policy Brief
 ---
-# 1. Introdução
+# 1. Apresentação
 
 
 
@@ -698,13 +698,166 @@ tabela_matriculas_distrito |>
 
 ```
 
+```{r setup-decis-bf-ei, include=FALSE}
+# ============================================================
+# DECIS DE DISTRITOS POR % DE BENEFICIÁRIOS DO BOLSA FAMÍLIA NA
+# EDUCAÇÃO INFANTIL MUNICIPAL, PONDERADOS PELA MATRÍCULA — 2025
+#
+# Proxy de vulnerabilidade econômica usada para comparar grupos
+# de distritos (além da média geral e dos distritos individuais)
+# em outras análises do documento.
+# ============================================================
+
+library(dplyr)
+library(scales)
+
+# ------------------------------------------------------------
+# 1. Matrículas municipais por distrito em 2025 (96 distritos e
+#    "São Paulo Toda", já somada em tabela_matriculas_distrito)
+# ------------------------------------------------------------
+
+matriculas_2025 <- tabela_matriculas_distrito %>%
+  filter(as.character(ano) == "2025") %>%
+  select(
+    ano,
+    CO_DISTRITO,
+    NO_DISTRITO,
+    mat_cre_municipal,
+    mat_pre_municipal,
+    mat_ei_municipal
+  )
+
+# ------------------------------------------------------------
+# 2. Matrículas beneficiárias do Bolsa Família por distrito em
+#    2025 (96 distritos, sem linha agregada)
+# ------------------------------------------------------------
+
+bf_distrito_2025 <- saopaulocapital_fl %>%
+  filter(as.numeric(NU_ANO_CENSO) == 2025) %>%
+  transmute(
+    CO_DISTRITO,
+    qtd_bf_creche_0a3 = coalesce(qtd_bf_creche_0a3, 0),
+    qtd_bf_pre_4a6 = coalesce(qtd_bf_pre_4a6, 0)
+  )
+
+# ------------------------------------------------------------
+# 3. Linha "São Paulo Toda" do Bolsa Família = soma dos 96
+#    distritos
+# ------------------------------------------------------------
+
+bf_sp_toda <- bf_distrito_2025 %>%
+  summarise(
+    CO_DISTRITO = 0,
+    qtd_bf_creche_0a3 = sum(qtd_bf_creche_0a3, na.rm = TRUE),
+    qtd_bf_pre_4a6 = sum(qtd_bf_pre_4a6, na.rm = TRUE)
+  )
+
+bf_distrito_2025 <- bind_rows(bf_distrito_2025, bf_sp_toda)
+
+# ------------------------------------------------------------
+# 4. Tabela por distrito: matrículas municipais + Bolsa Família
+#    + percentuais de BF na creche, na pré-escola e na EI
+# ------------------------------------------------------------
+
+bf_distritosp_2025 <- matriculas_2025 %>%
+  left_join(bf_distrito_2025, by = "CO_DISTRITO") %>%
+  mutate(
+    pct_bf_creche = if_else(
+      mat_cre_municipal > 0,
+      qtd_bf_creche_0a3 / mat_cre_municipal,
+      NA_real_
+    ),
+    pct_bf_pre = if_else(
+      mat_pre_municipal > 0,
+      qtd_bf_pre_4a6 / mat_pre_municipal,
+      NA_real_
+    ),
+    pct_bf_ei = if_else(
+      mat_ei_municipal > 0,
+      (qtd_bf_creche_0a3 + qtd_bf_pre_4a6) / mat_ei_municipal,
+      NA_real_
+    )
+  ) %>%
+  # "São Paulo Toda" sempre na primeira linha; demais distritos em
+  # ordem decrescente de % de BF na EI municipal
+  arrange(desc(NO_DISTRITO == "São Paulo Toda"), desc(pct_bf_ei))
+
+# ------------------------------------------------------------
+# 5. Distritos ordenados do menor para o maior % de BF na EI
+#    (exclui a linha agregada "São Paulo Toda") e agrupados em
+#    decis ponderados pela matrícula de EI municipal de cada
+#    distrito — e não pelo número de distritos — de modo que
+#    cada decil concentre ~10% das matrículas de EI municipal
+# ------------------------------------------------------------
+
+distritos_decil_bf_ei <- bf_distritosp_2025 %>%
+  filter(
+    NO_DISTRITO != "São Paulo Toda",
+    !is.na(pct_bf_ei),
+    mat_ei_municipal > 0
+  ) %>%
+  select(NO_DISTRITO, mat_ei_municipal, pct_bf_ei) %>%
+  arrange(pct_bf_ei) %>%
+  mutate(
+    matricula_acumulada = cumsum(mat_ei_municipal),
+    proporcao_acumulada = matricula_acumulada / sum(mat_ei_municipal),
+    decil_bf_ei = pmin(ceiling(proporcao_acumulada * 10), 10),
+    decil_bf_ei = factor(
+      decil_bf_ei,
+      levels = 1:10,
+      labels = c(
+        "D1 — menor % de BF",
+        "D2",
+        "D3",
+        "D4",
+        "D5",
+        "D6",
+        "D7",
+        "D8",
+        "D9",
+        "D10 — maior % de BF"
+      )
+    )
+  )
+
+# ------------------------------------------------------------
+# 6. Resumo por decil: nº de distritos, matrículas de EI e % de
+#    BF (mínimo, máximo e médio ponderado pela matrícula)
+# ------------------------------------------------------------
+
+resumo_decil_bf_ei <- distritos_decil_bf_ei %>%
+  group_by(decil_bf_ei) %>%
+  summarise(
+    n_distritos = dplyr::n(),
+    # pct_bf_ei_medio precisa ser calculado antes de sobrescrever
+    # mat_ei_municipal pela soma, já que usa o vetor original de
+    # matrículas por distrito como peso
+    pct_bf_ei_medio = weighted.mean(pct_bf_ei, mat_ei_municipal, na.rm = TRUE),
+    pct_bf_ei_min = min(pct_bf_ei, na.rm = TRUE),
+    pct_bf_ei_max = max(pct_bf_ei, na.rm = TRUE),
+    mat_ei_municipal = sum(mat_ei_municipal, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# ------------------------------------------------------------
+# 7. Distritos que compõem os grupos de comparação — D1 (menos
+#    vulnerável nessa proxy) e D10 (mais vulnerável)
+# ------------------------------------------------------------
+
+distritos_d1_bf_ei <- distritos_decil_bf_ei %>%
+  filter(decil_bf_ei == "D1 — menor % de BF") %>%
+  arrange(pct_bf_ei)
+
+distritos_d10_bf_ei <- distritos_decil_bf_ei %>%
+  filter(decil_bf_ei == "D10 — maior % de BF") %>%
+  arrange(pct_bf_ei)
+```
+
 ## 2. Metodologia
 
-A pesquisa analisa a evolução dos gastos públicos com Educação Infantil no município de São Paulo entre 2016 e 2025, relacionando a execução orçamentária às matrículas da rede municipal. A análise combina dados de execução orçamentária da Prefeitura Municipal de São Paulo (PMSP) e dados de matrículas do Censo Escolar, considerando como unidades de análise o ano e, em uma etapa específica, os distritos municipais.
+A pesquisa analisa a evolução da oferta e dos gastos públicos com Educação Infantil no município de São Paulo entre 2016 e 2025, relacionando a execução orçamentária às matrículas da rede municipal. A análise combina dados de execução orçamentária da Prefeitura Municipal de São Paulo (PMSP) e dados de matrículas do Censo Escolar, considerando como unidades de análise o ano e, em uma etapa específica, os distritos municipais.
 
-Também foram usados dados de receita municipal referentes ao período de 2016 a 2024 obtidos na base disponibilizada no repositório do Ipea (Instituto de Pesquisa Econômica Aplicada), que harmoniza informações provenientes de diferentes fontes, entre elas o Sistema de Informações sobre Orçamentos Públicos em Educação (Siope), a Declaração de Contas Anuais das Finanças do Brasil (Finbra), dados da Secretaria do Tesouro Nacional (STN) e do Fundo Nacional de Desenvolvimento da Educação (FNDE) (Bridi et al, 2026).
-
-Os dados de gasto municipal foram obtidos no portal da Secretaria Municipal de Planejamento e Eficiência da Prefeitura de São Paulo, com acesso realizado em abril de 2026. Para a análise, foram considerados valores liquidados. A escolha desta etapa de empenho busca mapear o gasto efetivo no momento em que a despesa é reconhecida como obrigação. Os valores empenhados apesar de representarem um compromisso de ação do Estado podem não se concretizar, tendo valores estimados e incertos. Já os valores pagos registram a saída efetiva de recursos do caixa, mas podem acontecer em momento posterior ao serviço prestado.
+Os dados de receita municipal referentes ao período de 2016 a 2024 foram obtidos na base disponibilizada no repositório do Ipea (Instituto de Pesquisa Econômica Aplicada), que harmoniza informações provenientes de diferentes fontes, entre elas o Sistema de Informações sobre Orçamentos Públicos em Educação (Siope), a Declaração de Contas Anuais das Finanças do Brasil (Finbra), dados da Secretaria do Tesouro Nacional (STN) e do Fundo Nacional de Desenvolvimento da Educação (FNDE) (Bridi et al, 2026). Os dados de gasto municipal foram obtidos no portal da Secretaria Municipal de Planejamento e Eficiência da Prefeitura de São Paulo, com acesso realizado em abril de 2026. Os dados de gasto municipal foram obtidos no portal da Secretaria Municipal de Planejamento e Eficiência da Prefeitura de São Paulo, com acesso realizado em abril de 2026. Para a análise, foram considerados valores liquidados. A escolha desta etapa de empenho busca mapear o gasto efetivo no momento em que a despesa é reconhecida como obrigação. Os valores empenhados apesar de representarem um compromisso de ação do Estado podem não se concretizar, tendo valores estimados e incertos. Já os valores pagos registram a saída efetiva de recursos do caixa, mas podem acontecer em momento posterior ao serviço prestado.
 
 Os valores de receita e despesa foram atualizados monetariamente pelo IPCA, tendo dezembro de 2025 como período de referência. 
 
@@ -714,7 +867,7 @@ O tratamento dos dados buscou identificar, para cada ano analisado, as institui�
 
 ### 2.1 Tratamento de dados
 
-A base de execução orçamentária contém informações sobre função, subfunção, programa, projeto/atividade, natureza da despesa e valores orçamentários. Foram utilizados os valores liquidados, corrigidos pelo IPCA, como medida da execução do gasto. A identificação das despesas de Educação Infantil foi realizada a partir da análise dos projetos e atividades orçamentários, não se restringindo às despesas diretamente classificadas na subfunção Educação Infantil. Foram excluídas linhas com valor liquidado igual a zero em todos os anos.
+Foram utilizados os valores liquidados, corrigidos pelo IPCA, como medida da execução do gasto. A identificação das despesas de Educação Infantil foi realizada a partir da análise dos projetos e atividades orçamentários, não se restringindo às despesas diretamente classificadas na subfunção Educação Infantil. Foram excluídas linhas com valor liquidado igual a zero em todos os anos.
 
 Os projetos e atividades identificados foram agrupados em componentes de gasto relacionados à oferta de Educação Infantil, incluindo remuneração de profissionais, manutenção e operação das unidades, transferências, materiais, uniformes, transporte e investimentos. Esses componentes foram associados a oito categorias de matrícula, diferenciadas por etapa (creche ou pré-escola), tipo de oferta (rede direta ou indireta) e jornada (parcial ou integral).
 
@@ -728,18 +881,16 @@ Para complementar a análise, foram calculados, para cada ano, o valor mínimo, 
 
 ### 2.2 Ferramentas 
 
-Todo o tratamento e processamento dos dados foi realizado em R. Foram empregados procedimentos de transformação, agregação, junção e validação das bases, incluindo verificações de valores ausentes, tipos das variáveis, consistência das matrículas derivadas e correspondência entre categorias de matrícula e componentes de gasto.
+O tratamento e processamento dos dados foi realizado em R, incluindo procedimentos de transformação, agregação, integração e validação das bases. Foram empregados procedimentos para verificação de consistência das variáveis, matrículas derivadas e correspondência entre categorias de matrícula e componentes de gasto.
 
 Assistentes virtuais baseados em inteligência artificial, especificamente GPT e Claude, foram usados como ferramenta de apoio à programação e à organização do processamento dos dados, especialmente na elaboração e depuração de códigos em R, na identificação de inconsistências e na construção de procedimentos de verificação. Todas as decisões relativas à seleção de receitas, de despesas, classificação dos componentes de gasto, definição das categorias de matrícula, critérios de tratamento dos dados e interpretação dos resultados foram realizadas e validadas pelos pesquisadores.
 
 ## 3. Oferta e financiamento da educação infantil em São Paulo
 ### 3.1 Evolução da oferta
 
-O município de São Paulo ofertou **`r format(resumosp$mat_ei_tot[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** matrículas na educação infantil em 2025, isso representa **`r round(resumosp$mat_ei_tot[resumosp$NU_ANO_CENSO == "2025"] / resumosp$mat_bas_tot[resumosp$NU_ANO_CENSO == "2025"] * 100, 2)`%** do total de matrículas da educação básica oferecidas pela rede municipal.
+O município de São Paulo ofertou **`r format(resumosp$mat_ei_tot[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** matrículas na educação infantil em 2025, isso representa **`r round(resumosp$mat_ei_tot[resumosp$NU_ANO_CENSO == "2025"] / resumosp$mat_bas_tot[resumosp$NU_ANO_CENSO == "2025"] * 100, 2)`%** do total de matrículas da educação básica oferecidas pela rede municipal. Desse total, **`r format(resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** eram matrículas na creche para crianças de 0 a 3 anos e **`r format(resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** eram vagas de pré-escola, ou como nomeia a rede municipal, infantil integrado, matrículas de crianças de 4 e 5 anos. 
 
-Desse total, **`r format(resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** eram matrículas na creche para crianças de 0 a 3 anos e **`r format(resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** eram vagas de pré-escola, ou como nomeia a rede municipal, infantil integrado, matrículas de crianças de 4 e 5 anos. 
-
-Este é o resultado de evolução na oferta de educação para a primeira infância, em especial, para a creche. Entre 2016 e 2025, foram criadas **`r format(resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2025"] - resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2016"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** de creche na capital paulista. No mesmo período, as vagas em pré-escola tiveram redução de **`r format(resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2025"] - resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2016"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`**.
+Este é o resultado da trajetória da oferta de educação para a primeira infância, em especial, para a creche, já que entre 2016 e 2025, foram criadas **`r format(resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2025"] - resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2016"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** vagas em creche na capital paulista e, no mesmo período, as vagas em pré-escola tiveram redução de **<span style="color:red">`r format(abs(resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2025"] - resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2016"]), big.mark = ".", decimal.mark = ",", scientific = FALSE)`</span>**.
 
 O gráfico a seguir mostra, de 2016 a 2025, a evolução das taxas de cobertura de creche e pré-escola calculadas pelo Inep, que consideram toda a oferta no município, pública e privada, sem convênio.
 
@@ -1184,6 +1335,42 @@ ggplot(mapa_pre_ti_2025) +
     plot.title = element_text(face = "bold")
   )
 ```
+
+Outra forma de olhar a jornada da pré-escola é relacioná-la a uma proxy de vulnerabilidade econômica construída a partir do percentual de matrículas de Educação Infantil beneficiárias do Bolsa Família, por distrito: os 96 distritos foram ordenados por esse percentual e agrupados em decis ponderados pela matrícula de EI municipal de cada distrito (e não pelo número de distritos), do decil 1 (D1, menos vulnerável) ao decil 10 (D10, mais vulnerável).
+
+```{r pre-ti-decis-bf-ei, include=FALSE}
+# ============================================================
+# % DE MATRÍCULAS DE PRÉ-ESCOLA MUNICIPAL EM TEMPO INTEGRAL,
+# NOS GRUPOS D1 E D10 DE % DE BF NA EI — SÃO PAULO, 2025
+# ============================================================
+
+library(dplyr)
+library(scales)
+
+pre_ti_distrito_2025 <- tabela_matriculas_distrito %>%
+  filter(as.character(ano) == "2025", NO_DISTRITO != "São Paulo Toda") %>%
+  select(NO_DISTRITO, mat_pre_ti_dir, mat_pre_ti_ind, mat_pre_municipal)
+
+pct_pre_ti_d1 <- pre_ti_distrito_2025 %>%
+  filter(NO_DISTRITO %in% distritos_d1_bf_ei$NO_DISTRITO) %>%
+  summarise(
+    pct_pre_ti = sum(mat_pre_ti_dir + mat_pre_ti_ind, na.rm = TRUE) /
+      sum(mat_pre_municipal, na.rm = TRUE)
+  ) %>%
+  pull(pct_pre_ti)
+
+pct_pre_ti_d10 <- pre_ti_distrito_2025 %>%
+  filter(NO_DISTRITO %in% distritos_d10_bf_ei$NO_DISTRITO) %>%
+  summarise(
+    pct_pre_ti = sum(mat_pre_ti_dir + mat_pre_ti_ind, na.rm = TRUE) /
+      sum(mat_pre_municipal, na.rm = TRUE)
+  ) %>%
+  pull(pct_pre_ti)
+```
+
+No grupo **D1**, formado pelos distritos com menor percentual de beneficiários do Bolsa Família na Educação Infantil (`r knitr::combine_words(distritos_d1_bf_ei$NO_DISTRITO, and = " e ")`), **`r percent(pct_pre_ti_d1, accuracy = 0.01, decimal.mark = ",")`** das matrículas de pré-escola de oferta municipal estavam em tempo integral, em 2025.
+
+Já no grupo **D10**, formado pelos distritos com maior percentual de beneficiários do Bolsa Família na Educação Infantil (`r knitr::combine_words(distritos_d10_bf_ei$NO_DISTRITO, and = " e ")`), essa proporção foi de **`r percent(pct_pre_ti_d10, accuracy = 0.01, decimal.mark = ",")`**.
 
 ### 3.4 Proporção docentes por turma
 
