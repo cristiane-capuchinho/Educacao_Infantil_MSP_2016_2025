@@ -17,9 +17,9 @@ Integrada como primeira etapa da educação básica na Lei de Diretrizes e Bases
 
 Por outro lado, a inclusão das matrículas das duas fases da educação infantil no Fundeb (Brasil, 2007), com possibilidade de financiamento por recursos públicos de vagas diretas ou conveniadas com instituições sem fins lucrativos abriu uma via para ampliação da oferta de creche e pré-escola pelas redes municipais (Arelaro, 2017; Oliveira, 2013).  
 
-Nesse contexto, os municípios enfrentam pressões simultâneas para ampliar a oferta de educação infantil e a jornada escolar. De um lado, a obrigatoriedade da pré-escola e as metas do Plano Nacional de Educação impulsionam a expansão do atendimento, incluindo a previsão de alcançar 60% das crianças de 0 a 3 anos na creche até 2036. De outro, a ampliação da educação em tempo integral acrescenta uma nova demanda sobre os sistemas municipais. Assim, o desafio não é apenas o de ampliar a oferta, mas decidir como fazê-lo: o gasto varia segundo a etapa e a idade das crianças, o tipo de provisão — direta ou conveniada — e a duração da jornada. 
+Nesse contexto, os municípios enfrentam pressões simultâneas para ampliar a oferta de educação infantil e a jornada escolar. De um lado, a obrigatoriedade da pré-escola e as metas do Plano Nacional de Educação impulsionam a expansão do atendimento, incluindo a previsão de alcançar 60% das crianças de 0 a 3 anos na creche até 2036. De outro, a meta de ampliação da educação em tempo integral impulsiona uma demanda sobre os sistemas municipais. Assim, o desafio não é apenas o de ampliar a oferta, mas decidir como fazê-lo: o gasto varia segundo a etapa e a idade das crianças, o tipo de provisão — direta ou conveniada — e a duração da jornada. 
 
-A aprovação do Fundeb Permanente, em 2020 (Brasil, 2020), acrescentou uma nova dimensão a esse problema ao alterar as regras de financiamento, com o aumento progressivo da complementação da União e mudanças nos mecanismos de redistribuição. 
+A aprovação do Fundeb Permanente, em 2020, acrescentou uma nova dimensão a esse problema ao alterar as regras de financiamento, com o aumento progressivo da complementação da União e mudanças nos mecanismos de redistribuição. 
 
 Nesse contexto, compreender como os recursos disponíveis se traduzem em diferentes padrões de oferta e de gasto torna-se questão central. 
 
@@ -897,8 +897,8 @@ Para a criação de uma proxy de vulnerabilidade econômica das crianças na Pri
 
 O tratamento e processamento das bases foram realizados em R, incluindo procedimentos de transformação, agregação, integração e verificação de consistência. Ferramentas de inteligência artificial generativa, especificamente GPT e Claude, foram utilizadas como apoio à programação e à organização do processamento dos dados.
 
-# 3. Oferta e financiamento da educação infantil em São Paulo
-## 3.1 Evolução da oferta
+# 3. A educação infantil em São Paulo
+## 3.1 Evolução da oferta pela rede municipal
 
 O município de São Paulo ofertou **`r format(resumosp$mat_ei_tot[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** matrículas na educação infantil em 2025, isso representa **`r format(round(resumosp$mat_ei_tot[resumosp$NU_ANO_CENSO == "2025"] / resumosp$mat_bas_tot[resumosp$NU_ANO_CENSO == "2025"] * 100, 2), big.mark = ".", decimal.mark = ",", scientific = FALSE)`%** do total de matrículas da educação básica oferecidas pela rede municipal. Desse total, **`r format(resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** eram matrículas na creche para crianças de 0 a 3 anos e **`r format(resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** eram vagas de pré-escola, matrículas de crianças de 4 e 5 anos. 
 
@@ -906,7 +906,7 @@ Este é o resultado da trajetória da oferta de educação para a primeira infâ
 
 O gráfico a seguir mostra, de 2016 a 2025, a evolução das taxas de cobertura de creche e pré-escola registradas na Pnad Contínua, que consideram a frequência das crianças à educação, seja ela custeada pelo Estado seja pelas famílias.
 
-```{r grafico-taxas-cobertura-atendimento, echo=FALSE, include=TRUE, fig.width=10, fig.height=6.5, out.width="100%"}
+```{r grafico-taxas-cobertura-atendimento, echo=FALSE, include=TRUE, fig.width=10, fig.height=4.875, out.width="100%"}
 # ============================================================
 # EVOLUÇÃO DAS TAXAS DE COBERTURA E DE ATENDIMENTO MUNICIPAL
 # CRECHE E PRÉ-ESCOLA — SÃO PAULO, 2016 A 2025
@@ -1085,7 +1085,7 @@ A **jornada integral é o padrão na oferta de vagas públicas em creche** na ci
 Havia apenas `r format(resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2025"] - resumosp$mat_cre_ti_dir[resumosp$NU_ANO_CENSO == "2025"] - resumosp$mat_cre_ti_ind[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)` vagas em creche de tempo parcial, uma opção de jornada oferecida aos pais no momento da matrícula.
 
 
-```{r grafico-evolucao-pre, echo=FALSE, include=TRUE, fig.width=10, fig.height=6.5, out.width="100%"}
+```{r grafico-evolucao-pre, echo=FALSE, include=TRUE, fig.width=10, fig.height=4.875, out.width="100%"}
 # ============================================================
 # EVOLUÇÃO DAS MATRÍCULAS NA PRÉ-ESCOLA
 # SÃO PAULO — 2016 A 2025
@@ -2496,11 +2496,11 @@ knitr::kable(
 
 ## 4.3 Evolução de transferências federais
 
-Entre as transferências fedeiras, como PNAE, PNATE
+O salário-educação é a mais importante transferência federal recebida pelo município de São Paulo entre 2016 e 2025, representando mais de 75% das transferências desse tipo. Essa transferência merece ser analisada pela importante alteração institucional ocorrida em sua distribuição nesse período. 
 
-No período analisado, outra fonte de financiamento da educação básica sofreu importante alteração institucional. O salário-educação trata-se de uma contribuição social recolhida das empresas em âmbito federal e que são redistribuídos entre União, estados e municípios. Até 2023, a distribuição dessas cotas combinava a arrecadação de cada unidade da federação com o número de matrículas na educação básica da rede pública: primeiro, os recursos eram apropriados de acordo com a origem da arrecadação e, posteriormente, redistribuídos entre os municípios de cada estado segundo suas matrículas. Tal mecanismo fazia com que a capacidade de arrecadação de cada estado condicionasse o volume de recursos posteriormente disponível para seus municípios, produzindo diferenças expressivas na receita per capita do salário-educação entre as unidades da federação.
+O salário-educação é uma contribuição social recolhida das empresas em âmbito federal e que são redistribuídos entre União, estados e municípios. Até 2023, a distribuição dessas cotas combinava a arrecadação de cada unidade da federação com o número de matrículas na educação básica da rede pública: primeiro, os recursos eram apropriados de acordo com a origem da arrecadação e, posteriormente, redistribuídos entre os municípios de cada estado segundo suas matrículas. Tal mecanismo fazia com que a capacidade de arrecadação de cada estado condicionasse o volume de recursos posteriormente disponível para seus municípios, produzindo diferenças expressivas na receita per capita do salário-educação entre as unidades da federação.
 
-Essa forma de partilha foi alterada em decorrência de uma controvérsia jurídica iniciada em 2009 e encerrada pelo Supremo Tribunal Federal em 2022. A decisão determinou que, a partir de 2024, a totalidade das cotas destinadas a estados e municípios passasse a ser destinada conforme o número de matrículas na educação básica pública, conforme previsto pela Emenda Constitucional nº 53/2006. A mudança deslocou o critério de distribuição da origem estadual da arrecadação para uma lógica nacional baseada na matrícula, conferindo ao salário-educação maior caráter redistributivo.
+Essa forma de partilha foi alterada em decorrência de uma controvérsia jurídica iniciada em 2009 e encerrada pelo Supremo Tribunal Federal em 2022. A decisão determinou que, a partir de 2024, a totalidade das cotas destinadas a estados e municípios passasse a ser destinada conforme o número de matrículas na educação básica pública, conforme previsto pela Emenda Constitucional nº 53/2006. A mudança deslocou o critério de distribuição da origem estadual da arrecadação para uma lógica nacional baseada na matrícula, conferindo ao salário-educação maior caráter redistributivo (Bassi, 2023).
 
 ```{r tabela-composicao-salario-educacao, echo=FALSE, include=TRUE}
 library(dplyr)
@@ -2554,7 +2554,7 @@ Para o município de São Paulo, a mudança implicou perda da vantagem relaciona
 
 Com quais etapas e modalidades da educação básica o município de São Paulo gasta? A análise das despesas liquidadas por subfunção permite identificar como os recursos da função Educação se distribuem entre diferentes áreas de atuação e, assim, observar mudanças nas prioridades de gasto do município. Nesta seção, a análise concentra-se no período de 2018 a 2025, quando a classificação orçamentária permite acompanhar de forma mais consistente a participação da Educação Infantil no conjunto das despesas educacionais. [^5]
 
-[^5]:.A comparação com 2016 e 2017 é limitada pelas características da classificação orçamentária adotada nesses anos. Nesse período, despesas relativas à Educação Infantil, ao Ensino Fundamental e a outras etapas e modalidades foram registradas de forma concentrada na subfunção Educação Básica, o que impede identificar separadamente o volume destinado a cada uma delas. 
+[^5]: A comparação com 2016 e 2017 é limitada pelas características da classificação orçamentária adotada nesses anos. Nesse período, despesas relativas à Educação Infantil, ao Ensino Fundamental e a outras etapas e modalidades foram registradas de forma concentrada na subfunção Educação Básica, o que impede identificar separadamente o volume destinado a cada uma delas.
 
 ```{r tabela-subfuncao-ano, echo=FALSE, include=TRUE}
 library(dplyr)
@@ -2721,7 +2721,7 @@ valor_ei_2025 <- dados_participacao_subfuncao %>%
 crescimento_ei_18_25 <- (valor_ei_2025 / valor_ei_2018 - 1) * 100
 ```
 
-Entre 2018 e 2025, o gasto liquidado com a subfunção Educação Infantil apresentou trajetória de crescimento, embora com oscilações no período de pandemia. Em valores atualizados, passou de R$ `r format(round(valor_ei_2018 / 1e9, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)` bilhões em 2018 para R$ `r format(round(valor_ei_2025 / 1e9, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)` bilhões em 2025, um aumento de aproximadamente `r format(round(crescimento_ei_18_25, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)`%.
+Entre 2018 e 2025, o gasto liquidado com a subfunção Educação Infantil apresentou trajetória de crescimento: em valores atualizados, passou de **R$ `r format(round(valor_ei_2018 / 1e9, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)` bilhões em 2018 para R$ `r format(round(valor_ei_2025 / 1e9, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)` bilhões em 2025**, um aumento de aproximadamente `r format(round(crescimento_ei_18_25, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)`%.
 
 ```{r grafico-participacao-educ-infantil, echo=FALSE, include=TRUE, fig.width=10, fig.height=6.5, out.width="100%"}
 library(dplyr)
