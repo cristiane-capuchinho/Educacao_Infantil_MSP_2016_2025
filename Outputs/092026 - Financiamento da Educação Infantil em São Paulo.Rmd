@@ -1,15 +1,27 @@
 ---
 title: "A educação infantil de oferta municipal em São Paulo"
-author: ''
+author: 'Cristiane Capuchinho e Anderson Henrique'
 date: "2026-09-15"
 output:
   html_document:
     md_extensions: "-tex_math_dollars"
-subtitle: Policy Brief - L3
+    toc: true
+    toc_depth: 3
+    toc_float: true
 ---
 # 1. Apresentação
 
+A educação infantil foi reconhecida como direito da criança e dever do Estado na Constituição Federal (Brasil, 1988). Entretanto, o acesso equânime de crianças de 0 a 5 anos a essa etapa e seu financiamento pelos municípios seguem um importante desafio. 
 
+Integrada como primeira etapa da educação básica na Lei de Diretrizes e Bases da Educação Nacional (Brasil, 1996), a educação infantil só passou a fazer parte do ensino obrigatório em 2009 com a expansão da faixa etária de obrigatoriedade para 4 anos, isto é, incluindo a pré-escola. A mudança constitucional criou uma cisão na etapa, com a pré-escola podendo acessar recursos vinculados à Manutenção e Desenvolvimento do Ensino (MDE) com prioridade em detrimento da creche.
+
+Por outro lado, a inclusão das matrículas das duas fases da educação infantil no Fundeb (Brasil, 2007), com possibilidade de financiamento por recursos públicos de vagas diretas ou conveniadas com instituições sem fins lucrativos abriu uma via para ampliação da oferta de creche e pré-escola pelas redes municipais (Arelaro, 2017; Oliveira, 2013).  
+
+Nesse contexto, os municípios enfrentam pressões simultâneas para ampliar a oferta de educação infantil e a jornada escolar. De um lado, a obrigatoriedade da pré-escola e as metas do Plano Nacional de Educação impulsionam a expansão do atendimento, incluindo a previsão de alcançar 60% das crianças de 0 a 3 anos na creche até 2036. De outro, a ampliação da educação em tempo integral acrescenta uma nova demanda sobre os sistemas municipais. Assim, o desafio não é apenas o de ampliar a oferta, mas decidir como fazê-lo: o gasto varia segundo a etapa e a idade das crianças, o tipo de provisão — direta ou conveniada — e a duração da jornada. 
+
+A aprovação do Fundeb Permanente, em 2020 (Brasil, 2020), acrescentou uma nova dimensão a esse problema ao alterar as regras de financiamento, com o aumento progressivo da complementação da União e mudanças nos mecanismos de redistribuição. 
+
+Nesse contexto, compreender como os recursos disponíveis se traduzem em diferentes padrões de oferta e de gasto torna-se questão central. 
 
 ## 1.1 Pergunta de pesquisa e objetivos
 
@@ -30,6 +42,8 @@ library ("readxl")
 library("readODS")
 
 options(scipen = 999)
+
+fonte_dados <- "Fonte: Elaboração dos autores a partir de dados."
 
 library(readr)
 
@@ -865,28 +879,32 @@ distritos_v20_bf_ei <- distritos_vintil_bf_ei %>%
   arrange(pct_bf_ei)
 ```
 
-## 2. Metodologia
+# 2. Metodologia
 
-A pesquisa analisa a evolução da oferta e do gasto público com Educação Infantil no município de São Paulo entre 2016 e 2025, articulando dados de execução orçamentária da Prefeitura Municipal de São Paulo (PMSP) e informações de matrículas do Censo Escolar (Inep). A análise tem como unidades de observação o ano e, em uma etapa específica, os distritos municipais.
-
-Para a análise da oferta, são consideradas tanto as matrículas da rede municipal direta quanto aquelas realizadas em instituições privadas parceiras do poder público. Foram incluídas as instituições que declararam parceria com a rede municipal, inclusive aquelas que também mantinham parceria com a rede estadual, em consonância com a responsabilidade prioritária dos municípios pela oferta de Educação Infantil.
+A pesquisa analisa a evolução da oferta e do gasto público com Educação Infantil no município de São Paulo entre 2016 e 2025, articulando dados de execução orçamentária da prefeitura de São Paulo (PMSP), dados de receita de bases nacionais e informações de matrículas do Censo Escolar (Inep). A análise tem como unidades de observação o ano e, em uma etapa específica, os distritos municipais.
 
 Os dados de receita municipal de 2016 a 2024 foram obtidos na base disponibilizada pelo Ipea, que harmoniza informações provenientes de diferentes fontes, entre elas Siope, Finbra, STN e FNDE (Bridi et al., 2026). Os dados de execução da despesa municipal foram obtidos no portal da Secretaria Municipal de Planejamento e Eficiência da PMSP, com acesso em abril de 2026. Foram utilizados os valores liquidados, por representarem o estágio em que a despesa é reconhecida como obrigação, evitando tanto a incerteza associada aos valores empenhados quanto a distância temporal que pode existir entre a prestação do serviço e o pagamento. Receitas e despesas foram corrigidas pelo IPCA, tendo dezembro de 2025 como período de referência.
 
-As despesas com educação Infantil foram identificadas a partir dos projetos e atividades orçamentários relacionados à oferta da etapa, e não apenas da classificação pela subfunção Educação Infantil. Os projetos e atividades foram agrupados em componentes de gasto associados à oferta de matrículas em creche e pré-escola, como remuneração de profissionais, manutenção e operação das unidades, transferências, materiais, uniformes, transporte e investimentos. Esses componentes foram relacionados a categorias de matrícula segundo fase (creche ou pré-escola), tipo de provisão (rede direta ou indireta) e jornada (parcial ou integral). 
+As despesas com educação infantil foram identificadas a partir dos projetos e atividades orçamentários relacionados à oferta da etapa, e não apenas da classificação pela subfunção Educação Infantil. Os projetos e atividades foram agrupados em componentes de gasto associados à oferta de matrículas em creche e pré-escola, como remuneração de profissionais, manutenção e operação das unidades, transferências, materiais, uniformes, transporte e investimentos. Esses componentes foram relacionados a categorias de matrícula segundo fase (creche ou pré-escola), tipo de provisão (rede direta ou indireta) e jornada (parcial ou integral). 
 
 A partir dessa correspondência, foram estimados valores de gasto por matrícula e aplicados às matrículas observadas em cada ano e distrito, permitindo calcular o gasto total e o gasto médio por matrícula de Educação Infantil. Para os componentes que abrangem jornadas de diferentes durações, as matrículas foram ponderadas de modo a atribuir peso 1 à jornada parcial e peso 2 à jornada integral. A metodologia detalhada de identificação, classificação e atribuição dos gastos, bem como os procedimentos de cálculo das matrículas e de validação das estimativas, está descrita no Apêndice Metodológico.
 
+Para a análise da oferta, são consideradas tanto as matrículas da rede municipal direta quanto aquelas realizadas em instituições privadas parceiras do poder público. Foram incluídas as instituições que declararam parceria com a rede municipal, inclusive aquelas que também mantinham parceria com a rede estadual, em consonância com a responsabilidade prioritária dos municípios pela oferta de educação infantil. 
+
+Como dados contextuais, foram usadas informações de população e taxa de cobertura em creche e pré-escola retirados do Censo do IBGE (2022) e da Pnad Contínua. 
+
+Para a criação de uma proxy de vulnerabilidade econômica das crianças na Primeira Infância, foram usados dados da PMSP sobre o percentual de beneficiários do Bolsa Família entre os estudantes matriculados na educação infantil por distrito municipal. Para isso, os 96 distritos foram ordenados pelo percentual de alunos beneficiários do Bolsa Família entre as matrículas de oferta municipal e agrupados em vintis (20 grupos) ponderados pela matrícula de EI municipal de cada distrito (e não pelo número de distritos), do grupo dos 5% menos vulneráveis, o vintil V1, ao grupo dos 5% mais vulneráveis, o vintil V20. 
+
 O tratamento e processamento das bases foram realizados em R, incluindo procedimentos de transformação, agregação, integração e verificação de consistência. Ferramentas de inteligência artificial generativa, especificamente GPT e Claude, foram utilizadas como apoio à programação e à organização do processamento dos dados.
 
-## 3. Oferta e financiamento da educação infantil em São Paulo
-### 3.1 Evolução da oferta
+# 3. Oferta e financiamento da educação infantil em São Paulo
+## 3.1 Evolução da oferta
 
-O município de São Paulo ofertou **`r format(resumosp$mat_ei_tot[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** matrículas na educação infantil em 2025, isso representa **`r round(resumosp$mat_ei_tot[resumosp$NU_ANO_CENSO == "2025"] / resumosp$mat_bas_tot[resumosp$NU_ANO_CENSO == "2025"] * 100, 2)`%** do total de matrículas da educação básica oferecidas pela rede municipal. Desse total, **`r format(resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** eram matrículas na creche para crianças de 0 a 3 anos e **`r format(resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** eram vagas de pré-escola, ou como nomeia a rede municipal, infantil integrado, matrículas de crianças de 4 e 5 anos. 
+O município de São Paulo ofertou **`r format(resumosp$mat_ei_tot[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** matrículas na educação infantil em 2025, isso representa **`r format(round(resumosp$mat_ei_tot[resumosp$NU_ANO_CENSO == "2025"] / resumosp$mat_bas_tot[resumosp$NU_ANO_CENSO == "2025"] * 100, 2), big.mark = ".", decimal.mark = ",", scientific = FALSE)`%** do total de matrículas da educação básica oferecidas pela rede municipal. Desse total, **`r format(resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** eram matrículas na creche para crianças de 0 a 3 anos e **`r format(resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** eram vagas de pré-escola, matrículas de crianças de 4 e 5 anos. 
 
 Este é o resultado da trajetória da oferta de educação para a primeira infância, em especial, para a creche, já que entre 2016 e 2025, foram criadas **`r format(resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2025"] - resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2016"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`** vagas em creche na capital paulista e, no mesmo período, as vagas em pré-escola tiveram redução de **<span style="color:red">`r format(abs(resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2025"] - resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2016"]), big.mark = ".", decimal.mark = ",", scientific = FALSE)`</span>**.
 
-O gráfico a seguir mostra, de 2016 a 2025, a evolução das taxas de cobertura de creche e pré-escola calculadas pelo Inep, que consideram toda a oferta no município, pública e privada, sem convênio.
+O gráfico a seguir mostra, de 2016 a 2025, a evolução das taxas de cobertura de creche e pré-escola registradas na Pnad Contínua, que consideram a frequência das crianças à educação, seja ela custeada pelo Estado seja pelas famílias.
 
 ```{r grafico-taxas-cobertura-atendimento, echo=FALSE, include=TRUE, fig.width=10, fig.height=6.5, out.width="100%"}
 # ============================================================
@@ -927,7 +945,7 @@ taxas_cobertura_sp <- capitais_FL %>%
   ) %>%
 
   # ------------------------------------------------------------
-  # 3. Manter o ano, as taxas do Inep e as taxas de atendimento
+  # 3. Manter o ano, as taxas da Pnad Contínua e as taxas de atendimento
   #    municipal (estas últimas ficam disponíveis na base, mesmo
   #    sem aparecer no gráfico)
   # ------------------------------------------------------------
@@ -940,7 +958,7 @@ taxas_cobertura_sp <- capitais_FL %>%
   )
 
 # ------------------------------------------------------------
-# 4. Formato longo apenas com as taxas de cobertura do Inep, que
+# 4. Formato longo apenas com as taxas de cobertura da Pnad Contínua, que
 #    são as duas séries exibidas no gráfico de linhas
 # ------------------------------------------------------------
 taxas_cobertura_sp_grafico <- taxas_cobertura_sp %>%
@@ -959,20 +977,20 @@ taxas_cobertura_sp_grafico <- taxas_cobertura_sp %>%
   mutate(
     indicador = recode(
       indicador,
-      "taxa_creche_0a3" = "Cobertura creche (Inep)",
-      "taxa_pre_4a5" = "Cobertura pré-escola (Inep)"
+      "taxa_creche_0a3" = "Cobertura creche (Pnad)",
+      "taxa_pre_4a5" = "Cobertura pré-escola (Pnad)"
     ),
     indicador = factor(
       indicador,
       levels = c(
-        "Cobertura creche (Inep)",
-        "Cobertura pré-escola (Inep)"
+        "Cobertura creche (Pnad)",
+        "Cobertura pré-escola (Pnad)"
       )
     ),
     # Rótulo com o valor de cada ponto, deslocado para cima ou para
     # baixo da linha conforme o indicador, para reduzir sobreposição
     rotulo_taxa = scales::label_number(suffix = "%", decimal.mark = ",", accuracy = 0.01)(taxa),
-    vjust_rotulo = if_else(indicador == "Cobertura creche (Inep)", 1.7, -0.9)
+    vjust_rotulo = if_else(indicador == "Cobertura creche (Pnad)", 1.7, -0.9)
   )
 
 # ------------------------------------------------------------
@@ -1009,8 +1027,8 @@ ggplot(
 
   scale_color_manual(
     values = c(
-      "Cobertura creche (Inep)" = "#1F77B4",
-      "Cobertura pré-escola (Inep)" = "#D95F02"
+      "Cobertura creche (Pnad)" = "#1F77B4",
+      "Cobertura pré-escola (Pnad)" = "#D95F02"
     )
   ) +
 
@@ -1019,7 +1037,8 @@ ggplot(
     subtitle = "Creche e pré-escola — São Paulo, 2016–2025",
     x = "Ano",
     y = "Taxa (%)",
-    color = NULL
+    color = NULL,
+    caption = fonte_dados
   ) +
 
   theme_minimal() +
@@ -1031,12 +1050,12 @@ ggplot(
   )
 ```
 
-### 3.2 Provisão
+## 3.2 Provisão
 A oferta de pré-escola, de ensino obrigatório, e de creche, etapa não obrigatória, tem características distintas na capital.
 
-Enquanto a pré-escola é oferecida majoritariamente na rede direta **(`r round((resumosp$mat_pre_dir[resumosp$NU_ANO_CENSO == "2025"] / resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2025"]) * 100, 2)`%, em 2025)**, a creche tem **`r round((1- resumosp$mat_cre_dir[resumosp$NU_ANO_CENSO == "2025"] / resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2025"]) * 100, 2)`%, em 2025** de suas matrículas em unidades conveniadas com o poder público. 
+Enquanto a pré-escola é oferecida majoritariamente na rede direta **(`r format(round((resumosp$mat_pre_dir[resumosp$NU_ANO_CENSO == "2025"] / resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2025"]) * 100, 2), big.mark = ".", decimal.mark = ",", scientific = FALSE)`%, em 2025)**, a creche tem **`r format(round((1- resumosp$mat_cre_dir[resumosp$NU_ANO_CENSO == "2025"] / resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2025"]) * 100, 2), decimal.mark = ",", nsmall = 2, scientific = FALSE)`%, em 2025** de suas matrículas em unidades conveniadas com o poder público.
 
-Apesar das tendências seguirem as mesmas no período analisado, o cenário atual mostra uma ampliação da contratação de matrículas para alunos na rede conveniada em detrimento do aumento de matrículas na rede direta. 
+Apesar das tendências seguirem as mesmas no período analisado, o cenário atual mostra uma ampliação da contratação de matrículas para alunos na rede conveniada em detrimento do aumento de matrículas na rede direta, tanto na creche quanto na pré-escola. 
 
 Em 2016, a rede direta ofertava **`r format((resumosp$mat_cre_dir[resumosp$NU_ANO_CENSO == "2016"]), big.mark = ".", decimal.mark = ",", scientific = FALSE)`** vagas na creche. Uma década mais tarde, a rede direta é responsável por **`r format((resumosp$mat_cre_dir[resumosp$NU_ANO_CENSO == "2025"]), big.mark = ".", decimal.mark = ",", scientific = FALSE)`**.
 
@@ -1059,10 +1078,11 @@ Já na pré-escola, em 2016, a rede indireta contava apenas **`r format((resumos
 )`%**.
 
 
-### 3.3 Jornada
+## 3.3 Jornada
 
-A **jornada integral é o padrão na oferta de vagas públicas em creche** na cidade de São Paulo, tanto na rede direta como na rede conveniada. Em números de 2025, eram `r format(resumosp$mat_cre_ti_dir[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)` matrículas em tempo integral na rede direta e `r format(resumosp$mat_cre_ti_ind[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)` vagas de tempo integral na rede indireta. 
-Isso significa que apenas `r format(resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2025"] - resumosp$mat_cre_ti_dir[resumosp$NU_ANO_CENSO == "2025"] - resumosp$mat_cre_ti_ind[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)` eram de tempo parcial, uma opção de jornada oferecida aos pais no momento da matrícula.
+A **jornada integral é o padrão na oferta de vagas públicas em creche** na cidade de São Paulo, tanto na rede direta como na rede parceira. Em números de 2025, eram `r format(resumosp$mat_cre_ti_dir[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)` matrículas em tempo integral na rede direta e `r format(resumosp$mat_cre_ti_ind[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)` vagas de tempo integral na rede indireta. 
+
+Havia apenas `r format(resumosp$mat_cre_tot[resumosp$NU_ANO_CENSO == "2025"] - resumosp$mat_cre_ti_dir[resumosp$NU_ANO_CENSO == "2025"] - resumosp$mat_cre_ti_ind[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)` vagas em creche de tempo parcial, uma opção de jornada oferecida aos pais no momento da matrícula.
 
 
 ```{r grafico-evolucao-pre, echo=FALSE, include=TRUE, fig.width=10, fig.height=6.5, out.width="100%"}
@@ -1156,6 +1176,16 @@ evolucao_pre_sp <- capitais_FL %>%
   )
 
 
+```
+
+Já na **pré-escola, a vaga pública de tempo parcial é o tipo de jornada mais comum** na rede. Eram `r format(resumosp$mat_pre_parc_dir[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)` matrículas em tempo parcial na rede direta em 2025, o equivalente a **`r format(round(((resumosp$mat_pre_parc_dir[resumosp$NU_ANO_CENSO == "2025"] + resumosp$mat_pre_parc_ind[resumosp$NU_ANO_CENSO == "2025"]) / resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2025"]) * 100, 2), decimal.mark = ",", nsmall = 2, scientific = FALSE)`% das matrículas** nessa fase da educação infantil. 
+
+Apenas **`r format(round(((resumosp$mat_pre_ti_dir[resumosp$NU_ANO_CENSO == "2025"] + resumosp$mat_pre_ti_ind[resumosp$NU_ANO_CENSO == "2025"]) / resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2025"]) * 100, 2), decimal.mark = ",", nsmall = 2, scientific = FALSE)`% das matrículas estão no tempo integral**, isto é, `r format(resumosp$mat_pre_ti_dir[resumosp$NU_ANO_CENSO == "2025"] + resumosp$mat_pre_ti_ind[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)` do total, sendo a maior parte em unidades da rede conveniada (`r format(resumosp$mat_pre_ti_ind[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)`), como mostra o Gráfico 2.
+
+
+```{r grafico pre escola, echo=FALSE, include=TRUE, fig.width=10, fig.height=6.5, out.width="100%"}
+
+
 # ============================================================
 # 2. Gráfico
 # ============================================================
@@ -1205,7 +1235,8 @@ ggplot(
     x = "Ano",
     y = "Número de matrículas",
     color = "Forma de provisão",
-    linetype = "Jornada"
+    linetype = "Jornada",
+    caption = fonte_dados
   ) +
   
   theme_minimal() +
@@ -1216,11 +1247,10 @@ ggplot(
     axis.text.x = element_text(angle = 45, hjust = 1)
   )
 
+
 ```
 
-Já na **pré-escola, a vaga pública de tempo parcial é o tipo de jornada mais comum** na rede. Apenas `r round(((resumosp$mat_pre_ti_dir[resumosp$NU_ANO_CENSO == "2025"] + resumosp$mat_pre_ti_ind[resumosp$NU_ANO_CENSO == "2025"]) / resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2025"]) * 100, 2)`% das matrículas estão no tempo integral, isto é, `r format(resumosp$mat_pre_ti_dir[resumosp$NU_ANO_CENSO == "2025"] + resumosp$mat_pre_ti_ind[resumosp$NU_ANO_CENSO == "2025"], big.mark = ".", decimal.mark = ",", scientific = FALSE)` do total, sendo a maior parte em unidades da rede conveniada, como mostra a figura acima.
-
-O mapa a seguir mostra, para cada distrito, a proporção das matrículas de pré-escola (rede direta e indireta) ofertadas em tempo integral, em 2025.
+A distribuição dessas vagas de jornada integral para crianças entre 4 e 5 anos, nessa fase de preparação para a alfabetização, não são distribuídas igualmente no território da cidade. O mapa 1 mostra, para cada distrito, a proporção das matrículas de pré-escola (rede direta e indireta) ofertadas em tempo integral, em 2025.
 
 ```{r ranking-pre-tempo-integral-distrito-2025, include=FALSE}
 library(dplyr)
@@ -1251,9 +1281,9 @@ n_distritos_pre_ti_100 <- nrow(distritos_pre_ti_100)
 bottom5_pre_ti <- tail(ranking_pre_ti_2025, 5) %>% arrange(percentual_pre_ti)
 ```
 
-Em 2025, `r n_distritos_pre_ti_100` distritos tinham todas as suas matrículas de pré-escola da rede municipal em tempo integral, sejam elas em unidades diretas ou indiretas: `r knitr::combine_words(distritos_pre_ti_100$NO_DISTRITO, and = " e ")`.
+Em 2025, **`r n_distritos_pre_ti_100` distritos tinham todas as suas matrículas de pré-escola da rede municipal em tempo integral**, sejam elas em unidades diretas ou indiretas: `r knitr::combine_words(distritos_pre_ti_100$NO_DISTRITO, and = " e ")`.
 
-Na outra ponta, os cinco distritos com menor proporção de matrículas de pré-escola em tempo integral são `r knitr::combine_words(bottom5_pre_ti$NO_DISTRITO, and = " e ")`, com percentuais entre `r percent(min(bottom5_pre_ti$percentual_pre_ti), accuracy = 0.01, decimal.mark = ",")` e `r percent(max(bottom5_pre_ti$percentual_pre_ti), accuracy = 0.01, decimal.mark = ",")`.
+Na outra ponta, **os cinco distritos com menor proporção de matrículas de pré-escola em tempo integral são `r knitr::combine_words(bottom5_pre_ti$NO_DISTRITO, and = " e ")`**, com percentuais entre `r percent(min(bottom5_pre_ti$percentual_pre_ti), accuracy = 0.01, decimal.mark = ",")` e `r percent(max(bottom5_pre_ti$percentual_pre_ti), accuracy = 0.01, decimal.mark = ",")`.
 
 ```{r mapa-pre-tempo-integral-distrito-2025, echo=FALSE, include=TRUE, fig.width=10, fig.height=8, out.width="100%"}
 # ============================================================
@@ -1323,7 +1353,8 @@ ggplot(mapa_pre_ti_2025) +
   labs(
     title = "Mapa 1. Matrículas de pré-escola em tempo integral, por distrito",
     subtitle = "São Paulo, 2025 — % das matrículas (rede direta + indireta) em tempo integral",
-    fill = "% das matrículas"
+    fill = "% das matrículas",
+    caption = fonte_dados
   ) +
   theme_void() +
   theme(
@@ -1332,7 +1363,7 @@ ggplot(mapa_pre_ti_2025) +
   )
 ```
 
-Outra forma de olhar a jornada da pré-escola é relacioná-la a uma proxy de vulnerabilidade econômica construída a partir do percentual de matrículas de Educação Infantil beneficiárias do Bolsa Família, por distrito: os 96 distritos foram ordenados por esse percentual e agrupados em vintis (20 grupos) ponderados pela matrícula de EI municipal de cada distrito (e não pelo número de distritos), do vintil 1 (V1, menos vulnerável) ao vintil 20 (V20, mais vulnerável).
+Outra forma de olhar a desigualdade na distribuição das vagas de tempo integral é verificar sua distribuição em relação aos grupos com maior número de beneficiários do Bolsa Família. 
 
 ```{r pre-ti-vintis-bf-ei, include=FALSE}
 # ============================================================
@@ -1364,25 +1395,33 @@ pct_pre_ti_v20 <- pre_ti_distrito_2025 %>%
   pull(pct_pre_ti)
 ```
 
-No grupo **V1**, formado pelos distritos com menor percentual de beneficiários do Bolsa Família na Educação Infantil (`r knitr::combine_words(distritos_v1_bf_ei$NO_DISTRITO, and = " e ")`), **`r percent(pct_pre_ti_v1, accuracy = 0.01, decimal.mark = ",")`** das matrículas de pré-escola de oferta municipal estavam em tempo integral, em 2025.
+No grupo **V1**, formado pelos distritos com menor percentual de beneficiários do Bolsa Família na Educação Infantil[^1], **`r percent(pct_pre_ti_v1, accuracy = 0.01, decimal.mark = ",")`** das matrículas de pré-escola de oferta municipal estavam em tempo integral, em 2025.
 
-Já no grupo **V20**, formado pelos distritos com maior percentual de beneficiários do Bolsa Família na Educação Infantil (`r knitr::combine_words(distritos_v20_bf_ei$NO_DISTRITO, and = " e ")`), essa proporção foi de **`r percent(pct_pre_ti_v20, accuracy = 0.01, decimal.mark = ",")`**.
+Já no grupo **V20**, formado pelos distritos com maior percentual de beneficiários do Bolsa Família na Educação Infantil, essa proporção foi de **`r percent(pct_pre_ti_v20, accuracy = 0.01, decimal.mark = ",")`**.
 
-### 3.4 Proporção docentes por turma
+[^1]: O grupo V1 é formado pelos distritos `r knitr::combine_words(distritos_v1_bf_ei$NO_DISTRITO, and = " e ")`. O grupo V20, o mais vulnerável, é formado pelos distritos `r knitr::combine_words(distritos_v20_bf_ei$NO_DISTRITO, and = " e ")`.
+
+## 3.4 Proporção docentes por turma
 
 As unidades da rede direta têm em média maior proporção de docentes por turma que a rede conveniada. Isso ocorre tanto na creche quanto na pré-escola. 
 
 Enquanto nas creches conveniadas a média de docentes por turma é de **`r format(round(resumosp$doc_tur_cre_ind[resumosp$NU_ANO_CENSO == "2025"], 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)`**, nas creches da rede municipal direta a proporção é de **`r format(round(resumosp$doc_tur_cre_dir[resumosp$NU_ANO_CENSO == "2025"], 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)`**, praticamente o dobro.
 
-Na pré-escola o mesmo fenômeno se repete. A média de docente por turma de pré-escola conveniada é de **`r format(round(resumosp$doc_tur_pre_ind[resumosp$NU_ANO_CENSO == "2025"], 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)`**, diante da média de **`r format(round(resumosp$doc_tur_pre_dir[resumosp$NU_ANO_CENSO == "2025"], 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)`** em escolas da rede municipal direta.
+Na pré-escola o mesmo fenômeno se repete. A média de docente por turma de pré-escola conveniada é de **`r format(round(resumosp$doc_tur_pre_ind[resumosp$NU_ANO_CENSO == "2025"], 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)`**, diante da média de **`r format(round(resumosp$doc_tur_pre_dir[resumosp$NU_ANO_CENSO == "2025"], 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)`** em escolas da rede municipal direta. É importante destacar aqui que a rede parceira tem média menor de docentes por turma que a rede direta, apesar de concentrar as vagas de tempo integral nessa fase da educação infantil. Em 2025, **`r percent(resumosp$mat_pre_ti_ind[resumosp$NU_ANO_CENSO == "2025"] / resumosp$mat_pre_ind[resumosp$NU_ANO_CENSO == "2025"], accuracy = 0.01, decimal.mark = ",")`** das matrículas de pré-escola da rede indireta eram de tempo integral, enquanto na rede direta esse percentual era de **`r percent(resumosp$mat_pre_ti_dir[resumosp$NU_ANO_CENSO == "2025"] / resumosp$mat_pre_dir[resumosp$NU_ANO_CENSO == "2025"], accuracy = 0.01, decimal.mark = ",")`**.
 
-### 3.5 Qualidade da infraestrutura
+Para entender se essa proporção melhorou ou piorou ao longo do tempo, vale comparar com 2016. Naquele ano, a média de docentes por turma nas creches da rede direta era de **`r format(round(resumosp$doc_tur_cre_dir[resumosp$NU_ANO_CENSO == "2016"], 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)`** e nas creches da rede indireta, de **`r format(round(resumosp$doc_tur_cre_ind[resumosp$NU_ANO_CENSO == "2016"], 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)`**. Na pré-escola, a média era de **`r format(round(resumosp$doc_tur_pre_dir[resumosp$NU_ANO_CENSO == "2016"], 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)`** docentes por turma na rede direta e de **`r format(round(resumosp$doc_tur_pre_ind[resumosp$NU_ANO_CENSO == "2016"], 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)`** na rede indireta.
 
-A infraestrutura é compreendida na literatura, e em documentos do Ministério da Educação, como elemento de grande importância para determinar a qualidade da oferta na educação infantil. Dentre os itens mapeados anualmente pelo Censo Escolar, selecionamos quatro elementos da infraestrutura relacionados especificamente com educação infantil ou apontados como importantes para esta fase. 
+## 3.5 Qualidade da infraestrutura
+
+A infraestrutura é compreendida na literatura (Falciano; Santos; Nunes, 2016; Oliveira, 2016), e em documentos do Ministério da Educação (Brasil, 2015), como elemento de grande importância para determinar a qualidade da oferta na educação infantil. Dentre os itens mapeados anualmente pelo Censo Escolar, selecionamos quatro elementos da infraestrutura relacionados especificamente com educação infantil ou apontados como importantes para esta fase. 
 
 Foram eles: **presença de área verde** na unidade escolar, existência de **banheiro infantil**, disponibilidade de **jogos pedagógicos** e de **material de atividades artísticas**. A partir disso, foram criadas duas categorias de unidades para casos extremos, aquelas sem nenhum dos quatro itens e aquelas com todos os quatro itens. Todas essas informações estão presentes a partir do Censo Escolar de 2019. 
 
-A análise dessas informações, como é possível observar na tabela a seguir, indica que houve melhora na infraestrutura da rede no período analisado. Contudo, é clara a maior presença de elementos identificados com a qualidade em unidades escolares da rede direta, tanto em 2019 quanto em 2025. 
+O gráfico 3 evidencia a **maior presença de elementos identificados com a qualidade em unidades escolares da rede direta, tanto em 2019 quanto em 2025**. A maior distância pode ser percebida no percentual de matrículas da rede direta em unidades com área verde (40,17%, em 2025), diante de 23,91% de matrículas na rede parceira em unidades com área verde.
+
+Ao comparar a evolução, percebe-se que, em unidades da rede direta, entre 2019 e 2025 houve aumento do percentual de matrículas ofertadas em unidades com cada um dos elementos investigados ou com a presença de todos, indicando a melhora na infraestrutura ofertada para essas unidades. 
+
+Já na rede indireta, no período analisado, há melhora apenas no índice de crianças matriculadas em unidades com material artístico (de 35,18% para 37,18%). E **entre as parceiras, há retração no percentual de matrículas em unidades indiretas com área verde, banheiro infantil, jogos pedagógicos ou todos os itens**. Chama a atenção que 22,81% das matrículas da rede indireta em 2025 estavam em unidades que não declararam possuir nenhum dos quatro itens no Censo Escolar.
  
 ```{r tabela-infra-ei, include=FALSE}
 library(knitr)
@@ -1471,7 +1510,7 @@ tabela_infra_ei <- tabela_infra_ei_num %>%
 knitr::kable(
   tabela_infra_ei,
   format = "html",
-  caption = "Distribuição das matrículas de Educação Infantil segundo atributos de infraestrutura, por rede e ano — São Paulo, 2019 e 2025",
+  caption = paste0("Distribuição das matrículas de Educação Infantil segundo atributos de infraestrutura, por rede e ano — São Paulo, 2019 e 2025\n", fonte_dados),
   col.names = c(
     "Rede", "Ano", "Área verde", "Banheiro infantil",
     "Jogos pedagógicos", "Material artístico", "Com todos itens", "Sem nenhum item"
@@ -1547,7 +1586,8 @@ ggplot(
     subtitle = "Percentual de matrículas em unidades com cada atributo — São Paulo, 2019 e 2025",
     x = NULL,
     y = "% das matrículas",
-    fill = "Rede"
+    fill = "Rede",
+    caption = fonte_dados
   ) +
   theme_minimal() +
   theme(
@@ -1556,7 +1596,6 @@ ggplot(
   )
 ```
 
-O mapa a seguir mostra, para cada distrito, a proporção das matrículas de Educação Infantil (rede direta e indireta) ofertadas em unidades que reúnem todos os itens de infraestrutura considerados (área verde, banheiro infantil, jogos pedagógicos e material artístico), em 2025.
 
 ```{r ranking-infra-4itens-distrito-2025, include=FALSE}
 library(dplyr)
@@ -1583,9 +1622,10 @@ distritos_sem_4itens <- ranking_infra_4itens_2025 %>%
 n_distritos_sem_4itens <- nrow(distritos_sem_4itens)
 ```
 
-Os cinco distritos com maior proporção de matrículas de Educação Infantil em unidades com todos os itens de infraestrutura em 2025 são `r knitr::combine_words(top5_infra_4itens$NO_DISTRITO, and = " e ")`, com percentuais entre `r percent(min(top5_infra_4itens$percentual_4itens), accuracy = 0.01, decimal.mark = ",")` e `r percent(max(top5_infra_4itens$percentual_4itens), accuracy = 0.01, decimal.mark = ",")`.
+A análise por distritos (mapa 2) da proporção das matrículas de educação infantil (rede direta e indireta) ofertadas em unidades que reúnem todos os itens de infraestrutura considerados (área verde, banheiro infantil, jogos pedagógicos e material artístico), em 2025, indica que **`r n_distritos_sem_4itens` distritos não apresentaram em 2025 qualquer unidade com matrículas de oferta municipal com os quatro itens de infraestrutura**, entre eles República, Liberdade, Marsilac, Barra Funda e Pinheiros.
 
-Na outra ponta, `r n_distritos_sem_4itens` distritos não apresentaram em 2025 qualquer unidade com matrículas de oferta municipal com os quatro itens de infraestrutura, entre eles República, Liberdade, Marsilac, Barra Funda, Pinheiros.
+Enquanto isso, os distritos **`r knitr::combine_words(top5_infra_4itens$NO_DISTRITO, and = " e ")` reúnem percentuais entre `r percent(min(top5_infra_4itens$percentual_4itens), accuracy = 0.01, decimal.mark = ",")` e `r percent(max(top5_infra_4itens$percentual_4itens), accuracy = 0.01, decimal.mark = ",")` em unidades com infraestrutura completa**.
+
 
 ```{r mapa-infra-4itens-distrito-2025, echo=FALSE, include=TRUE, fig.width=10, fig.height=8, out.width="100%"}
 # ============================================================
@@ -1656,7 +1696,8 @@ ggplot(mapa_infra_4itens_2025) +
   labs(
     title = "Mapa 2. Matrículas de Educação Infantil em unidades com todos os itens de infraestrutura",
     subtitle = "São Paulo, 2025 — % das matrículas (rede direta + indireta) em unidades com área verde,\nbanheiro infantil, jogos pedagógicos e material artístico",
-    fill = "% das matrículas"
+    fill = "% das matrículas",
+    caption = fonte_dados
   ) +
   theme_void() +
   theme(
@@ -1700,9 +1741,8 @@ pct_infra_4itens_sp_toda <- (
 ) / resumosp$mat_ei_tot[resumosp$NU_ANO_CENSO == "2025"]
 ```
 
-Relacionando a infraestrutura completa à proxy de vulnerabilidade econômica por vintis de distrito (ver Apêndice Metodológico), no grupo **V1** (distritos com menor percentual de beneficiários do Bolsa Família na Educação Infantil), **`r percent(pct_infra_4itens_v1, accuracy = 0.01, decimal.mark = ",")`** das matrículas de Educação Infantil estavam em unidades com todos os quatro itens de infraestrutura, em 2025. Já no grupo **V20** (distritos com maior percentual de beneficiários), essa proporção foi de **`r percent(pct_infra_4itens_v20, accuracy = 0.01, decimal.mark = ",")`**. Na média geral do município (São Paulo Toda), **`r percent(pct_infra_4itens_sp_toda, accuracy = 0.01, decimal.mark = ",")`** das matrículas de Educação Infantil estavam em unidades com infraestrutura completa.
 
-O mapa a seguir mostra, para cada distrito, a proporção das matrículas de Educação Infantil (rede direta e indireta) ofertadas em unidades sem nenhum dos quatro itens de infraestrutura considerados, em 2025.
+Relacionando a infraestrutura completa à proxy de vulnerabilidade econômica por vintis de distrito (ver Apêndice Metodológico), no grupo **V1** (distritos com menor percentual de beneficiários do Bolsa Família na Educação Infantil), **`r percent(pct_infra_4itens_v1, accuracy = 0.01, decimal.mark = ",")`** das matrículas de Educação Infantil estavam em unidades com todos os quatro itens de infraestrutura, em 2025. Já no grupo **V20** (distritos com maior percentual de beneficiários), essa proporção foi de **`r percent(pct_infra_4itens_v20, accuracy = 0.01, decimal.mark = ",")`**. Na média geral do município (São Paulo Toda), **`r percent(pct_infra_4itens_sp_toda, accuracy = 0.01, decimal.mark = ",")`** das matrículas de Educação Infantil estavam em unidades com infraestrutura completa.
 
 ```{r ranking-infra-sem4itens-distrito-2025, include=FALSE}
 library(dplyr)
@@ -1731,7 +1771,7 @@ distritos_zero_sem4itens <- ranking_infra_sem4itens_2025 %>%
 n_distritos_zero_sem4itens <- nrow(distritos_zero_sem4itens)
 ```
 
-Em 2025, `r n_distritos_zero_sem4itens` distritos não tinham nenhuma matrícula de Educação Infantil em unidades sem nenhum item de infraestrutura — ou seja, em todos eles, a totalidade das matrículas estava em unidades com pelo menos um dos quatro itens considerados: `r knitr::combine_words(distritos_zero_sem4itens$NO_DISTRITO, and = " e ")`.
+A distribuição de vagas em unidades sem nenhum dos quatro itens de infraestrutura (mapa 3) aponta distritos em que a maioria das crianças estão em unidades com essas características, enquanto em `r n_distritos_zero_sem4itens` todas as crianças de 0 a 5 anos na estavam matriculadas em unidades com pelo menos um dos quatro itens considerados: `r knitr::combine_words(distritos_zero_sem4itens$NO_DISTRITO, and = " e ")`.
 
 Já os cinco distritos com maior proporção de matrículas em unidades sem nenhum item de infraestrutura são `r knitr::combine_words(top5_infra_sem4itens$NO_DISTRITO, and = " e ")`, com percentuais entre `r percent(min(top5_infra_sem4itens$percentual_sem4itens), accuracy = 0.01, decimal.mark = ",")` e `r percent(max(top5_infra_sem4itens$percentual_sem4itens), accuracy = 0.01, decimal.mark = ",")`.
 
@@ -1774,7 +1814,8 @@ ggplot(mapa_infra_sem4itens_2025) +
   labs(
     title = "Mapa 3. Matrículas de Educação Infantil em unidades sem nenhum item de infraestrutura",
     subtitle = "São Paulo, 2025 — % das matrículas (rede direta + indireta) em unidades sem área verde,\nbanheiro infantil, jogos pedagógicos nem material artístico",
-    fill = "% das matrículas"
+    fill = "% das matrículas",
+    caption = fonte_dados
   ) +
   theme_void() +
   theme(
@@ -1819,9 +1860,11 @@ pct_infra_sem4itens_sp_toda <- (
 ) / resumosp$mat_ei_tot[resumosp$NU_ANO_CENSO == "2025"]
 ```
 
+Essa desigualdade territorial, no entanto, não está relacionada necessariamente com a vulnerabilidade econômica da população. 
+
 Relacionando a ausência de infraestrutura à mesma proxy de vulnerabilidade econômica por vintis de distrito, no grupo **V1** (distritos com menor percentual de beneficiários do Bolsa Família na Educação Infantil), **`r percent(pct_infra_sem4itens_v1, accuracy = 0.01, decimal.mark = ",")`** das matrículas de Educação Infantil estavam em unidades sem nenhum item de infraestrutura, em 2025. Já no grupo **V20** (distritos com maior percentual de beneficiários), essa proporção foi de **`r percent(pct_infra_sem4itens_v20, accuracy = 0.01, decimal.mark = ",")`**. Na média geral do município (São Paulo Toda), **`r percent(pct_infra_sem4itens_sp_toda, accuracy = 0.01, decimal.mark = ",")`** das matrículas de Educação Infantil estavam em unidades sem nenhum item de infraestrutura.
 
-## 4. Evolução dos gastos em Educação da PMSP
+# 4. Evolução dos gastos em Educação da PMSP
 
 ```{r crescimento-gasto-educ, echo=FALSE, include=FALSE}
 library(dplyr)
@@ -1839,17 +1882,14 @@ crescimento_gasto_educ_pct <- (
 ) * 100
 ```
 
-A ampliação da oferta de educação infantil e a expansão da jornada na pré-escola são concomitantes com um período de aumento de gastos com educação no município de São Paulo. Entre 2016 e 2025, os recursos liquidados na Função Educação cresceram `r round(crescimento_gasto_educ_pct, 2)`%, já descontada a inflação no período.
+A ampliação da oferta de educação infantil e a expansão da jornada na pré-escola acontecem em um **período de aumento de gastos com educação no município de São Paulo. Entre 2016 e 2025, os recursos liquidados na Função Educação cresceram `r format(round(crescimento_gasto_educ_pct, 2), big.mark = ".", decimal.mark = ",", scientific = FALSE)`%**, já descontada a inflação no período (gráfico 4). Os valores passaram de R$ 15,4 bilhões, em 2016, para R$ 27,2 bilhões, em 2025. O crescimento é especialmente acelerado a partir de 2023.
 
-Essa trajetória de aumento de gastos é paralela ao crescimento dos valores vinculados constitucionalmente à educação, o que mostra uma expansão de gasto relacionada ao aumento de receita total do município.
-
-A tabela e o gráfico a seguir comparam, ano a ano, o valor liquidado na função Educação pela Prefeitura de São Paulo com o total de receitas vinculadas à Educação.
-
-```{r tabela-gastos-educ, echo=FALSE, include=TRUE}
+```{r grafico-gastos-educ, echo=FALSE, include=TRUE, fig.width=10, fig.height=4.875, out.width="100%"}
 library(dplyr)
-library(knitr)
-library(kableExtra)
+library(tidyr)
+library(ggplot2)
 library(scales)
+
 
 # ============================================================
 # EVOLUÇÃO DOS GASTOS E RECEITAS DE EDUCAÇÃO — PMSP
@@ -1860,49 +1900,15 @@ library(scales)
 # 2. Receita total vinculada à Educação, 2016 a 2024 (receitas_pmsp_ipca)
 receita_educ_pmsp <- receitas_pmsp_ipca %>%
   filter(ano >= 2016, ano <= 2024) %>%
-  select(ano, receita_educ_ipca = rectot_educ_ipca)
+  select(ano, receita_educ_ipca = rectot_educ_ipca, impadd_mde_ipca)
 
 # 3. Consolidar as duas séries
 evolucao_gastos_pmsp <- gasto_educ_pmsp %>%
   left_join(receita_educ_pmsp, by = "ano") %>%
   arrange(ano)
 
-# 4. Tabela formatada (valores em R$ milhões, IPCA dez/2025)
-tabela_gastos_educ <- evolucao_gastos_pmsp %>%
-  transmute(
-    Ano = ano,
-    `Gasto liquidado em Educação` = gasto_liquidado_ipca / 1e6,
-    `Receita vinculada à Educação` = receita_educ_ipca / 1e6
-  ) %>%
-  mutate(
-    across(
-      c(`Gasto liquidado em Educação`, `Receita vinculada à Educação`),
-      ~ format(round(.x, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)
-    )
-  )
-
-knitr::kable(
-  tabela_gastos_educ,
-  format = "html",
-  align = c("c", "r", "r"),
-  caption = "Tabela 1. Gasto liquidado em Educação e receita vinculada à Educação — São Paulo, 2016–2025 (R$ milhões, valores atualizados pelo IPCA a dezembro de 2025)"
-) %>%
-  kableExtra::kable_styling(
-    bootstrap_options = c("striped", "hover", "bordered"),
-    full_width = FALSE
-  ) %>%
-  kableExtra::column_spec(1, bold = TRUE) %>%
-  kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;") %>%
-  kableExtra::column_spec(1:3, extra_css = "padding: 6px 14px;")
-```
-
-```{r grafico-gastos-educ, echo=FALSE, include=TRUE, fig.width=10, fig.height=6.5, out.width="100%"}
-library(dplyr)
-library(tidyr)
-library(ggplot2)
-library(scales)
-
 evolucao_gastos_pmsp_long <- evolucao_gastos_pmsp %>%
+  select(ano, gasto_liquidado_ipca, receita_educ_ipca) %>%
   rename(
     `Gasto liquidado em Educação` = gasto_liquidado_ipca,
     `Receita vinculada à Educação` = receita_educ_ipca
@@ -1946,7 +1952,8 @@ ggplot(
     subtitle = "São Paulo, 2016–2025 — valores atualizados pelo IPCA (dez/2025)",
     x = "Ano",
     y = "R$ milhões",
-    color = NULL
+    color = NULL,
+    caption = fonte_dados
   ) +
   theme_minimal() +
   theme(
@@ -1955,8 +1962,48 @@ ggplot(
     axis.text.x = element_text(angle = 45, hjust = 1)
   )
 ```
+O aumento de gastos é concomitante ao crescimento dos valores vinculados constitucionalmente à educação para a cidade de São Paulo, o que mostra **uma expansão de gasto relacionada ao aumento de receita total do município** (tabela 1). A receita vinculada cresce gradual e incessantemente no período, lembrando que nos anos de 2020 e 2021, por conta da pandemia de Covid-19, os municípios ficaram isentos da obrigatoriedade de aplicação do mínimo em educação por meio da Emenda Constitucional 119/2022.
 
-### 4.1 Fontes de receitas
+```{r tabela-gastos-educ, echo=FALSE, include=TRUE}
+library(kableExtra)
+library(scales)
+
+
+# 4. Tabela formatada (valores em R$ milhões, IPCA dez/2025)
+tabela_gastos_educ <- evolucao_gastos_pmsp %>%
+  transmute(
+    Ano = ano,
+    `Gasto liquidado em Educação` = gasto_liquidado_ipca / 1e6,
+    `Receita vinculada à Educação` = receita_educ_ipca / 1e6,
+    `Impostos adicionais vinculados ao MDE` = impadd_mde_ipca / 1e6
+  ) %>%
+  mutate(
+    across(
+      c(
+        `Gasto liquidado em Educação`,
+        `Receita vinculada à Educação`,
+        `Impostos adicionais vinculados ao MDE`
+      ),
+      ~ format(round(.x, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)
+    )
+  )
+
+knitr::kable(
+  tabela_gastos_educ,
+  format = "html",
+  align = c("c", "r", "r", "r"),
+  caption = paste0("Tabela 1. Gasto liquidado em Educação, receita vinculada à Educação e impostos adicionais vinculados ao MDE — São Paulo, 2016–2025 (R$ milhões, valores atualizados pelo IPCA a dezembro de 2025)\n", fonte_dados)
+) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "bordered"),
+    full_width = FALSE
+  ) %>%
+  kableExtra::column_spec(1, bold = TRUE) %>%
+  kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;") %>%
+  kableExtra::column_spec(1:4, extra_css = "padding: 6px 14px;")
+```
+
+## 4.1 Fontes de receitas
 
 ```{r tabela-fonte-ano, echo=FALSE, include=FALSE}
 library(dplyr)
@@ -2008,14 +2055,14 @@ tabela_fonte_ano <- tabela_fonte_ano %>%
   mutate(
     across(
       matches("_percentual$"),
-      ~ percent(.x, accuracy = 0.01)
+      ~ percent(.x, accuracy = 0.01, decimal.mark = ",")
     )
   )
 
 knitr::kable(
   tabela_fonte_ano,
   format = "html",
-  caption = "Gasto liquidado em Educação por fonte de recursos e participação percentual no total do ano — São Paulo, 2016–2025 (valores atualizados pelo IPCA a dezembro de 2025)"
+  caption = paste0("Gasto liquidado em Educação por fonte de recursos e participação percentual no total do ano — São Paulo, 2016–2025 (valores atualizados pelo IPCA a dezembro de 2025)\n", fonte_dados)
 ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
@@ -2025,9 +2072,9 @@ knitr::kable(
   kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
 ```
 
-Ao analisar as fontes dos recursos gastos em educação no município de São Paulo, revela-se que o financiamento educacional na capital paulista é marcado pela baixa relevância relativa dos recursos redistribuídos do Fundeb em relação ao total das receitas educacionais do município. 
+Ao analisar as fontes dos recursos gastos em educação no município de São Paulo, revela-se que o gasto educacional na capital paulista é fortemente financiado pelo Tesouro Municipal, com menor relevância dos recursos redistribuídos pelo Fundeb. 
 
-O gráfico a seguir mostra a evolução do gasto liquidado por fonte de recursos, em valores absolutos.
+São Paulo sustenta a maior parte de seus gastos educacionais com arrecadação própria, como mostra o gráfico 5. Em 2016, eram R$ 8,9 bilhões de gastos liquidados oriundos do Tesouro Municipal. Dez anos depois, o valor chegou a R$ 18,5 bilhões. 
 
 ```{r grafico-fonte-ano, echo=FALSE, include=TRUE, fig.width=10, fig.height=6.5, out.width="100%"}
 library(dplyr)
@@ -2053,6 +2100,27 @@ ordem_fontes <- dados_grafico_fonte %>%
 
 dados_grafico_fonte <- dados_grafico_fonte %>%
   mutate(Ds_Fonte = factor(Ds_Fonte, levels = ordem_fontes))
+
+transferencias_federais_ano <- dados_grafico_fonte %>%
+  filter(Ds_Fonte == "Transferências Federais") %>%
+  group_by(Cd_Exercicio) %>%
+  summarise(
+    valor = sum(Vl_Liquidado_ipca, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+valor_tf_2016 <- transferencias_federais_ano %>%
+  filter(Cd_Exercicio == 2016) %>%
+  pull(valor)
+
+valor_tf_2025 <- transferencias_federais_ano %>%
+  filter(Cd_Exercicio == 2025) %>%
+  pull(valor)
+
+valor_tf_medio <- mean(
+  transferencias_federais_ano$valor,
+  na.rm = TRUE
+)
 
 ggplot(
   dados_grafico_fonte,
@@ -2080,7 +2148,8 @@ ggplot(
     subtitle = "São Paulo, 2016–2025 — valores atualizados pelo IPCA (dez/2025)",
     x = "Ano",
     y = "Valor liquidado (R$ milhões)",
-    color = "Fonte"
+    color = "Fonte",
+    caption = fonte_dados
   ) +
   guides(color = guide_legend(nrow = 2, byrow = TRUE)) +
   theme_minimal() +
@@ -2090,12 +2159,12 @@ ggplot(
     axis.text.x = element_text(angle = 45, hjust = 1)
   )
 ```
+Já o Fundeb é fonte de cerca de um terço das despesas (tabela 2), valores entre R$ 5,4 bilhões, em 2016, e R$ 8,1 bilhões, em 2025. Essa baixa dependência do Fundeb segue, como aponta Nota Técnica de Pereira, Machado e Minarelli (2026), um padrão próprio de grandes cidades, com alta capacidade de financiamento por impostos próprios, como o IPTU e o ISS. 
 
-### 4.1.1 Participação das Fontes de Receitas
+Ao longo do período, a terceira fonte de recursos são as transferências federais, que reúnem recursos do Salário-Educação e de transferências universais ou condicionadas do FNDE (Fundo Nacional de Desenvolvimento da Educação). 
 
-São Paulo sustenta grande parte de seu gasto educacional com receitas próprias vinculadas. Essa baixa dependência do Fundeb segue, como aponta Nota Técnica de Pereira, Machado e Minarelli (2026), um padrão próprio de grandes cidades, com alta capacidade de financiamento por impostos próprios, como o IPTU e o ISS. 
-
-A tabela a seguir isola a participação percentual de cada fonte de recursos no gasto liquidado em Educação, ano a ano.
+Considerando o período analisado, o valor médio anual das Transferências Federais foi de 
+R$ `r format(valor_tf_medio / 1e9, digits = 2, decimal.mark = ",", nsmall = 2)` bilhões, indicando patamar bastante mais baixo dessa fonte na composição municipal.
 
 ```{r tabela-fonte-percentual, echo=FALSE, include=TRUE}
 library(dplyr)
@@ -2142,7 +2211,7 @@ tabela_fonte_percentual <- tabela_fonte_percentual_base %>%
     Ds_Fonte = as.character(Ds_Fonte),
     across(
       -Ds_Fonte,
-      ~ percent(.x, accuracy = 0.01)
+      ~ percent(.x, accuracy = 0.01, decimal.mark = ",")
     )
   )
 
@@ -2155,7 +2224,7 @@ knitr::kable(
   tabela_fonte_percentual,
   format = "html",
   col.names = c("Fonte", 2016:2025),
-  caption = "Tabela 2. Participação percentual de cada fonte de recursos no gasto liquidado em Educação, por ano — São Paulo, 2016–2025"
+  caption = paste0("Tabela 2. Participação percentual de cada fonte de recursos no gasto liquidado em Educação, por ano — São Paulo, 2016–2025\n", fonte_dados)
 ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
@@ -2184,13 +2253,11 @@ media_percentual <- mean(percentuais, na.rm = TRUE)
 
 ```
 
-O maior percentual de participação do Fundo Constitucional ocorreu em `r ano_maior`, com `r round(max(percentuais, na.rm = TRUE), 2)`%. O menor ocorreu em `r ano_menor`, com `r round(min(percentuais, na.rm = TRUE), 2)`%. No período, a média foi de `r round(media_percentual, 2)`%.
+## 4.2 Evolução de receitas do Fundeb
 
-Tal característica reduz a influência direta das regras do fundo sobre a composição do gasto educacional como um todo e, ao mesmo tempo, preserva maior margem de decisão do município na alocação dos recursos vinculados à educação. Desse modo, ainda que o Fundeb estabeleça regras específicas para a aplicação dos recursos, inclusive com o objetivo de assegurar uma parcela significativa dos gastos com pessoal, seus efeitos sobre a trajetória do orçamento educacional paulistano são condicionados pela elevada capacidade de arrecadação do município.
+A participação do fundo constitucional Fundeb variou entre `r format(round(max(percentuais, na.rm = TRUE), 2), big.mark = ".", decimal.mark = ",", scientific = FALSE)`%, em `r ano_maior`, e `r format(round(min(percentuais, na.rm = TRUE), 2), big.mark = ".", decimal.mark = ",", scientific = FALSE)`%, em `r ano_menor`; com média no período de `r format(round(media_percentual, 2), big.mark = ".", decimal.mark = ",", scientific = FALSE)`%. A participação expressiva de recursos próprios do município reduz o peso do Fundeb na composição do orçamento educacional e amplia a margem de decisão municipal sobre a alocação dos recursos vinculados à educação.
 
-### 4.1.2 Evolução de receitas do Fundeb
-
-Como é possível perceber pela composição de fontes, a implementação do Fundeb Permanente não alterou esse cenário. Ainda que a complementação da União ao fundo tenha sido ampliada, os recursos suplementares com fim de aumentar a equidade do financiamento em educação não beneficiam o município de São Paulo. Assim, a única complementação a que o município pode ter acesso é aquela ligada aos seus resultados (Complementação VAAR). No entanto, quando recebe em 2024, o valor é pouco representativo em relação ao todo dos recursos redistribuídos no Fundo. 
+A implementação do Fundeb Permanente não alterou esse cenário. Embora tenha ampliado a complementação da União, São Paulo não recebe as modalidades destinadas à redução das desigualdades de financiamento, podendo acessar apenas a complementação VAAR, vinculada a resultados. E, em 2024, único ano que o município recebeu a complementação, esse recurso representou parcela pouco significativa do financiamento municipal (tabela 4).
 
 ```{r variacao-fundo-constitucional, echo=FALSE, include=FALSE}
 library(dplyr)
@@ -2218,7 +2285,7 @@ tabela_variacao_fundo_constitucional <- variacao_fundo_constitucional %>%
       big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE
     ),
     `Variação anual` = ifelse(
-      is.na(variacao), "-", percent(variacao, accuracy = 0.01)
+      is.na(variacao), "-", percent(variacao, accuracy = 0.01, decimal.mark = ",")
     )
   )
 
@@ -2231,7 +2298,7 @@ tabela_variacao_fundo_constitucional <- tabela_variacao_fundo_constitucional %>%
     tibble(
       Ano = "2016–2025",
       `Gasto liquidado (R$ milhões)` = "",
-      `Variação anual` = percent(variacao_periodo_fundo, accuracy = 0.01)
+      `Variação anual` = percent(variacao_periodo_fundo, accuracy = 0.01, decimal.mark = ",")
     )
   )
 
@@ -2239,7 +2306,7 @@ knitr::kable(
   tabela_variacao_fundo_constitucional,
   format = "html",
   align = c("c", "r", "r"),
-  caption = "Variação anual do gasto liquidado na fonte Fundo Constitucional da Educação — São Paulo, 2016–2025 (valores atualizados pelo IPCA a dezembro de 2025)"
+  caption = paste0("Variação anual do gasto liquidado na fonte Fundo Constitucional da Educação — São Paulo, 2016–2025 (valores atualizados pelo IPCA a dezembro de 2025)\n", fonte_dados)
 ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
@@ -2249,9 +2316,8 @@ knitr::kable(
   kableExtra::row_spec(nrow(tabela_variacao_fundo_constitucional), bold = TRUE)
 ```
 
-É importante deixar claro que os repasses do Fundeb, ligados diretamente ao número de matrículas ofertadas, tiveram crescimento ao longo do período mas em menor proporção em relação ao restante das outras fontes de receita. 
+É importante deixar claro que **os repasses do Fundeb, ligados diretamente ao número de matrículas ofertadas, tiveram crescimento ao longo do período mas em menor proporção em relação ao restante das outras fontes de receita**. 
 
-O aumento total dos recursos do Fundeb foi de `r percent(variacao_periodo_fundo, accuracy = 0.01)`, saindo de `r format(round(variacao_fundo_constitucional$Vl_Liquidado_ipca[variacao_fundo_constitucional$ano == 2016] / 1e9, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)` bilhões em 2016 para `r format(round(variacao_fundo_constitucional$Vl_Liquidado_ipca[variacao_fundo_constitucional$ano == 2024] / 1e9, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)` bi em 2024.
 
 ```{r comparacao-variacao-fundo-total, echo=FALSE, include=TRUE}
 library(dplyr)
@@ -2283,15 +2349,15 @@ tabela_comparacao_variacao_fundo_total <- comparacao_variacao_fundo_total %>%
   transmute(
     Ano = as.character(ano),
     `Variação — Fundo Constitucional da Educação` = ifelse(
-      is.na(variacao_fundo), "-", percent(variacao_fundo, accuracy = 0.01)
+      is.na(variacao_fundo), "-", percent(variacao_fundo, accuracy = 0.01, decimal.mark = ",")
     ),
     `Variação — Demais fontes` = ifelse(
-      is.na(variacao_total), "-", percent(variacao_total, accuracy = 0.01)
+      is.na(variacao_total), "-", percent(variacao_total, accuracy = 0.01, decimal.mark = ",")
     ),
     `Diferença (p.p.)` = ifelse(
       is.na(variacao_fundo) | is.na(variacao_total),
       "-",
-      percent(variacao_fundo - variacao_total, accuracy = 0.01)
+      percent(variacao_fundo - variacao_total, accuracy = 0.01, decimal.mark = ",")
     )
   )
 
@@ -2304,16 +2370,16 @@ variacao_periodo_total <- variacao_total_fontes$Vl_Liquidado_ipca[variacao_total
 # tabela_comparacao_variacao_fundo_total, sem ser exibidas
 tabela_comparacao_variacao_fundo_total_periodo <- tibble(
   `Período` = "2016–2025",
-  `Variação — Fundo Constitucional da Educação` = percent(variacao_periodo_fundo, accuracy = 0.01),
-  `Variação — Demais fontes` = percent(variacao_periodo_total, accuracy = 0.01),
-  `Diferença (p.p.)` = percent(variacao_periodo_fundo - variacao_periodo_total, accuracy = 0.01)
+  `Variação — Fundo Constitucional da Educação` = percent(variacao_periodo_fundo, accuracy = 0.01, decimal.mark = ","),
+  `Variação — Demais fontes` = percent(variacao_periodo_total, accuracy = 0.01, decimal.mark = ","),
+  `Diferença (p.p.)` = percent(variacao_periodo_fundo - variacao_periodo_total, accuracy = 0.01, decimal.mark = ",")
 )
 
 knitr::kable(
   tabela_comparacao_variacao_fundo_total_periodo,
   format = "html",
   align = c("c", "r", "r", "r"),
-  caption = "Tabela 3. Comparação da variação do gasto liquidado entre 2016 e 2025 — Fundo Constitucional da Educação versus demais fontes de recursos — São Paulo"
+  caption = paste0("Tabela 3. Comparação da variação do gasto liquidado entre 2016 e 2025 — Fundo Constitucional da Educação versus demais fontes de recursos — São Paulo\n", fonte_dados)
 ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
@@ -2321,8 +2387,9 @@ knitr::kable(
   ) %>%
   kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
 ```
+O aumento total dos recursos do Fundeb foi de **`r percent(variacao_periodo_fundo, accuracy = 0.01, big.mark = ".", decimal.mark = ",")`**, saindo de `r format(round(variacao_fundo_constitucional$Vl_Liquidado_ipca[variacao_fundo_constitucional$ano == 2016] / 1e9, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)` bilhões em 2016 para `r format(round(variacao_fundo_constitucional$Vl_Liquidado_ipca[variacao_fundo_constitucional$ano == 2024] / 1e9, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)` bi em 2024.
 
-O aumento total dos recursos das demais fontes foi de `r percent(variacao_periodo_total, accuracy = 0.01)`, saindo de `r format(round(variacao_total_fontes$Vl_Liquidado_ipca[variacao_total_fontes$ano == 2016] / 1e9, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)` bilhões em 2016 para `r format(round(variacao_total_fontes$Vl_Liquidado_ipca[variacao_total_fontes$ano == 2024] / 1e9, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)` bi em 2024.
+Ao mesmo tempo, o **aumento total dos recursos das demais fontes foi de `r percent(variacao_periodo_total, accuracy = 0.01, big.mark = ".", decimal.mark = ",")`**, saindo de `r format(round(variacao_total_fontes$Vl_Liquidado_ipca[variacao_total_fontes$ano == 2016] / 1e9, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)` bilhões em 2016 para `r format(round(variacao_total_fontes$Vl_Liquidado_ipca[variacao_total_fontes$ano == 2024] / 1e9, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)` bi em 2024.
 
 ```{r tabela-composicao-fundeb, echo=FALSE, include=TRUE}
 library(dplyr)
@@ -2358,7 +2425,7 @@ knitr::kable(
   col.names = c(
     "Ano", "Transferências Fundeb", "Complementação VAAR"
   ),
-  caption = "Tabela 4. Composição da receita do Fundeb — São Paulo, 2016–2024 (R$ milhões, valores atualizados pelo IPCA a dezembro de 2025)"
+  caption = paste0("Tabela 4. Composição da receita do Fundeb — São Paulo, 2016–2024 (R$ milhões, valores atualizados pelo IPCA a dezembro de 2025)\n", fonte_dados)
 ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
@@ -2411,14 +2478,14 @@ tabela_verificacao_fundeb <- verificacao_fundeb %>%
       round(diferenca / 1e6, 2),
       big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE
     ),
-    `Diferença (%)` = percent(diferenca_percentual, accuracy = 0.01)
+    `Diferença (%)` = percent(diferenca_percentual, accuracy = 0.01, decimal.mark = ",")
   )
 
 knitr::kable(
   tabela_verificacao_fundeb,
   format = "html",
   align = c("c", "r", "r", "r", "r"),
-  caption = "Verificação: receita do Fundeb (receitas_pmsp_ipca) versus gasto liquidado na fonte Fundo Constitucional da Educação (dadosfunedu_16_25) — São Paulo, 2016–2024 (valores atualizados pelo IPCA a dezembro de 2025)"
+  caption = paste0("Verificação: receita do Fundeb (receitas_pmsp_ipca) versus gasto liquidado na fonte Fundo Constitucional da Educação (dadosfunedu_16_25) — São Paulo, 2016–2024 (valores atualizados pelo IPCA a dezembro de 2025)\n", fonte_dados)
 ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
@@ -2427,13 +2494,13 @@ knitr::kable(
   kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
 ```
 
-### 4.1.3 Evolução de receitas do Salário-Educação
+## 4.3 Evolução de transferências federais
+
+Entre as transferências fedeiras, como PNAE, PNATE
 
 No período analisado, outra fonte de financiamento da educação básica sofreu importante alteração institucional. O salário-educação trata-se de uma contribuição social recolhida das empresas em âmbito federal e que são redistribuídos entre União, estados e municípios. Até 2023, a distribuição dessas cotas combinava a arrecadação de cada unidade da federação com o número de matrículas na educação básica da rede pública: primeiro, os recursos eram apropriados de acordo com a origem da arrecadação e, posteriormente, redistribuídos entre os municípios de cada estado segundo suas matrículas. Tal mecanismo fazia com que a capacidade de arrecadação de cada estado condicionasse o volume de recursos posteriormente disponível para seus municípios, produzindo diferenças expressivas na receita per capita do salário-educação entre as unidades da federação.
 
 Essa forma de partilha foi alterada em decorrência de uma controvérsia jurídica iniciada em 2009 e encerrada pelo Supremo Tribunal Federal em 2022. A decisão determinou que, a partir de 2024, a totalidade das cotas destinadas a estados e municípios passasse a ser destinada conforme o número de matrículas na educação básica pública, conforme previsto pela Emenda Constitucional nº 53/2006. A mudança deslocou o critério de distribuição da origem estadual da arrecadação para uma lógica nacional baseada na matrícula, conferindo ao salário-educação maior caráter redistributivo.
-
-A tabela a seguir mostra a receita do Salário-Educação em relação à receita total vinculada à Educação, ano a ano.
 
 ```{r tabela-composicao-salario-educacao, echo=FALSE, include=TRUE}
 library(dplyr)
@@ -2463,7 +2530,7 @@ tabela_composicao_salario_educacao <- composicao_salario_raw %>%
     ano,
     sal_educ_ipca = format(round(sal_educ_ipca / 1e6, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE),
     rectot_educ_ipca = format(round(rectot_educ_ipca / 1e6, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE),
-    percentual = percent(percentual, accuracy = 0.01)
+    percentual = percent(percentual, accuracy = 0.01, decimal.mark = ",")
   )
 
 knitr::kable(
@@ -2473,7 +2540,7 @@ knitr::kable(
   col.names = c(
     "Ano", "Salário-Educação", "Receita total vinculada à Educação", "% Salário-Educação no total"
   ),
-  caption = "Tabela 5. Salário-Educação em relação à receita total vinculada à Educação — São Paulo, 2016–2024 (R$ milhões, valores atualizados pelo IPCA a dezembro de 2025)"
+  caption = paste0("Tabela 5. Salário-Educação em relação à receita total vinculada à Educação — São Paulo, 2016–2024 (R$ milhões, valores atualizados pelo IPCA a dezembro de 2025)\n", fonte_dados)
 ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
@@ -2481,15 +2548,13 @@ knitr::kable(
   ) %>%
   kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
 ```
-Para o município de São Paulo, a mudança implicou perda da vantagem relacionada à elevada arrecadação do estado de São Paulo. A mudança é observada nos dados de 2024, que indicam queda de ** R$ `r format(round(queda_sal_educ_valor / 1e6, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)` milhões** em relação ao ano anterior, o equivalente a uma queda de **`r format(round(queda_sal_educ_pct, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)`%**.
+Para o município de São Paulo, a mudança implicou perda da vantagem relacionada à elevada arrecadação do estado de São Paulo (tabela 5). A mudança é observada nos dados de 2024, que indicam queda de **R$ `r format(round(queda_sal_educ_valor / 1e6, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)` milhões** em relação ao ano anterior, o equivalente a uma queda de **`r format(round(queda_sal_educ_pct, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)`%**.
 
-## 4.2 Evolução da participação da Educação Infantil nas despesas
+## 4.4 Evolução da participação da Educação Infantil nas despesas
 
-Com quais etapas e modalidades da educação básica o município de São Paulo gasta? A análise das despesas liquidadas por subfunção permite identificar como os recursos da função Educação se distribuem entre diferentes áreas de atuação e, assim, observar mudanças nas prioridades de gasto do município. Nesta seção, a análise concentra-se no período de 2018 a 2025, quando a classificação orçamentária permite acompanhar de forma mais consistente a participação da Educação Infantil no conjunto das despesas educacionais.
+Com quais etapas e modalidades da educação básica o município de São Paulo gasta? A análise das despesas liquidadas por subfunção permite identificar como os recursos da função Educação se distribuem entre diferentes áreas de atuação e, assim, observar mudanças nas prioridades de gasto do município. Nesta seção, a análise concentra-se no período de 2018 a 2025, quando a classificação orçamentária permite acompanhar de forma mais consistente a participação da Educação Infantil no conjunto das despesas educacionais. [^5]
 
-A comparação com 2016 e 2017 é limitada pelas características da classificação orçamentária adotada nesses anos. Nesse período, despesas relativas à Educação Infantil, ao Ensino Fundamental e a outras etapas e modalidades foram registradas de forma concentrada na subfunção Educação Básica, o que impede identificar separadamente o volume destinado a cada uma delas. 
-
-A partir de 2018, a classificação permite uma leitura mais detalhada das despesas por subfunção, tornando possível acompanhar a participação da Educação Infantil no orçamento educacional e sua evolução ao longo do período.
+[^5]:.A comparação com 2016 e 2017 é limitada pelas características da classificação orçamentária adotada nesses anos. Nesse período, despesas relativas à Educação Infantil, ao Ensino Fundamental e a outras etapas e modalidades foram registradas de forma concentrada na subfunção Educação Básica, o que impede identificar separadamente o volume destinado a cada uma delas. 
 
 ```{r tabela-subfuncao-ano, echo=FALSE, include=TRUE}
 library(dplyr)
@@ -2573,55 +2638,53 @@ tabela_subfuncao_ano <- tabela_subfuncao_base %>%
   ) %>%
   select(Ds_SubFuncao, Cd_Exercicio, `R$, em milhões`, `% no ano`) %>%
 
-  # Uma linha por ano e medida (valor e %)
+  # Manter valor e percentual como medidas distintas para cada ano
   pivot_longer(
     cols = c(`R$, em milhões`, `% no ano`),
     names_to = "Medida",
     values_to = "valor"
   ) %>%
 
-  # Subfunções como colunas, na ordem de gasto acumulado, com
-  # "Outras subfunções" por último
+  # Exibir apenas os anos solicitados
+  filter(Cd_Exercicio %in% c(2018, 2022, 2025)) %>%
+
+  # Subfunções como linhas e ano + medida como colunas
   mutate(Ds_SubFuncao = factor(Ds_SubFuncao, levels = ordem_final)) %>%
   arrange(Ds_SubFuncao) %>%
   pivot_wider(
-    id_cols = c(Cd_Exercicio, Medida),
-    names_from = Ds_SubFuncao,
-    values_from = valor
+    id_cols = Ds_SubFuncao,
+    names_from = c(Cd_Exercicio, Medida),
+    names_glue = "{Cd_Exercicio} - {Medida}",
+    values_from = valor,
+    names_sort = TRUE
   ) %>%
   # Subfunção sem gasto no ano: 0 (um "-" solto seria lido pelo
   # pandoc como item de lista e quebraria a tabela)
   mutate(
     across(
-      -c(Cd_Exercicio, Medida),
-      ~ coalesce(.x, if_else(Medida == "R$, em milhões", "0,00", "0,00%"))
+      contains("R$, em milhões"),
+      ~ coalesce(.x, "0,00")
     ),
-    Medida = factor(Medida, levels = c("R$, em milhões", "% no ano"))
+    across(
+      contains("% no ano"),
+      ~ coalesce(.x, "0,00%")
+    )
   ) %>%
-  # Exibir apenas os anos de 2018, 2019 e 2022 a 2025 (sem 2020 e 2021);
-  # os percentuais continuam calculados sobre o total de cada ano
-  filter(!Cd_Exercicio %in% c(2020, 2021)) %>%
-  arrange(Cd_Exercicio, Medida) %>%
-  mutate(
-    Ano = as.character(Cd_Exercicio),
-    Medida = as.character(Medida)
-  ) %>%
-  select(Ano, Medida, all_of(ordem_final[ordem_final %in% names(.)]))
+  select(Ds_SubFuncao, everything())
 
 # Formatação para apresentação
 tabela_subfuncao_ano %>%
   knitr::kable(
     format = "html",
-    align = c("c", "l", rep("r", ncol(tabela_subfuncao_ano) - 2)),
-    caption = "Tabela 6. Gasto liquidado em Educação por subfunção e participação percentual no total do ano — São Paulo, 2018, 2019 e 2022–2025 (valores em milhões de R$, atualizados pelo IPCA a dezembro de 2025)"
+    align = c("l", rep("r", ncol(tabela_subfuncao_ano) - 1)),
+    caption = paste0("Tabela 6. Gasto liquidado em Educação por subfunção e participação percentual no total do ano — São Paulo, 2018, 2022 e 2025 (valores em milhões de R$, atualizados pelo IPCA a dezembro de 2025)\n", fonte_dados)
   ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
     full_width = FALSE
   ) %>%
   kableExtra::column_spec(1, bold = TRUE) %>%
-  kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;") %>%
-  kableExtra::collapse_rows(columns = 1, valign = "middle")
+  kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
 ```
 
 ```{r dados-participacao-subfuncao, echo=FALSE, include=FALSE}
@@ -2790,7 +2853,8 @@ ggplot(
     subtitle = "São Paulo, 2018–2025 — valores atualizados pelo IPCA (dez/2025)",
     x = "Ano",
     y = "R$ milhões",
-    color = NULL
+    color = NULL,
+    caption = fonte_dados
   ) +
 
   guides(
@@ -2808,11 +2872,11 @@ ggplot(
   )
 ```
 
-## 5. Em que o dinheiro é gasto?
+# 5. Em que o dinheiro é gasto?
 
 Saber quanto o município gasta com educação é apenas parte da história. A composição desse gasto ajuda a entender como a política é financiada e como o município organiza a oferta dos serviços educacionais. A evolução dos gastos por natureza de despesa e por modalidade de aplicação revela, nesse sentido, mudanças importantes na estrutura do financiamento da educação paulistana — especialmente quando se compara o conjunto da função Educação com a Educação Infantil.
 
-### 5.1 Por grupo de natureza de despesa
+## 5.1 Por grupo de natureza de despesa
 
 ```{r dados-grupo-ano-funcao, echo=FALSE, include=FALSE}
 library(dplyr)
@@ -2848,7 +2912,7 @@ pessoal_2025_pct <- pessoal_2025$percentual * 100
 
 Na função Educação, a composição do gasto mudou ao longo da última década. A participação de Pessoal e Encargos Sociais diminuiu gradualmente, enquanto Outras Despesas Correntes ganhou espaço. Essa mudança acompanha a expansão da oferta por meio de instituições privadas sem fins lucrativos, concentrada sobretudo na Educação Infantil.
 
-Em 2016, os gastos liquidados com Pessoal foram de R$ **`r format(round(pessoal_2016_valor / 1e9, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)`** bilhões, o que representava **`r format(round(pessoal_2016_pct, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)`%**. Em 2025, Pessoal pela liquidação de R$ **`r format(round(pessoal_2025_valor / 1e9, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)`** bilhões, isto é, **`r format(round(pessoal_2025_pct, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)`%** dos gastos por natureza de despesa na Função Educação naquele ano.
+Em 2016, os **gastos liquidados com Pessoal foram de R$ **`r format(round(pessoal_2016_valor / 1e9, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)`** bilhões**, o que representava **`r format(round(pessoal_2016_pct, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)`%**. Em 2025, Pessoal pela liquidação de R$ **`r format(round(pessoal_2025_valor / 1e9, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)`** bilhões, isto é, **`r format(round(pessoal_2025_pct, 2), big.mark = ".", decimal.mark = ",", nsmall = 2, scientific = FALSE)`%** dos gastos por natureza de despesa na Função Educação naquele ano.
 
 A mudança acompanha o aumento gradativo da participação de matrículas via parceria com instituições privadas sem fins lucrativos, como apontado na terceira seção deste relatório.
 ```{r tabela-grupo-ano, echo=FALSE, include=TRUE}
@@ -2991,7 +3055,8 @@ ggplot(
     subtitle = "São Paulo, 2018–2025 — valores atualizados pelo IPCA (dez/2025)",
     x = "Ano",
     y = "Valor liquidado (R$ milhões)",
-    color = "Grupo de natureza de despesa"
+    color = "Grupo de natureza de despesa",
+    caption = fonte_dados
   ) +
   guides(color = guide_legend(nrow = 2, byrow = TRUE)) +
   theme_minimal() +
@@ -3062,7 +3127,7 @@ dados_grafico_modalidade_ei <- dadosfunedu_16_25 %>%
 
 ```
 
-### 5.2 Gastos com pessoal na rede direta e indireta de EI
+## 5.2 Gastos com pessoal na rede direta e indireta de EI
 
 ```{r tabela-elemento-ei-total, echo=FALSE, include=TRUE}
 library(dplyr)
@@ -3132,7 +3197,7 @@ knitr::kable(
     "Elemento de despesa",
     unlist(lapply(anos_tabela_elemento, function(ano) c(paste(ano, "em R$"), paste(ano, "em %"))))
   ),
-  caption = "Tabela 7. Gasto liquidado por elemento de despesa (Ds_Elemento) na subfunção Educação Infantil e participação percentual no total do ano — São Paulo, 2018, 2022 e 2025 (valores em milhões de R$, atualizados pelo IPCA a dezembro de 2025)"
+  caption = paste0("Tabela 7. Gasto liquidado por elemento de despesa (Ds_Elemento) na subfunção Educação Infantil e participação percentual no total do ano — São Paulo, 2018, 2022 e 2025 (valores em milhões de R$, atualizados pelo IPCA a dezembro de 2025)\n", fonte_dados)
 ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
@@ -3142,15 +3207,9 @@ knitr::kable(
   kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
 ```
 
-## 6. Estimativa de gasto por tipo de provisão e jornada
+# 6. Estimativa de gasto por tipo de provisão e jornada
 
-Os gastos classificados na subfunção Educação Infantil não permitem diferenciar recursos usados para financiar a creche ou a pré-escola, sendo que apenas a última é obrigatória. 
-
-### 6.1 Metodologia de reconstrução de gastos por fase da educação infantil e tipo de provisão
-
-Os gastos por fase da educação infantil e tipo de provisão foram reconstruídos a partir da classificação orçamentária: dos 127 Projetos Atividades com valores liquidados registrados entre 2016 e 2025, foram selecionadas 26 ações relacionadas à Educação Infantil, classificadas em nove tipos de componentes de gasto que diferenciam a forma de provisão (direta ou indireta), a fase (creche ou pré-escola) e a natureza da despesa (custeio ou investimento) — a lista completa das ações por componente de gasto está no Apêndice Metodológico.
-
-Os componentes de gasto não incluem alimentação escolar, cujo registro reúne a merenda de todas as etapas e jornadas de ensino, o que impede sua ponderação sem uma análise à parte. Também foi excluído o Projeto Atividade "Bolsa Primeira Infância" (2886) — um auxílio emergencial de R$ 200 mensais a famílias em fila de creche já inscritas no CAD Único, vigente entre 2019 e 2021, com execução total de **R$ `r scales::number(sum(dadosfunedu_16_25$Vl_Liquidado_ipca[dadosfunedu_16_25$ProjetoAtividade == 2886], na.rm = TRUE), big.mark = ".", decimal.mark = ",", accuracy = 0.01)`** no período — por não constituir gasto com a oferta de educação infantil. Essa reclassificação recompôs entre 99,91% e 100% do gasto liquidado na subfunção Educação Infantil, conforme o ano (ver Apêndice Metodológico para a justificativa completa e a tabela de cobertura ano a ano).
+Os gastos classificados na subfunção Educação Infantil não permitem diferenciar recursos usados para financiar a creche ou a pré-escola, sendo que apenas a última é obrigatória. Assim, usamos a classificação dos gastos por projeto atividade para recompor os gastos nas diferentes fases da educação infantil, por provisão direta ou parceira, e com jornadas diferentes (para detalhes, veja apêndice metodológico).
 
 ```{r custos-matricula-definicao, include=FALSE}
 # ============================================================
@@ -3378,9 +3437,11 @@ tabela_custos <- valores_custos_componentes %>%
   select(custo, Ds_SubFuncao, all_of(as.character(2016:2025)))
 ```
 
-### 6.2 Limitações das estimativas
+## 6.1 Limitações das estimativas
 
-A reconstrução do gasto por matrícula a partir das ações orçamentárias apresenta limitações que devem ser consideradas na interpretação dos resultados. Na rede direta, as ações agregam despesas de profissionais com diferentes formações, remunerações e momentos da carreira, sem permitir identificar como esses gastos se distribuem entre unidades, distritos, etapas ou jornadas — a estimativa baseada em valores médios não captura, portanto, diferenças na composição do corpo docente. Na rede indireta, a ação orçamentária que reúne os repasses para a manutenção da Educação Infantil não discrimina os diferentes arranjos de parceria (por exemplo, unidades em que o município arca com aluguel e unidades em imóveis cedidos), o que pode implicar gastos e condições de infraestrutura distintos não capturados pela estimativa. Os valores reconstruídos permitem, assim, comparar a magnitude e a distribuição do gasto entre diferentes tipos de oferta, mas não devem ser interpretados como medidas exatas do componente de gasto de cada matrícula (ver Apêndice Metodológico para a tabela completa de cobertura ano a ano e a discussão de 2016–2017).
+A reconstrução do gasto por matrícula a partir das ações orçamentárias apresenta limitações que devem ser consideradas na interpretação dos resultados. Na rede direta, os gastos com remuneração agregam despesas de profissionais com diferentes formações, remunerações e momentos da carreira, sem permitir identificar como esses gastos se distribuem entre unidades, distritos, etapas ou jornadas — a estimativa baseada em valores médios não captura, portanto, diferenças na composição do corpo docente. Na rede indireta, a ação orçamentária que reúne os repasses para a manutenção da Educação Infantil não discrimina os diferentes arranjos de parceria (por exemplo, unidades em que o município arca com aluguel e unidades em imóveis cedidos), o que pode implicar gastos e condições de infraestrutura distintos não capturados pela estimativa. Os valores reconstruídos permitem, assim, comparar a magnitude e a distribuição do gasto entre diferentes tipos de oferta, mas não devem ser interpretados como medidas exatas do componente de gasto de cada matrícula (ver Apêndice Metodológico para a tabela completa de cobertura ano a ano e a discussão de 2016–2017).
+
+## 6.2 Evolução dos gastos por tipo de matrícula
 
 ```{r verificacao-cobertura-custos, include=FALSE}
 # Conciliação entre o gasto liquidado na subfunção Educação
@@ -3604,7 +3665,7 @@ custos_por_matricula %>%
   ) %>%
   knitr::kable(
     format = "html",
-    caption = "Tabela 8. Valor estimado por matrícula de Educação Infantil, por fase, tipo de provisão e jornada — São Paulo, 2016–2025 (R$, atualizados pelo IPCA a dezembro de 2025)"
+    caption = paste0("Tabela 8. Valor estimado por matrícula de Educação Infantil, por fase, tipo de provisão e jornada — São Paulo, 2016–2025 (R$, atualizados pelo IPCA a dezembro de 2025)\n", fonte_dados)
   ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
@@ -3711,7 +3772,7 @@ validacao_custo_matricula %>%
   knitr::kable(
     format = "html",
     align = c("c", "r", "r", "r", "r"),
-    caption = "Tabela 9. Validação: matrículas × valor por matrícula, comparado ao gasto observado nos seis componentes de gasto com correspondência direta a matrículas — São Paulo, 2016–2025"
+    caption = paste0("Tabela 9. Validação: matrículas × valor por matrícula, comparado ao gasto observado nos seis componentes de gasto com correspondência direta a matrículas — São Paulo, 2016–2025\n", fonte_dados)
   ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
@@ -3720,11 +3781,9 @@ validacao_custo_matricula %>%
   kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
 ```
 
+## 6.3 Investimentos em educação infantil
 
-
-### 6.3 Investimentos em educação infantil
-
-Os investimentos foram identificados a partir das ações orçamentárias de construção, ampliação, reforma e requalificação de unidades de educação infantil. Para observar sua evolução, os valores foram agregados por fase da educação infantil, distinguindo investimentos em creche e em pré-escola, e restringidos ao período de 2018 a 2025.
+Os investimentos foram identificados a partir das ações orçamentárias de construção, ampliação, reforma e requalificação de unidades de educação infantil. Para observar sua evolução, os valores foram agregados por fase da educação infantil, distinguindo investimentos em creche e em pré-escola.
 
 ```{r investimentos-creche-pre-escola, echo=FALSE, include=TRUE, fig.width=10, fig.height=6, out.width="100%"}
 investimentos_ei <- valores_custos_componentes %>%
@@ -3772,7 +3831,8 @@ ggplot(investimentos_ei, aes(x = ano, y = investimento_milhoes, color = etapa)) 
   labs(
     title = "Gráfico 8. Evolução dos investimentos em educação infantil",
     subtitle = "São Paulo, 2018–2025 — valores liquidados corrigidos pelo IPCA",
-    x = "Ano"
+    x = "Ano",
+    caption = fonte_dados
   ) +
   theme_minimal(base_size = 12) +
   theme(
@@ -3792,7 +3852,7 @@ valor_pico_investimento <- max(investimentos_ei$investimento)
 
 Entre 2018 e 2025, os investimentos em creche passaram de **R$ `r scales::number(investimento_creche_2018 / 1e6, accuracy = 0.1, big.mark = ".", decimal.mark = ",")` milhões** para **R$ `r scales::number(investimento_creche_2025 / 1e6, accuracy = 0.1, big.mark = ".", decimal.mark = ",")` milhões**, enquanto os investimentos em pré-escola variaram de **R$ `r scales::number(investimento_pre_2018 / 1e6, accuracy = 0.1, big.mark = ".", decimal.mark = ",")` milhões** para **R$ `r scales::number(investimento_pre_2025 / 1e6, accuracy = 0.1, big.mark = ".", decimal.mark = ",")` milhões**. O maior valor anual registrado no período correspondeu à **`r etapa_pico_investimento`**, em **`r ano_pico_investimento`**, com **R$ `r scales::number(valor_pico_investimento / 1e6, accuracy = 0.1, big.mark = ".", decimal.mark = ",")` milhões**. A evolução evidencia que os investimentos não se distribuem de forma uniforme ao longo da série, refletindo a concentração de despesas de construção, ampliação, reforma e requalificação em determinados anos.
 
-### 6.4 Desigualdades territoriais no gasto por matrícula
+## 6.4 Desigualdades territoriais no gasto por matrícula
 
 A partir dos valores gastos por tipo de matrícula ofertada nos diferentes distritos de São Paulo, é possível estimar um valor médio de gasto por aluno da educação infantil por distrito e por ano. O objetivo é criar um indicador comparativo do esforço de gasto feito pela Prefeitura nos 96 territórios da cidade, dadas as diferentes decisões de provisão e de jornada.
 
@@ -3895,7 +3955,7 @@ amplitude_dist_por_ano %>%
   knitr::kable(
     format = "html",
     align = c("c", "r", "r", "r", "r"),
-    caption = "Tabela 10. Desigualdade territorial no valor médio por matrícula de Educação Infantil entre os distritos de São Paulo — 2018–2025 (valores atualizados pelo IPCA a dezembro de 2025)"
+    caption = paste0("Tabela 10. Desigualdade territorial no valor médio por matrícula de Educação Infantil entre os distritos de São Paulo — 2018–2025 (valores atualizados pelo IPCA a dezembro de 2025)\n", fonte_dados)
   ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
@@ -3946,7 +4006,8 @@ ggplot(
     subtitle = "São Paulo, 2018–2025 — distritos com maior e menor valor médio por matrícula",
     x = "Ano",
     y = "Valor por matrícula (R$)",
-    color = NULL
+    color = NULL,
+    caption = fonte_dados
   ) +
   theme_minimal() +
   theme(
@@ -4060,7 +4121,8 @@ ggplot(mapa_custo_medio_2025) +
   labs(
     title = "Mapa 4. Valor por matrícula de Educação Infantil em relação à média municipal, por distrito",
     subtitle = "São Paulo, 2025 — índice em relação ao valor médio de São Paulo Toda (São Paulo Toda = 1);\nquanto mais escuro, maior o valor por matrícula",
-    fill = "Índice\n(SP Toda = 1)"
+    fill = "Índice\n(SP Toda = 1)",
+    caption = fonte_dados
   ) +
   theme_void() +
   theme(
@@ -4115,7 +4177,7 @@ bind_rows(top10_indice_2025, bottom10_indice_2025) %>%
   knitr::kable(
     format = "html",
     align = c("l", "r", "r"),
-    caption = "Tabela 11. Distritos com os 10 maiores e os 10 menores índices do valor médio por matrícula de Educação Infantil em relação à média municipal, e percentual de beneficiários do Bolsa Família na Educação Infantil municipal — São Paulo, 2025"
+    caption = paste0("Tabela 11. Distritos com os 10 maiores e os 10 menores índices do valor médio por matrícula de Educação Infantil em relação à média municipal, e percentual de beneficiários do Bolsa Família na Educação Infantil municipal — São Paulo, 2025\n", fonte_dados)
   ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
@@ -4164,7 +4226,7 @@ tabela_bf_indice_2025 %>%
   knitr::kable(
     format = "html",
     align = c("l", "r", "r"),
-    caption = "Tabela 12. Percentual de beneficiários do Bolsa Família na Educação Infantil municipal e índice do valor médio por matrícula de Educação Infantil em relação à média municipal, por distrito — São Paulo, 2025"
+    caption = paste0("Tabela 12. Percentual de beneficiários do Bolsa Família na Educação Infantil municipal e índice do valor médio por matrícula de Educação Infantil em relação à média municipal, por distrito — São Paulo, 2025\n", fonte_dados)
   ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
@@ -4271,7 +4333,7 @@ tibble(
   knitr::kable(
     format = "html",
     align = c("r", "r", "r", "c"),
-    caption = "Verificação do valor médio por matrícula multiplicado pelo total de matrículas de Educação Infantil versus gasto observado — São Paulo, 2025"
+    caption = paste0("Verificação do valor médio por matrícula multiplicado pelo total de matrículas de Educação Infantil versus gasto observado — São Paulo, 2025\n", fonte_dados)
   ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
@@ -4292,11 +4354,11 @@ if (dplyr::near(valor_medio_multiplicado_mat_ei_tot_2025, gasto_observado_2025))
 }
 ```
 
-## Considerações finais
+# 7. Considerações finais
 
-O estudo indica que na educação infantil, o município de São Paulo ainda tem um desafio importante na ampliação da jornada escolar na pré-escola, início da educação obrigatória e fase em que a criança adquire habilidades necessárias para a posterior alfabetização (Sealf - MEC, 2021). O município tem **xxxx**% de suas matrículas nesta fase em tempo parcial, isto é, xxx crianças. 
+O estudo indica que na educação infantil, o município de São Paulo ainda tem um desafio importante na ampliação da jornada escolar na pré-escola, início da educação obrigatória e fase em que a criança adquire habilidades necessárias para a posterior alfabetização (Sealf - MEC, 2021). O município tem **`r format(round(((resumosp$mat_pre_parc_dir[resumosp$NU_ANO_CENSO == "2025"] + resumosp$mat_pre_parc_ind[resumosp$NU_ANO_CENSO == "2025"]) / resumosp$mat_pre_tot[resumosp$NU_ANO_CENSO == "2025"]) * 100, 2), decimal.mark = ",", nsmall = 2, scientific = FALSE)`%** de suas matrículas nesta fase em tempo parcial.
 
-O município conseguiu de maneira consistente
+Para a creche, o município conseguiu de maneira consistente
 
 A desigualdade, no entanto, resta
 
@@ -4309,9 +4371,9 @@ Apesar de ter parte importante dos recursos vinculados ligados ao Fundeb, caiu p
 As informações foram analisadas e validadas por Cristiane Capuchinho. As bases de dados foram organizadas e tratadas por Anderson Henrique e Cristiane Capuchinho.
 
 
-## Apêndice Metodológico
+# Apêndice Metodológico
 
-### Reconstrução de gastos por fase da educação infantil e tipo de provisão
+## Reconstrução de gastos por fase da educação infantil e tipo de provisão
 
 Com o objetivo de reconstruir gastos por fase da educação infantil e tipo de provisão, a decisão foi por fazer uma reconstrução a partir da classificação orçamentária. Assim, foram identificados diferentes projetos atividades que poderiam ser reclassificados em função da fase da educação infantil, do tipo de provisão e do tipo de gasto (custeio ou investimento). A partir dos 127 Projetos Atividades com valores liquidados registrados entre 2016 e 2025, foi realizada uma seleção conforme sua descrição, a análise dos PPAs e, quando necessário, a busca por decretos e detalhamento no site da Prefeitura de São Paulo. Foram selecionadas 26 ações orçamentárias, classificadas em nove tipos de componentes de gasto que diferenciam a forma de provisão, a fase da educação infantil e a natureza da despesa.
 
@@ -4413,7 +4475,7 @@ conciliacao_cobertura_ei %>%
   knitr::kable(
     format = "html",
     align = c("c", "r", "r", "r"),
-    caption = "Tabela 13. Cobertura dos nove tipos de componentes de gasto em relação ao gasto liquidado na subfunção Educação Infantil — São Paulo, 2016–2025"
+    caption = paste0("Tabela 13. Cobertura dos nove tipos de componentes de gasto em relação ao gasto liquidado na subfunção Educação Infantil — São Paulo, 2016–2025\n", fonte_dados)
   ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
@@ -4426,7 +4488,9 @@ Como discutido anteriormente, em 2016 e 2017 a subfunção Educação Infantil r
 
 ### Construção da proxy de vulnerabilidade econômica (Bolsa Família) por vintis de distrito
 
-A comparação entre os distritos com maior e menor percentual de matrículas beneficiárias do Bolsa Família, feita acima com os 10 extremos, tem a vantagem de ser simples de comunicar, mas os grupos resultantes têm tamanhos populacionais muito distintos e são sensíveis a distritos com poucas matrículas e percentuais atípicos. Para uma comparação mais robusta entre grupos de vulnerabilidade econômica — por exemplo, ao relacionar essa proxy a outros atributos da oferta —, os 96 distritos foram ordenados do menor para o maior percentual de matrículas de Educação Infantil beneficiárias do Bolsa Família (`pct_bf_ei`) e agrupados em vintis (20 grupos) ponderados pela matrícula de EI municipal de cada distrito, e não pelo número de distritos. Cada vintil reúne, assim, um conjunto de distritos cuja soma de matrículas corresponde a aproximadamente 5% do total de matrículas de EI municipal da cidade — o que os torna comparáveis em tamanho de população atendida, ainda que formados por números distintos de distritos. O vintil 1 (V1) reúne os distritos menos vulneráveis nessa proxy e o vintil 20 (V20), os mais vulneráveis.
+A comparação entre os distritos com maior e menor percentual de matrículas beneficiárias do Bolsa Família, feita acima com os 10 extremos, tem a vantagem de ser simples de comunicar, mas os grupos resultantes têm tamanhos populacionais muito distintos e são sensíveis a distritos com poucas matrículas e percentuais atípicos. Para uma comparação mais robusta entre grupos de vulnerabilidade econômica — por exemplo, ao relacionar essa proxy a outros atributos da oferta —, os 96 distritos foram ordenados do menor para o maior percentual de matrículas de Educação Infantil beneficiárias do Bolsa Família (`pct_bf_ei`) e agrupados em vintis (20 grupos) ponderados pela matrícula de EI municipal de cada distrito, e não pelo número de distritos. Cada vintil reúne, assim, um conjunto de distritos cuja soma de matrículas corresponde a aproximadamente 5% do total de matrículas de EI municipal da cidade — o que os torna comparáveis em tamanho de população atendida, ainda que formados por números distintos de distritos. 
+
+O vintil 1 (V1) reúne os distritos menos vulneráveis nessa proxy e o vintil 20 (V20), os mais vulneráveis. O V1, grupo menos vulnerável, tem média de 24,09% das crianças matriculadas beneficiárias do Bolsa Família; e o V20, grupo mais vulnerável, tem média de 57,46% das matrículas na educação infantil para crianças beneficiárias do BF.
 
 ```{r apendice-tabela-vintis-bf-ei, echo=FALSE, include=TRUE}
 # Reaproveita resumo_vintil_bf_ei, já calculada no chunk
@@ -4448,7 +4512,7 @@ resumo_vintil_bf_ei %>%
   knitr::kable(
     format = "html",
     align = c("l", "c", "r", "r", "r", "r"),
-    caption = "Tabela 14. Vintis de distritos por % de beneficiários do Bolsa Família na Educação Infantil municipal, ponderados pela matrícula — São Paulo, 2025"
+    caption = paste0("Tabela 14. Vintis de distritos por % de beneficiários do Bolsa Família na Educação Infantil municipal, ponderados pela matrícula — São Paulo, 2025\n", fonte_dados)
   ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
@@ -4457,3 +4521,25 @@ resumo_vintil_bf_ei %>%
   kableExtra::column_spec(1, bold = TRUE) %>%
   kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
 ```
+
+# Bibliografia
+
+ALVES, Thiago; PINTO, José Marcelino de Rezende. As Múltiplas Realidades Educacionais dos Municípios no Contexto do Fundeb. **FINEDUCA - Revista de Financiamento da Educação**, v. 10, 1 out. 2020.
+
+ARELARO, Lisete Regina Gomes. Avaliação das políticas de educação infantil no Brasil: avanços e retrocessos. **Zero-a-Seis**, v. 19, n. 36, p. 206–222, 18 dez. 2017. 
+
+BASSI, Camillo De Moraes. Nota Técnica n. 110 (Diset) : O Salário-educação e os novos critérios de partição. [S.l.]: Instituto de Pesquisa Econômica Aplicada, 6 abr. 2023. Acesso em: 10 jul. 2025.
+
+DINIZ JÚNIOR, Carlos Antônio. Salário-Educação e a desigualdade no repasse da quota estadual / municipal. **Jornal de Políticas Educacionais**, v. 17, 2023. 
+
+FALCIANO, Bruno Tovar; SANTOS, Edson Cordeiro dos; NUNES, Maria Fernanda Rezende. Infraestrutura escolar: um critério de comparação da qualidade na educação infantil. **Estudos em Avaliação Educacional**, v. 27, n. 66, p. 880–906, 22 dez. 2016. 
+
+GOHN, Maria da Glória Marcondes. **A Força da Periferia: a luta das mulheres por creches em São Paulo**. Petrópolis (RJ): Editora Vozes, 1985. 
+
+NASCIMENTO, Ana Paula Santiago do; SILVA, Cleber Nelson de Oliveira. As creches conveniadas em São Paulo: quais os reais motivos dessa opção política. **FINEDUCA - Revista de Financiamento da Educação**, v. 5, 30 dez. 2015. 
+
+OLIVEIRA, Tiago Grama de. As condições das creches públicas e conveniadas com o poder público no Brasil. Revista Iberoamericana de Educación, v. 71, p. 63–86, 1 maio 2016. 
+
+OLIVEIRA, Jaqueline dos Santos; BORGHI, Raquel Fontes. Fundef / Fundeb - Implicações para oferta de educação infantil via convênios/ parcerias. **EccoS – Revista Científica**, n. 30, p. 35–54, 5 abr. 2013. 
+
+SANTOS, Joedson Brito dos; JUNIOR, Luiz de Sousa. O financiamento da Educação Infantil após 30 anos da Constituição Federal 1988: avanços, contradições e desafios. **Revista Educação e Políticas em Debate**, v. 7, n. 2, p. 263–288, 30 ago. 2018.
