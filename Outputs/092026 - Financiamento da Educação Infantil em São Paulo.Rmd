@@ -3683,7 +3683,6 @@ custos_calculo <- custos_long_categoria %>%
   )
 ```
 
-A tabela a seguir apresenta o valor estimado por matrícula, segundo a fase da educação infantil, o tipo de provisão e a jornada.
 
 ```{r tabela-custo-por-matricula, echo=FALSE, include=TRUE}
 library(dplyr)
@@ -4264,7 +4263,7 @@ bind_rows(top10_indice_2025, bottom10_indice_2025) %>%
   knitr::kable(
     format = "html",
     align = c("l", "r", "r"),
-    caption = paste0("Tabela 11. Distritos com os 10 maiores e os 10 menores índices do valor médio por matrícula de Educação Infantil em relação à média municipal, e percentual de beneficiários do Bolsa Família na Educação Infantil municipal — São Paulo, 2025\n", fonte_dados)
+    caption = paste0("Tabela 9. Distritos com os 10 maiores e os 10 menores índices do valor médio por matrícula de Educação Infantil em relação à média municipal, e percentual de beneficiários do Bolsa Família na Educação Infantil municipal — São Paulo, 2025\n", fonte_dados)
   ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
@@ -4275,171 +4274,6 @@ bind_rows(top10_indice_2025, bottom10_indice_2025) %>%
   kableExtra::pack_rows("10 menores índices", 11, 20)
 ```
 
-A tabela a seguir lista os 96 distritos em ordem decrescente de percentual de matrículas de Educação Infantil municipal beneficiárias do Bolsa Família, ao lado do índice do valor médio por matrícula em relação à média municipal (São Paulo = 1).
-
-```{r tabela-bf-indice-valor-medio-2025, echo=FALSE, include=TRUE}
-# ============================================================
-# % DE BENEFICIÁRIOS DO BOLSA FAMÍLIA NA EI MUNICIPAL E ÍNDICE
-# DO VALOR MÉDIO POR MATRÍCULA (SÃO PAULO TODA = 1), POR
-# DISTRITO — SÃO PAULO, 2025
-# ============================================================
-
-library(dplyr)
-library(scales)
-library(knitr)
-library(kableExtra)
-
-indice_valor_medio_2025 <- custo_medio_ei_distrito %>%
-  filter(ano == 2025) %>%
-  transmute(
-    CO_DISTRITO,
-    indice_valor_medio = valor_medio_aluno / valor_medio_sp_toda_2025
-  )
-
-# bf_distritosp_2025 já vem com "São Paulo Toda" na primeira linha
-# e os distritos em ordem decrescente de % de BF na EI municipal
-tabela_bf_indice_2025 <- bf_distritosp_2025 %>%
-  select(CO_DISTRITO, NO_DISTRITO, pct_bf_ei) %>%
-  left_join(indice_valor_medio_2025, by = "CO_DISTRITO")
-
-tabela_bf_indice_2025 %>%
-  transmute(
-    Distrito = NO_DISTRITO,
-    `% de beneficiários do Bolsa Família na EI municipal` =
-      percent(pct_bf_ei, accuracy = 0.1, decimal.mark = ","),
-    `Índice do valor médio por matrícula de EI (SP Toda = 1)` =
-      number(indice_valor_medio, accuracy = 0.01, decimal.mark = ",")
-  ) %>%
-  knitr::kable(
-    format = "html",
-    align = c("l", "r", "r"),
-    caption = paste0("Tabela 12. Percentual de beneficiários do Bolsa Família na Educação Infantil municipal e índice do valor médio por matrícula de Educação Infantil em relação à média municipal, por distrito — São Paulo, 2025\n", fonte_dados)
-  ) %>%
-  kableExtra::kable_styling(
-    bootstrap_options = c("striped", "hover", "bordered"),
-    full_width = FALSE
-  ) %>%
-  kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;") %>%
-  kableExtra::row_spec(
-    which(tabela_bf_indice_2025$NO_DISTRITO == "São Paulo Toda"),
-    bold = TRUE
-  ) %>%
-  kableExtra::scroll_box(height = "500px")
-```
-
-```{r vintis-valor-medio-bf-ei, include=FALSE}
-# ============================================================
-# VALOR MÉDIO POR MATRÍCULA DE EI NOS GRUPOS V1 E V20 DE % DE
-# BF NA EI, E EM SÃO PAULO TODA — 2025
-# ============================================================
-
-library(dplyr)
-library(scales)
-
-valor_medio_2025_distrito <- custo_medio_ei_distrito %>%
-  filter(ano == 2025, CO_DISTRITO != 0)
-
-valor_medio_v1_2025 <- valor_medio_2025_distrito %>%
-  filter(NO_DISTRITO %in% distritos_v1_bf_ei$NO_DISTRITO) %>%
-  summarise(
-    valor_medio = sum(valor_total_calculado, na.rm = TRUE) /
-      sum(mat_ei_municipal, na.rm = TRUE)
-  ) %>%
-  pull(valor_medio)
-
-valor_medio_v20_2025 <- valor_medio_2025_distrito %>%
-  filter(NO_DISTRITO %in% distritos_v20_bf_ei$NO_DISTRITO) %>%
-  summarise(
-    valor_medio = sum(valor_total_calculado, na.rm = TRUE) /
-      sum(mat_ei_municipal, na.rm = TRUE)
-  ) %>%
-  pull(valor_medio)
-
-# custo_medio_ei_distrito já traz uma linha "São Paulo Toda"
-# (CO_DISTRITO == 0), herdada de tabela_matriculas_distrito
-valor_medio_sp_toda_2025 <- custo_medio_ei_distrito %>%
-  filter(ano == 2025, CO_DISTRITO == 0) %>%
-  pull(valor_medio_aluno)
-
-diferenca_v20_v1_pct <- (valor_medio_v20_2025 / valor_medio_v1_2025 - 1) * 100
-```
-
-
-
-```{r verificacao-valor-medio-matriculas-totais-2025, echo=FALSE, include=FALSE}
-# ============================================================
-# VERIFICAÇÃO DO VALOR MÉDIO POR MATRÍCULA EM 2025
-# ============================================================
-# dadosfunedu_16_25 é a base orçamentária e não contém NO_MUNICIPIO
-# nem mat_ei_tot. Esses campos estão na base de matrículas por distrito.
-
-matriculas_totais_distrito_2025 <- saopaulocapital_fl %>%
-  filter(as.numeric(NU_ANO_CENSO) == 2025) %>%
-  group_by(CO_DISTRITO, NO_DISTRITO) %>%
-  summarise(
-    mat_ei_tot = sum(mat_ei_tot, na.rm = TRUE),
-    .groups = "drop"
-  )
-
-valor_medio_multiplicado_mat_ei_tot_2025 <- custo_medio_ei_distrito %>%
-  filter(ano == 2025, CO_DISTRITO != 0) %>%
-  select(CO_DISTRITO, NO_DISTRITO, valor_medio_aluno) %>%
-  left_join(
-    matriculas_totais_distrito_2025,
-    by = c("CO_DISTRITO", "NO_DISTRITO")
-  ) %>%
-  summarise(
-    valor_medio_x_mat_ei_tot = sum(
-      valor_medio_aluno * mat_ei_tot,
-      na.rm = TRUE
-    )
-  ) %>%
-  pull(valor_medio_x_mat_ei_tot)
-
-gasto_observado_2025 <- total_custos_ano %>%
-  filter(Cd_Exercicio == 2025) %>%
-  summarise(
-    gasto_observado = sum(custos_matricula, na.rm = TRUE)
-  ) %>%
-  pull(gasto_observado)
-
-diferenca_verificacao_2025 <- valor_medio_multiplicado_mat_ei_tot_2025 - gasto_observado_2025
-
-tibble(
-  `Valor médio por matrícula × mat_ei_tot (R$)` = valor_medio_multiplicado_mat_ei_tot_2025,
-  `Gasto observado em 2025 (R$)` = gasto_observado_2025,
-  `Diferença (R$)` = diferenca_verificacao_2025,
-  `Igual?` = dplyr::near(valor_medio_multiplicado_mat_ei_tot_2025, gasto_observado_2025)
-) %>%
-  mutate(
-    across(
-      where(is.numeric),
-      ~ scales::number(.x, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
-    )
-  ) %>%
-  knitr::kable(
-    format = "html",
-    align = c("r", "r", "r", "c"),
-    caption = paste0("Verificação do valor médio por matrícula multiplicado pelo total de matrículas de Educação Infantil versus gasto observado — São Paulo, 2025\n", fonte_dados)
-  ) %>%
-  kableExtra::kable_styling(
-    bootstrap_options = c("striped", "hover", "bordered"),
-    full_width = FALSE
-  ) %>%
-  kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
-```
-
-```{r texto-verificacao-valor-medio-2025, echo=FALSE, include=FALSE}
-if (dplyr::near(valor_medio_multiplicado_mat_ei_tot_2025, gasto_observado_2025)) {
-  cat("A verificação indica que os valores são iguais, considerando a precisão numérica do cálculo.")
-} else {
-  cat(
-    "A verificação indica uma diferença de R$ ",
-    scales::number(abs(diferenca_verificacao_2025), accuracy = 0.01, big.mark = ".", decimal.mark = ","),
-    ", comparando o valor médio por matrícula multiplicado por mat_ei_tot ao gasto observado em 2025 nos seis componentes de gasto com correspondência direta a matrículas."
-  )
-}
-```
 
 # 7. Considerações finais
 
@@ -4516,7 +4350,7 @@ Destaca-se que não foram utilizados os recursos liquidados no Projeto Atividade
 
 É preciso chamar a atenção para o fato de que os componentes de gasto não incluem gastos com alimentação escolar. Isso porque o registro reúne gastos de merenda escolar de todas as etapas de ensino e tipos de jornada, impossibilitando a ponderação desses gastos sem uma análise aprofundada da forma como são realizados os repasses e as ofertas de merenda em todas as etapas e modalidades ofertadas pela rede.
 
-Essa reclassificação foi cotejada com os gastos registrados pela prefeitura na subfunção "Educação Infantil" e foram recompostos gastos equivalentes a entre 99,91% e 100% do gasto, conforme os diferentes anos. A diferença se dá pela escolha metodológica de não contabilizar recursos usados no projeto-atividade "Bolsa Primeira Infância". O Programa Bolsa Primeira Infância, vigente entre 2019 e 2021, não entrou na recomposição de componentes de gasto por considerarmos que este programa de transferência de recursos para famílias na fila da creche não constitui gastos com oferta de educação infantil.
+Essa reclassificação foi cotejada com os gastos registrados pela prefeitura na subfunção "Educação Infantil" e foram recompostos gastos equivalentes a entre 99,92% e 100% do gasto, conforme os diferentes anos. A diferença se dá pela escolha metodológica de não contabilizar recursos usados no projeto-atividade "Bolsa Primeira Infância". O Programa Bolsa Primeira Infância, vigente entre 2019 e 2021, não entrou na recomposição de componentes de gasto por considerarmos que este programa de transferência de recursos para famílias na fila da creche não constitui gastos com oferta de educação infantil.
 
 **Ponderação de matrículas em tempo integral e parcial**
 
@@ -4528,15 +4362,11 @@ E a partir de quais referências pensar o financiamento de jornadas diferentes? 
 
 Como as jornadas integrais praticadas na rede municipal de São Paulo correspondem aproximadamente ao dobro da jornada parcial, adotou-se peso 2 para as matrículas integrais e peso 1 para as parciais. Essa ponderação constitui uma hipótese de alocação do gasto e não uma estimativa do custo efetivamente observado de cada tipo de jornada.
 
-Sendo assim, Mp = número de matrículas em tempo parcial, Mi = número de matrículas em tempo integral, V = valor total de recursos. O total de matrículas ponderadas é dado por: M_pond = Mp + 2Mi. O valor de uma matrícula parcial é dado por: Valor_parcial = V / (Mp + 2Mi). O valor de uma matrícula integral é dado por: Valor_integral = 2 × Valor_parcial.
-
 **Limitações das estimativas**
 
 A reconstrução do gasto por matrícula a partir das ações orçamentárias apresenta limitações que devem ser consideradas na interpretação dos resultados. Na rede direta, as ações utilizadas agregam despesas de profissionais com diferentes formações, remunerações e momentos da carreira, sem permitir identificar como esses gastos se distribuem entre unidades, distritos, etapas ou jornadas. Dessa forma, a estimativa baseada em valores médios não captura diferenças na composição e nas características do corpo docente, dimensão relevante para a qualidade da oferta educacional.
 
 Na rede indireta, por sua vez, a ação orçamentária que reúne os repasses para a manutenção da Educação Infantil na rede parceira não discrimina os diferentes arranjos de parceria existentes. Não é possível, por exemplo, distinguir unidades em que o município arca com despesas de aluguel daquelas que funcionam em imóveis cedidos ou disponibilizados pelas próprias instituições. Essas diferenças podem implicar gastos e condições de infraestrutura distintos, mas permanecem agregadas na ação orçamentária e, portanto, não são capturadas pela estimativa. Assim, os valores reconstruídos permitem comparar a magnitude e a distribuição do gasto entre diferentes tipos de oferta, mas não devem ser interpretados como medidas exatas do componente de gasto de cada matrícula.
-
-A tabela a seguir confere, ano a ano, qual a proporção do gasto liquidado na subfunção Educação Infantil que foi efetivamente recomposta pelos nove tipos de componentes de gasto descritos acima. A diferença corresponde, sobretudo, ao Programa Bolsa Primeira Infância, deliberadamente excluído da reconstituição.
 
 ```{r apendice-cobertura-componentes-gasto, echo=FALSE, include=TRUE}
 # Reaproveita conciliacao_cobertura_ei, já calculada no chunk
@@ -4560,16 +4390,16 @@ conciliacao_cobertura_ei %>%
   knitr::kable(
     format = "html",
     align = c("c", "r", "r", "r"),
-    caption = paste0("Tabela 13. Cobertura dos nove tipos de componentes de gasto em relação ao gasto liquidado na subfunção Educação Infantil — São Paulo, 2016–2025\n", fonte_dados)
+    caption = paste0("Tabela 11. Cobertura dos nove tipos de componentes de gasto em relação ao gasto liquidado na subfunção Educação Infantil — São Paulo, 2016–2025\n", fonte_dados)
   ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
     full_width = FALSE
   ) %>%
   kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
+ 
 ```
 
-Como discutido anteriormente, em 2016 e 2017 a subfunção Educação Infantil reunia apenas parte do gasto com esta etapa (o restante ficava registrado em Educação Básica), de modo que os gastos referentes à rede direta (creche, pré-escola e educação infantil direta) não são plenamente capturados nesses dois anos. A leitura do valor por matrícula deve, portanto, priorizar o período de 2018 a 2025.
 
 ## A.2 Construção da proxy de vulnerabilidade econômica (Bolsa Família) por vintis de distrito
 
@@ -4597,7 +4427,7 @@ resumo_vintil_bf_ei %>%
   knitr::kable(
     format = "html",
     align = c("l", "c", "r", "r", "r", "r"),
-    caption = paste0("Tabela 14. Vintis de distritos por % de beneficiários do Bolsa Família na Educação Infantil municipal, ponderados pela matrícula — São Paulo, 2025\n", fonte_dados)
+    caption = paste0("Tabela 12. Vintis de distritos por % de beneficiários do Bolsa Família na Educação Infantil municipal, ponderados pela matrícula — São Paulo, 2025\n", fonte_dados)
   ) %>%
   kableExtra::kable_styling(
     bootstrap_options = c("striped", "hover", "bordered"),
