@@ -3205,8 +3205,6 @@ Assim, em 2025, o gasto com **Outros serviços de terceiros - pessoa jurídica**
 
 A comparação tem limites. Não é possível saber qual parte do valor de cada ano é usado na contratação de oferta de vagas em creches e pré-escola. Nesse mesmo elemento, podem estar registrados gastos com segurança ou limpeza terceirizada em unidades diretas da educação infantil. 
 
-Até aqui, a análise identificou a magnitude dos gastos com educação infantil e sua composição, com alguns detalhes sobre a diferença entre provisão direta e indireta. No entanto, até aqui não é possível diferenciar os gastos entre creche e pré-escola, nem entre jornada parcial e integral.
-
 ```{r tabela-elemento-ei-total, echo=FALSE, include=TRUE}
 library(dplyr)
 library(tidyr)
@@ -3298,6 +3296,8 @@ knitr::kable(
   kableExtra::column_spec(1, bold = TRUE) %>%
   kableExtra::row_spec(0, bold = TRUE, extra_css = "padding: 8px 14px;")
 ```
+
+Até aqui, a análise identificou a magnitude dos gastos com educação infantil e sua composição, com alguns detalhes sobre a diferença entre provisão direta e indireta. 
 
 # 6. Estimativa de custeio por fase da educação infantil e jornada
 
@@ -3543,7 +3543,11 @@ tabela_custos <- valores_custos_componentes %>%
 
 ## 6.1 Limitações das estimativas
 
-A reconstrução do gasto por matrícula a partir das ações orçamentárias apresenta limitações que devem ser consideradas na interpretação dos resultados. Na rede direta, os gastos com remuneração agregam despesas de profissionais com diferentes formações, remunerações e momentos da carreira, sem permitir identificar como esses gastos se distribuem entre unidades, distritos, etapas ou jornadas — a estimativa baseada em valores médios não captura, portanto, diferenças na composição do corpo docente. Na rede indireta, a ação orçamentária que reúne os repasses para a manutenção da Educação Infantil não discrimina os diferentes arranjos de parceria (por exemplo, unidades em que o município arca com aluguel e unidades em imóveis cedidos), o que pode implicar gastos e condições de infraestrutura distintos não capturados pela estimativa. Os valores reconstruídos permitem, assim, comparar volume de gastos e sua distribuição entre diferentes tipos de oferta, mas não devem ser interpretados como medidas exatas do componente de gasto de cada matrícula.
+A reconstrução do gasto por matrícula a partir das ações orçamentárias apresenta limitações que devem ser consideradas na interpretação dos resultados. Na rede direta, os gastos com remuneração agregam despesas de profissionais com diferentes formações, remunerações e momentos da carreira, sem permitir identificar como esses gastos se distribuem entre unidades, distritos, etapas ou jornadas — a estimativa baseada em valores médios não captura, portanto, diferenças na composição do corpo docente. 
+
+Na rede indireta, a ação orçamentária que reúne os repasses para a manutenção da Educação Infantil não discrimina os diferentes arranjos de parceria (por exemplo, unidades em que o município arca com aluguel e unidades em imóveis cedidos), o que pode implicar gastos e condições de infraestrutura distintos não capturados pela estimativa. Os valores reconstruídos permitem, assim, comparar volume de gastos e sua distribuição entre diferentes tipos de oferta, mas não devem ser interpretados como medidas exatas do componente de gasto de cada matrícula.
+
+A alimentação escolar não entrou no cômputo.
 
 ## 6.2 Evolução dos gastos por tipo de matrícula
 
